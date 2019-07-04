@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.OrderActivity;
+import com.jiuwang.buyer.activity.RechargeActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.service.UpdateVersionService;
 import com.jiuwang.buyer.util.NetURL;
@@ -31,23 +33,20 @@ import java.io.File;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 
 import static com.jiuwang.buyer.R.id.actionbar_text;
 import static com.jiuwang.buyer.R.id.onclick_layout_left;
 
 
-public class MineFragment extends Fragment  {
+public class MineFragment extends Fragment {
 	@Bind(actionbar_text)
 	TextView actionbarText;
 	@Bind(onclick_layout_left)
 	RelativeLayout onclickLayoutLeft;
 	@Bind(R.id.iv_find)
 	ImageView ivFind;
-	@Bind(R.id.iv_header)
-	ImageView ivHeader;
-	@Bind(R.id.tv_username)
-	TextView tvUsername;
 	@Bind(R.id.orderTextView)
 	TextView orderTextView;
 	@Bind(R.id.orderNumberTextView)
@@ -84,6 +83,16 @@ public class MineFragment extends Fragment  {
 	TextView settingTextView;
 	@Bind(R.id.tv_exit)
 	TextView tvExit;
+	@Bind(R.id.civAuther)
+	CircleImageView civAuther;
+	@Bind(R.id.recharge)
+	TextView recharge;
+	@Bind(R.id.userRelativeLayout)
+	LinearLayout userRelativeLayout;
+	@Bind(R.id.tvUserName)
+	TextView tvUserName;
+	@Bind(R.id.tvBalance)
+	TextView tvBalance;
 	private View view;
 	private MainActivity mActivity;
 	private String userCode;
@@ -160,7 +169,9 @@ public class MineFragment extends Fragment  {
 		ButterKnife.unbind(this);
 	}
 
-	@OnClick({R.id.waitPaymentRelativeLayout, R.id.waitDeliverRelativeLayout, R.id.waitReceiptRelativeLayout, R.id.waitEvaluateRelativeLayout, R.id.waitRefundRelativeLayout, R.id.addressTextView, R.id.settingTextView, R.id.tv_exit})
+	@OnClick({R.id.waitPaymentRelativeLayout, R.id.waitDeliverRelativeLayout, R.id.waitReceiptRelativeLayout,
+			R.id.waitEvaluateRelativeLayout, R.id.waitRefundRelativeLayout, R.id.addressTextView, R.id.settingTextView,
+			R.id.tv_exit, R.id.civAuther, R.id.recharge})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.waitPaymentRelativeLayout:
@@ -199,6 +210,13 @@ public class MineFragment extends Fragment  {
 				Intent intentExit = new Intent(getActivity(), LoginActivity.class);
 				startActivity(intentExit);
 				break;
+			case R.id.civAuther://头像
+				break;
+			case R.id.recharge://充值
+				getActivity().startActivity(new Intent(getActivity(), RechargeActivity.class));
+				break;
 		}
 	}
+
+
 }

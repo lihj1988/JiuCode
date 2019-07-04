@@ -1,6 +1,7 @@
 package com.jiuwang.buyer.activity;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,7 +12,9 @@ import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
+import com.jiuwang.buyer.popupwindow.RechargePopupWindow;
 import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.MyToastView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,11 +45,13 @@ public class RechargeActivity extends BaseActivity {
 	ImageView ivFind;
 	@Bind(R.id.btnNext)
 	TextView btnNext;
-
+	private View rootView;
+	private RechargePopupWindow rechargePopupWindow;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recharge);
+		rootView = View.inflate(RechargeActivity.this,R.layout.activity_recharge,null);
 		ButterKnife.bind(this);
 		initView();
 	}
@@ -67,9 +72,21 @@ public class RechargeActivity extends BaseActivity {
 				String money = etMoney.getText().toString();
 				if (!"".equals(money)) {
 					if (CommonUtil.numberCheck(money)) {
+						String[] split = money.split(".");
+						if(split.length==2){
+							if(split[1].length()>2){
+								MyToastView.showToast("充值金额最小单位为分" ,RechargeActivity.this);
+								return;
+							}
+						}
 						//弹出支付方式窗口
-
+						rechargePopupWindow = new RechargePopupWindow(RechargeActivity.this);
+						// 显示窗口
+						rechargePopupWindow.showAtLocation(rootView, Gravity.BOTTOM
+								| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
 					}
+				}else {
+					MyToastView.showToast("请输入充值金额" ,RechargeActivity.this);
 				}
 
 				break;

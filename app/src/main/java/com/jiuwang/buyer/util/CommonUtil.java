@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.WelcomeActivity;
 import com.jiuwang.buyer.base.MyApplication;
@@ -182,6 +183,7 @@ public class CommonUtil {
 		}
 		return true;
 	}
+
 	//非负的整数和小数
 	public static boolean numberCheck(String str) {
 		Pattern pattern = Pattern.compile("[1-9]\\d*\\.?\\d*");
@@ -438,7 +440,7 @@ public class CommonUtil {
 	 */
 	public static boolean isMobileNO(String mobiles) {
 	            /*
-                 * 移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
+	             * 移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
 				 * 联通：130、131、132、152、155、156、185、186 电信：133、153、180、189、（1349卫通）
 				 * 总结起来就是第一位必定为1，第二位必定为3或5或8，其他位置的可以为0-9
 				 */
@@ -1163,11 +1165,12 @@ public class CommonUtil {
 
 	public static void loadImage(Context context, String url, ImageView ivPic) {
 		Glide.with(context)
-				.load(url)
+				.load(url).error(R.drawable.test)
 //				.load(R.drawable.test)
 				.diskCacheStrategy(DiskCacheStrategy.NONE)
 				.into(ivPic);
 	}
+
 
 	public static BaseEntity<LoginEntity> loginEntity;
 	public static Throwable throwable;

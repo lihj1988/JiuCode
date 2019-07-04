@@ -37,7 +37,7 @@ public class ProjectListActivity extends BaseActivity implements XRecyclerView.L
 		projectListView.setPullRefreshEnabled(true);
 		projectList = new ArrayList<>();
 
-		projectListAdapter = new ProjectListAdapter(this,projectList);
+//		projectListAdapter = new ProjectListAdapter(this,projectList,);
 
 //		projectListAdapter.setOnItemClickListener(new AddressListAdapter.onItemClickListener() {
 //			@Override

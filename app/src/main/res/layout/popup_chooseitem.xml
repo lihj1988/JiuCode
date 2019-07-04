@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:padding="@dimen/padding_size_10"
+              android:orientation="vertical">
+
+    <TextView
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="请选择商品"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/padding_size_10"
+        android:background="@color/light_gray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/itemRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></com.jcodecraeer.xrecyclerview.XRecyclerView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/padding_size_10"
+        android:layout_marginBottom="@dimen/padding_size_10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/cancle"
+            style="@style/TextCanle"/>
+    </LinearLayout>
+
+</LinearLayout>

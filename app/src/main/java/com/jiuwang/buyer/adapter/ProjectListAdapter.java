@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
@@ -24,10 +25,11 @@ public class ProjectListAdapter  extends RecyclerView.Adapter<ProjectListAdapter
 
 	private Context context;
 	private List<ProjectBean> projectList;
-
-	public ProjectListAdapter(Context context, List<ProjectBean> projectList) {
+	private ProjectItemOnClickListener projectItemOnClickListener;
+	public ProjectListAdapter(Context context, List<ProjectBean> projectList,ProjectItemOnClickListener projectItemOnClickListener) {
 		this.context = context;
 		this.projectList = projectList;
+		this.projectItemOnClickListener = projectItemOnClickListener;
 	}
 
 	@Override
@@ -37,8 +39,14 @@ public class ProjectListAdapter  extends RecyclerView.Adapter<ProjectListAdapter
 	}
 
 	@Override
-	public void onBindViewHolder(ProjectListAdapter.ViewHolder holder, int position) {
+	public void onBindViewHolder(ProjectListAdapter.ViewHolder holder, final int position) {
 		holder.tvProjectName.setText(projectList.get(position).getGoods_name());
+		holder.llItem.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				projectItemOnClickListener.itemOnClick(position);
+			}
+		});
 		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+projectList.get(position).getPic_url(),holder.ivPic);
 
 	}
@@ -54,6 +62,7 @@ public class ProjectListAdapter  extends RecyclerView.Adapter<ProjectListAdapter
 		public TextView tvHour;
 		public TextView tvMin;
 		public TextView tvSec;
+		public LinearLayout llItem;
 
 
 		public ViewHolder(View view) {
@@ -64,8 +73,14 @@ public class ProjectListAdapter  extends RecyclerView.Adapter<ProjectListAdapter
 			tvHour = view.findViewById(R.id.tvHour);
 			tvMin = view.findViewById(R.id.tvMin);
 			tvSec = view.findViewById(R.id.tvSec);
+			llItem = view.findViewById(R.id.llItem);
 
 		}
+
+	}
+
+	public interface ProjectItemOnClickListener {
+		abstract void itemOnClick(int position);
 
 	}
 

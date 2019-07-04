@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.ParseException;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.Gravity;
@@ -15,6 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.base.MyApplication;
 
 import java.io.File;
@@ -621,6 +624,15 @@ public class AppUtils {
 				llAll.setPadding(24, 12, 24, 12);
 			}
 		}
+	}
+
+	public static void initGridViewNothing(int column, XRecyclerView xRecyclerView){
+		StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(column,
+				StaggeredGridLayoutManager.VERTICAL);
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		xRecyclerView.setLayoutManager(layoutManager);
+		xRecyclerView.setLoadingMoreEnabled(false);
+		xRecyclerView.setPullRefreshEnabled(false);
 	}
 
 

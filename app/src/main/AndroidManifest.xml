@@ -38,6 +38,7 @@
 		<activity android:name=".activity.RegisterActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.SearchActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.GoodsDetailsActivty" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.RechargeActivity" android:screenOrientation="portrait"/>
 
 	</application>
 

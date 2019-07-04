@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,10 @@ import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.ProjectListAdapter;
+import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.entity.ProjectBean;
+import com.jiuwang.buyer.popupwindow.ChooseItemPopupWindow;
+import com.jiuwang.buyer.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +40,9 @@ import static com.jiuwang.buyer.R.id.actionbar_text;
  * desc:
  */
 
-public class ProjectFragment extends Fragment implements XRecyclerView.LoadingListener {
+public class ProjectFragment extends Fragment implements XRecyclerView.LoadingListener{
 
+	private static final String TAG = ProjectFragment.class.getName();
 	@Bind(actionbar_text)
 	TextView actionbarText;
 	@Bind(R.id.return_img)
@@ -53,7 +58,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	private int page = 1;
 	private List<ProjectBean> projectList;
 	private ProjectListAdapter projectListAdapter;
-	Handler handler = new Handler(){
+	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			if (projectListAdapter != null) {
@@ -62,23 +67,25 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 				setAdapter();
 			}
 
-			if(page==1){
+			if (page == 1) {
 				projectListView.refreshComplete();
-			}else {
+			} else {
 				projectListView.loadMoreComplete();
 			}
 
 
 		}
 	};
+	private View rootView;
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-		View view = View.inflate(getActivity(), R.layout.fragment_project_list, null);
-		ButterKnife.bind(this, view);
+		rootView = View.inflate(getActivity(), R.layout.fragment_project_list, null);
+		ButterKnife.bind(this, rootView);
 		projectList = new ArrayList<>();
 		initView();
-		return view;
+		return rootView;
 	}
 
 	private void initView() {
@@ -105,7 +112,16 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	}
 
 	private void setAdapter() {
-		projectListAdapter = new ProjectListAdapter(getActivity(), projectList);
+		projectListAdapter = new ProjectListAdapter(getActivity(), projectList, new ProjectListAdapter.ProjectItemOnClickListener() {
+			@Override
+			public void itemOnClick(int position) {
+				LogUtils.e(TAG, "点击了第" + (position + 1) + "条");
+				ChooseItemPopupWindow chooseItemPopupWindow = new ChooseItemPopupWindow(MyApplication.currentActivity);
+				// 显示窗口
+				chooseItemPopupWindow.showAtLocation(rootView, Gravity.BOTTOM
+						| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
+			}
+		});
 		projectListView.setAdapter(projectListAdapter);
 	}
 
@@ -134,7 +150,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		if (page == 1) {
 			projectList.clear();
 		}
-		for (int i = 0; i < (page-1) + 5; i++) {
+		for (int i = 0; i < (page - 1) + 5; i++) {
 			ProjectBean projectBean = new ProjectBean();
 			projectBean.setNotes("deac" + page);
 			projectBean.setEnd_time("2019-07-04 12:00:00");
@@ -144,8 +160,10 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 			projectBean.setPic_url("");
 			projectList.add(projectBean);
 		}
-		handler.sendEmptyMessageDelayed(0,2000);
+		handler.sendEmptyMessageDelayed(0, 2000);
 
 
 	}
+
+
 }
