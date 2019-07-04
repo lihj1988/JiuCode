@@ -1,0 +1,24 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/llMain"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/app_bg"
+	android:orientation="vertical">
+
+	<include layout="@layout/include_topview"></include>
+
+	<FrameLayout
+		android:id="@+id/center_layout"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"/>
+
+	<com.jiuwang.buyer.spinerwidget.MyTabWidget
+		android:id="@+id/tbBottom"
+		app:bottom_labels="@array/bottom_bar_labels"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"></com.jiuwang.buyer.spinerwidget.MyTabWidget>
+
+</LinearLayout>

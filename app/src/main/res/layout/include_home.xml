@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="48dp">
+
+    <LinearLayout
+        android:id="@+id/include_home"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/app_main_color"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_size_10"
+            android:background="@drawable/home_logo"/>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_size_10"
+            android:layout_weight="1"
+            android:background="@drawable/search_shape_home">
+
+            <ImageView
+                android:id="@+id/find_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/padding_size_10"
+                android:background="@drawable/find"/>
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="220dp"
+                android:layout_height="@dimen/padding_size_28"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/find_image"
+                android:background="@drawable/round_white_btn_bg"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="搜索你想要的"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/textsize_13"
+                android:windowSoftInputMode="stateHidden"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_marginLeft="@dimen/padding_size_10"
+            android:layout_marginRight="@dimen/padding_size_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+
+                android:id="@+id/shopping_car"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/shopping_car"/>
+
+            <TextView
+                android:id="@+id/visible_dot"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignRight="@+id/shopping_car"
+                android:layout_alignTop="@+id/shopping_car"
+                android:background="@drawable/myshopcar_dot"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size12"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

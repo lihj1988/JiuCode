@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/ll_all"
+              android:paddingLeft="@dimen/padding_size_10"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/selector_color_white_add"
+              android:gravity="center_vertical"
+              android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <CheckBox
+            android:id="@+id/checkitem_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_size_10"
+            android:button="@drawable/check_box_bg"
+            android:checked="false"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        <LinearLayout
+            android:id="@+id/goodsRelativeLayout"
+            style="@style/Layout.Item"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/padding_size_8"
+            android:paddingLeft="@dimen/padding_size_8"
+            android:paddingRight="@dimen/padding_size_8"
+            android:paddingTop="@dimen/padding_size_8">
+
+            <ImageView
+                android:id="@+id/goodsImageView"
+                style="@style/ImageView.ItemGoodsVer"
+                android:layout_width="64dip"
+                android:layout_height="64dip"
+                android:src="@drawable/test"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip">
+
+                <TextView
+                    android:id="@+id/goodsNameTextView"
+                    style="@style/TextView.ItemGoodsName"
+                    android:paddingLeft="8dip"
+                    android:paddingRight="8dip"
+                    android:text="商品名称"/>
+
+
+                <TextView
+                    android:id="@+id/tvDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dip"
+                    android:paddingRight="8dip"
+                    android:text="1"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="8dip"
+                    android:paddingRight="8dip">
+
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="￥666.66"/>
+
+                    <TextView
+                        android:id="@+id/tvCheapPrice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="￥666.66"
+                        android:textColor="@color/red"/>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/padding_size_10">
+
+            <TextView
+                android:id="@+id/delTextView"
+                style="@style/TextView.Button"
+                android:text="删除"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linear_add_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:paddingRight="@dimen/padding_size_10">
+
+            <ImageView
+                android:id="@+id/tv_reduce"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:background="@drawable/text_angle"
+                android:gravity="center"
+                android:src="@drawable/shopcar_cut"/>
+
+            <EditText
+                android:id="@+id/tv_num"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:background="@drawable/text_angle"
+                android:gravity="center"
+                android:minWidth="20dp"
+                android:paddingLeft="@dimen/padding_size_20"
+                android:paddingRight="@dimen/padding_size_20"
+                android:singleLine="true"
+                android:text="00"
+                android:textColor="@color/brown"
+                android:textSize="@dimen/textsize_14"/>
+
+            <ImageView
+                android:id="@+id/tv_add"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/text_angle"
+                android:gravity="center"
+                android:src="@drawable/shopcar_add"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

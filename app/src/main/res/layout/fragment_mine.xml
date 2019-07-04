@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/include_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@drawable/mine_top_background"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/head_portrait"/>
+
+                <TextView
+                    android:id="@+id/tv_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="7dp"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/padding_size_0.5"
+                android:background="@color/gray" />
+            <RelativeLayout style="@style/Layout.HeightWrap">
+
+                <TextView
+                    android:id="@+id/orderTextView"
+                    style="@style/TextView.TitleLeft"
+                    android:drawableLeft="@drawable/ic_user_order"
+                    android:drawableStart="@drawable/ic_user_order"
+                    android:text="全部订单" />
+
+                <TextView
+                    android:id="@+id/orderNumberTextView"
+                    style="@style/TextView.ItemOrderState"
+                    android:textColor="@color/grey" />
+
+            </RelativeLayout>
+            <View style="@style/View.Line" />
+            <LinearLayout style="@style/Layout.LinearHor">
+
+                <RelativeLayout
+                    android:id="@+id/waitPaymentRelativeLayout"
+                    style="@style/Layout.Mine">
+
+                    <TextView
+                        android:id="@+id/waitPaymentTextView"
+                        style="@style/TextView.Mine"
+                        android:drawableTop="@drawable/ic_user_order_wait_pay"
+                        android:text="待付款" />
+
+                    <TextView
+                        android:id="@+id/waitPaymentNumberTextView"
+                        style="@style/TextView.MineNum"
+                        android:layout_toEndOf="@+id/waitPaymentTextView"
+                        android:layout_toRightOf="@+id/waitPaymentTextView" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/waitDeliverRelativeLayout"
+                    style="@style/Layout.Mine">
+
+                    <TextView
+                        android:id="@+id/waitDeliverTextView"
+                        style="@style/TextView.Mine"
+                        android:drawableTop="@drawable/ic_user_order_wait_drive"
+                        android:text="待发货" />
+
+                    <TextView
+                        android:id="@+id/waitDeliverNumberTextView"
+                        style="@style/TextView.MineNum"
+                        android:layout_toEndOf="@+id/waitDeliverTextView"
+                        android:layout_toRightOf="@+id/waitDeliverTextView" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/waitReceiptRelativeLayout"
+                    style="@style/Layout.Mine">
+
+                    <TextView
+                        android:id="@+id/waitReceiptTextView"
+                        style="@style/TextView.Mine"
+                        android:drawableTop="@drawable/ic_user_order_wait_receipt"
+                        android:text="待收货" />
+
+                    <TextView
+                        android:id="@+id/waitReceiptNumberTextView"
+                        style="@style/TextView.MineNum"
+                        android:layout_toEndOf="@+id/waitReceiptTextView"
+                        android:layout_toRightOf="@+id/waitReceiptTextView" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/waitEvaluateRelativeLayout"
+                    style="@style/Layout.Mine">
+
+                    <TextView
+                        android:id="@+id/waitEvaluateTextView"
+                        style="@style/TextView.Mine"
+                        android:drawableTop="@drawable/ic_user_order_wait_evaluate"
+                        android:text="待评价" />
+
+                    <TextView
+                        android:id="@+id/waitEvaluateNumberTextView"
+                        style="@style/TextView.MineNum"
+                        android:layout_toEndOf="@+id/waitEvaluateTextView"
+                        android:layout_toRightOf="@+id/waitEvaluateTextView" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/waitRefundRelativeLayout"
+                    style="@style/Layout.Mine">
+
+                    <TextView
+                        style="@style/TextView.Mine"
+                        android:drawableTop="@drawable/ic_user_order_wait_refund"
+                        android:text="退货/款" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/addressTextView"
+                style="@style/TextView.TitleLeft"
+                android:drawableLeft="@drawable/ic_user_address"
+                android:drawableStart="@drawable/ic_user_address"
+                android:text="收货地址" />
+
+            <View style="@style/View.Line" />
+
+            <TextView
+                android:id="@+id/settingTextView"
+                style="@style/TextView.TitleLeft"
+                android:drawableLeft="@drawable/ic_user_setting"
+                android:drawableStart="@drawable/ic_user_setting"
+                android:text="系统设置" />
+
+            <View
+                style="@style/View.Line"
+                android:layout_height="8dip" />
+            <TextView
+                android:id="@+id/tv_exit"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/rectangle_pic"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="退出登录"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

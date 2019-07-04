@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="catager_name">
+        <item>全部</item>
+        <item>钢材建材</item>
+        <item>板带材</item>
+        <item>管材</item>
+        <item>型材</item>
+        <item>冷轧涂镀</item>
+    </string-array>
+    <!-- 合同类型 -->
+    <string-array name="typeOfContract">
+        <item>购买合同</item><!-- "0" -->
+        <item>退货合同</item><!-- "1" -->
+    </string-array>
+    <!-- 合同状态 -->
+    <string-array name="contractStatus">
+        <item>未完成</item><!-- "1" -->
+        <item>待支付</item><!-- "2" -->
+        <item>过期</item><!-- "3" -->
+        <item>生效</item><!-- "4" -->
+        <item>完成</item><!-- "5" -->
+        <item>作废</item><!-- "5" -->
+        <item>中止</item><!-- "7" -->
+        <item>已支付</item><!-- "8" -->
+    </string-array>
+    <!-- 付款方式 -->
+    <string-array name="paymentMethod">
+        <item>线下全款</item><!-- "1" -->
+        <item>预付款支付</item><!-- "2" -->
+        <item>信用金支付</item><!-- "3" -->
+        <item>线上支付</item><!-- "4" -->
+    </string-array>
+    <!-- 提货方式-->
+    <string-array name="deliveryMode">
+        <item>自提</item><!-- "1" -->
+        <item>配送</item><!-- "2" -->
+    </string-array>
+    <!-- 提单状态-->
+    <string-array name="billStatus">
+        <item>未验单</item><!-- "0" -->
+        <item>已验单</item><!-- "1" -->
+        <item>已提货</item><!-- "2" -->
+        <item>已收到货</item><!-- "3" -->
+        <item>提单撤销</item><!-- "4" -->
+    </string-array>
+</resources>

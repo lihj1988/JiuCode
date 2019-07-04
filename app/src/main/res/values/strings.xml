@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">电商买家</string>
+	<string name="action_settings">Settings</string>
+	<string name="hello_world">Hello world!</string>
+	<string name="no_data">没有找到符合条件</string>
+	<string name="home">首页</string>
+	<string name="project">抢购</string>
+	<string name="car">购物车</string>
+	<string name="mine">我的</string>
+	<string name="supply">我的提单</string>
+	<string name="me">我的</string>
+	<string name="text_time">2018-04-10 10:50:54</string>
+	<string name="building_materials">建材品种</string>
+	<string name="item_tip">点击添加关注品种</string>
+	<string name="title_activity_contract_billof_loading">ContractBillofLoadingActivity</string>
+	<string name="title_activity_contract_bill_of_lading">ContractBillOfLading</string>
+	<string name="title_activity_contract_bil_loading">ContractBilLoading</string>
+	<string name="shopcar">新闻资讯</string>
+	<string name="chengshixuanze">城市选择</string>
+	<string name="home_string">首页</string>
+	<string name="car_string">购物车</string>
+	<string name="mine_string">我的</string>
+	<string name="title_activity_test">TestActivity</string>
+	<string name="title_home">Home</string>
+	<string name="title_dashboard">Dashboard</string>
+	<string name="title_notifications">Notifications</string>
+</resources>

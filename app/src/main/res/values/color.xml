@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--项目主色调-->
+    <color name="app_main_color">#d61825</color>
+    <color name="mainAdd">#DD3000</color>
+    <color name="app_main_color_dark">#6c0000</color>
+    <color name="background">#EEEEEE</color>
+    <!--标题栏中搜索背景颜色-->
+    <color name="search_shape">#ffffff</color>
+    <!--购物车角标颜色-->
+    <color name="shopcar_badge">#860000</color>
+    <!--黑色-->
+    <color name="black">#000000</color>
+    <!--红色 金额颜色-->
+    <color name="red">#FF0000</color>
+    <!--白色 顶部导航栏颜色-->
+    <color name="white">#ffffff</color>
+    <!--白色 顶部导航栏颜色-->
+    <color name="blue">#00aaff</color>
+    <!--弹窗分割线-->
+    <color name="gray">#F1F1F1</color>
+    <!--listview分割线 由于颜色太浅，弹窗分割线不能使用-->
+    <color name="gray_line">#F2F2F3</color>
+
+    <color name="gray_dark">#e1e1e1</color>
+    <!--弹窗半透明背景色-->
+    <color name="no_color">#00000000</color>
+    <!-- 首页背景颜色-->
+    <color name="app_bg">#eeeeee</color>
+    <!--我的界面 或者可编辑、展示界面的分割线-->
+    <color name="line_gray">#C4C4C4</color>
+    <!-- 灰色字体 正常字体颜色除了黑色就是这个灰色-->
+    <color name="brown">#666666</color>
+    <color name="transparent">#00000000</color>
+    <color name="original_border_color">#F18459</color>
+    <color name="grey_line_bg">#E4E4E4</color>
+    <color name="grey_normal_bg">#EEEEEE</color>
+    <color name="trantracent">#22000000</color>
+    <color name="trantracent_wode">#55000000</color>
+    <color name="deep_transparent">#bb000000</color>
+
+
+<!--标准版没用到的色调-->
+    <!-- 搜索样式颜色 -->
+    <color name="text_gray">#7b403b37</color>
+    <color name="category_tab_highlight_text">#fffafafa</color>
+    <color name="list_item_focus">#0a000000</color>
+    <color name="select_buyer_line_gray">#F4F4F4</color>
+    <color name="category_tab_text">#ff707070</color>
+    <color name="light_gray">#f1f1f1</color>
+    <color name="grey_text_color_normal">#8A8A8A</color>
+
+    <color name="grey">#999999</color>
+    <color name="greySub">#CCCCCC</color>
+    <color name="greyAdd">#666666</color>
+    <color name="redAdd">#DD0000</color>
+    <color name="blackSub">#333333</color>
+    <color name="backgroundContent">#66000000</color>
+    <color name="whiteAdd">#EAEAEA</color>
+    <color name="pink">#DB4453</color>
+</resources>

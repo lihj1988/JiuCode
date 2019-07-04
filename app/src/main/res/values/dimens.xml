@@ -1,0 +1,98 @@
+<resources>
+	<!--标准字体，无例外统一使用该字号-->
+	<!--列表一级标题-->
+	<dimen name="textsize_14">14sp</dimen>
+	<!--列表正文-->
+	<dimen name="textsize_13">13sp</dimen>
+	<!--标签字号，包括底部-->
+	<dimen name="text_size10">10sp</dimen>
+	<!--标题栏右上角筛选及返回 字号-->
+	<dimen name="textsize_16">16sp</dimen>
+	<!--标题字体-->
+	<dimen name="title_textsize">16sp</dimen>
+	<!--列表字体-->
+	<dimen name="item_textsize">14sp</dimen>
+	<dimen name="font_normal">15sp</dimen>
+	<!-- 标题栏中间字体-->
+	<dimen name="text_big">18sp</dimen>
+	<!--重置 确定按钮字大小-->
+	<dimen name="text_15sp">15sp</dimen>
+	<!--dialog 内容显示字体大小-->
+	<dimen name="text_size12">12sp</dimen>
+
+	//---------------------------dp设置------------------------------------------
+	<!--编辑界面的分割线高度， 比如在线配车界面-->
+	<dimen name="padding_size_0.5">0.5dp</dimen>
+	<!--带有画的输入框  左右边距-->
+	<dimen name="padding_size_5">5dp</dimen>
+	<!--左右上下边距-->
+	<dimen name="padding_size_10">10dp</dimen>
+	<!--下边两个还没有在项目中修改呢10dp-->
+	<!--筛选上下边距-->
+	<dimen name="screen_padding_size">10dp</dimen>
+	<!--listview 的分割线高度-->
+	<dimen name="listview_divider_line">8dp</dimen>
+
+	<!--  一行展示多个数据时，居左的边距为15dp-->
+	<dimen name="padding_size_15">15dp</dimen>
+	<!-- 购物车输入框左右边距-->
+	<dimen name="padding_size_20">20dp</dimen>
+	<!--登录界面距离顶部的边距 -->
+	<dimen name="padding_size_25">25dp</dimen>
+	<!--标题栏 中的输入框的高度-->
+	<dimen name="padding_size_28">28dp</dimen>
+	<!-- -->
+	<dimen name="padding_size_30">30dp</dimen>
+	<!-- 标题栏title 底部导航栏 公用高度 -->
+	<dimen name="title_common">48dp</dimen>
+	<!--资源选购 Gridview  中item的宽度-->
+	<dimen name="padding_size_80">80dp</dimen>
+
+	<!--dialog 相关设置-->
+	<!--整个dialog 的宽度-->
+	<dimen name="dialog_width">260dp</dimen>
+	<!--整个dialog 的高度-->
+	<dimen name="dialog_height">140dp</dimen>
+	<!--dialog 标题高度 -->
+	<dimen name="padding_size_35">35dp</dimen>
+	<!--dialog 取消确定 的高度-->
+	<dimen name="padding_size_40">40dp</dimen>
+	<!--dialog 取消确定 的宽度-->
+	<!--dialog 取消确定 的宽度-->
+	<dimen name="padding_size_60">60dp</dimen>
+
+
+	<!--标准版没有用到-->
+	<dimen name="padding_size_38">38dp</dimen>
+	<dimen name="padding_size_90">90dp</dimen>
+	<!--分享中gridview 中item 的宽高 -->
+	<dimen name="padding_size_100">100dp</dimen>
+	<!--标准版中没有用到 资源筛选  一级菜单前的图标大小-->
+	<dimen name="padding_size_17">17dp</dimen>
+	<dimen name="padding_size_7">7dp</dimen>
+	<dimen name="padding_size_8">8dp</dimen>
+	<dimen name="padding_size_3">3dp</dimen>
+	<dimen name="padding_size_2">2dp</dimen>
+	<dimen name="padding_size_1">1dp</dimen>
+	<!-- Default screen margins, per the Android Design guidelines. -->
+	<dimen name="activity_horizontal_margin">16dp</dimen>
+	<dimen name="activity_vertical_margin">16dp</dimen>
+	<!--详情显示界面的 分割线高度-->
+	<dimen name="detail_divider_line">1dp</dimen>
+
+
+	<!-- typical spacing between two views -->
+	<dimen name="spacing_huge">40dp</dimen>
+	<dimen name="spacing_larger">34dp</dimen>
+	<dimen name="spacing_large">24dp</dimen>
+	<dimen name="spacing_biger">20dp</dimen>
+	<dimen name="spacing_big">18dp</dimen>
+	<dimen name="spacing_normal">14dp</dimen>
+	<dimen name="spacing_small">12dp</dimen>
+	<dimen name="spacing_smaller">10dp</dimen>
+	<dimen name="spacing_smallest">8dp</dimen>
+	<dimen name="spacing_tiny">6dp</dimen>
+	<dimen name="spacing_tinyer">4dp</dimen>
+	<dimen name="spacing_tinyest">2dp</dimen>
+	<dimen name="divider_size">10dp</dimen>
+</resources>

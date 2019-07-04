@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Layout.Main">
+
+    <include
+        android:id="@+id/toolbarInclude"
+        style="@style/Include.Wrap"
+        layout="@layout/include_toolbar" />
+
+    <ScrollView
+        style="@style/ScrollView.Main"
+        android:layout_below="@+id/toolbarInclude">
+
+        <LinearLayout style="@style/Layout.Linear">
+
+            <TextView
+                android:id="@+id/snTextView"
+                style="@style/TextView.ItemStoreName"
+                android:text="订单编号" />
+
+            <View
+                style="@style/View.Line"
+                android:layout_height="8dip" />
+
+            <TextView
+                android:id="@+id/payListTextView"
+                style="@style/TextView.ItemStoreName"
+                android:text="支付方式" />
+
+            <View style="@style/View.Line" />
+
+            <RadioGroup
+                android:id="@+id/listRadioGroup"
+                style="@style/RadioGroup.Pay">
+
+                <RadioButton
+                    android:id="@+id/aliPayTextView"
+                    style="@style/RadioButton.Pay" />
+
+                <RadioButton
+                    android:id="@+id/wxPayTextView"
+                    style="@style/RadioButton.Pay"
+                    android:drawableEnd="@drawable/ic_pay_wx"
+                    android:drawableRight="@drawable/ic_pay_wx"
+                    android:text="微信支付" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/payTextView"
+        style="@style/TextView.GoodsBuy"
+        android:layout_width="match_parent"
+        android:layout_height="48dip"
+        android:text="去支付" />
+
+</RelativeLayout>
