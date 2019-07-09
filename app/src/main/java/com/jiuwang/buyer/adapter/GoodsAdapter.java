@@ -15,7 +15,7 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.GoodsDetailsActivty;
 import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.NetURL;
+import com.jiuwang.buyer.constant.NetURL;
 
 import java.util.List;
 

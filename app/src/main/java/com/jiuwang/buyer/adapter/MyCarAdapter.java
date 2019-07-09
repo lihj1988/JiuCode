@@ -22,7 +22,7 @@ import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
-import com.jiuwang.buyer.util.NetURL;
+import com.jiuwang.buyer.constant.NetURL;
 
 import java.util.HashMap;
 import java.util.List;

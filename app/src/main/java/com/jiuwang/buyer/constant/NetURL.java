@@ -1,4 +1,4 @@
-package com.jiuwang.buyer.util;
+package com.jiuwang.buyer.constant;
 
 import android.os.Environment;
 

@@ -25,7 +25,7 @@ import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyList;
 import com.jiuwang.buyer.util.MyToastView;
-import com.jiuwang.buyer.util.NetURL;
+import com.jiuwang.buyer.constant.NetURL;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;

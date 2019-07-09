@@ -5,19 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.bean.SelectGoodsBean;
-import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.MyList;
-import com.jiuwang.buyer.util.NetURL;
+import com.jiuwang.buyer.constant.NetURL;
 
 import java.util.List;
 
@@ -48,6 +44,11 @@ public class ChooseItemAdapter extends RecyclerView.Adapter<ChooseItemAdapter.Vi
 	public void onBindViewHolder(ViewHolder holder, final int position) {
 		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+selectGoodsList.get(position).getPic_url(),holder.ivGoodsImg);
 		holder.tvGoodsName.setText(selectGoodsList.get(position).getGoods_name());
+		if(selectGoodsList.get(position).getPic_url().split(",").length>1){
+			CommonUtil.loadImage(context,selectGoodsList.get(position).getPic_url().split(",")[0],holder.ivGoodsImg);
+		}else {
+			CommonUtil.loadImage(context,selectGoodsList.get(position).getPic_url(),holder.ivGoodsImg);
+		}
 		holder.llItem.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

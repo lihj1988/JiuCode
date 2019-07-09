@@ -28,7 +28,7 @@ import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
-import com.jiuwang.buyer.util.NetURL;
+import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.view.ADInfo;
 import com.jiuwang.buyer.view.ImageCycleView;

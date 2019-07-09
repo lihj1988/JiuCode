@@ -27,7 +27,7 @@ import com.jiuwang.buyer.bean.GoodsDetailsBean;
 import com.jiuwang.buyer.bean.RecommendGoodsBean;
 import com.jiuwang.buyer.goods.adaper.NetworkImageHolderView;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.NetURL;
+import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.widget.SlideDetailsLayout;
 
 import java.util.ArrayList;

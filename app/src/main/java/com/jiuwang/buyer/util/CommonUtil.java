@@ -1169,6 +1169,7 @@ public class CommonUtil {
 		Glide.with(context)
 				.load(url).error(R.drawable.test)
 //				.load(R.drawable.test)
+				.error(R.drawable.test)
 				.diskCacheStrategy(DiskCacheStrategy.NONE)
 				.into(ivPic);
 	}

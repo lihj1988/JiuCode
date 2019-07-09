@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.jiuwang.buyer.base.MyApplication;
-import com.jiuwang.buyer.util.NetURL;
+import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;

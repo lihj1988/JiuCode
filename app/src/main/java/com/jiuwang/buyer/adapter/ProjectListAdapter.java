@@ -137,6 +137,9 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 				projectItemOnClickListener.itemOnClick(position);
 			}
 		});
+//		if(projectList.get(position).getPic_url()){
+//
+//		}
 //		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+projectList.get(position).getPic_url(),holder.ivPic);
 
 	}

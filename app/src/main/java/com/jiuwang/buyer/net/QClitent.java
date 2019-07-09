@@ -3,7 +3,7 @@ package com.jiuwang.buyer.net;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.NetURL;
+import com.jiuwang.buyer.constant.NetURL;
 
 import java.io.IOException;
 import java.util.ArrayList;

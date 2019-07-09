@@ -23,7 +23,7 @@ import com.jiuwang.buyer.activity.OrderActivity;
 import com.jiuwang.buyer.activity.RechargeActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.service.UpdateVersionService;
-import com.jiuwang.buyer.util.NetURL;
+import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
