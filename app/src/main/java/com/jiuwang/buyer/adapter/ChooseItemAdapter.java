@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.bean.GoodsBean;
+import com.jiuwang.buyer.bean.SelectGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyList;
@@ -28,12 +29,12 @@ import java.util.List;
 public class ChooseItemAdapter extends RecyclerView.Adapter<ChooseItemAdapter.ViewHolder> {
 
 	private Context context;
-	private List<GoodsBean> goodsList;
-	private ItemOnClickListener itemOnClickListener;
 
-	public ChooseItemAdapter(Context context, List<GoodsBean> goodsList,ItemOnClickListener itemOnClickListener) {
+	private ItemOnClickListener itemOnClickListener;
+	private List<SelectGoodsBean> selectGoodsList;
+	public ChooseItemAdapter(Context context, List<SelectGoodsBean> selectGoodsList,ItemOnClickListener itemOnClickListener) {
 		this.context = context;
-		this.goodsList = goodsList;
+		this.selectGoodsList = selectGoodsList;
 		this.itemOnClickListener = itemOnClickListener;
 	}
 
@@ -45,8 +46,8 @@ public class ChooseItemAdapter extends RecyclerView.Adapter<ChooseItemAdapter.Vi
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, final int position) {
-		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+goodsList.get(position).getPic_url(),holder.ivGoodsImg);
-		holder.tvGoodsName.setText(goodsList.get(position).getGoods_name());
+		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+selectGoodsList.get(position).getPic_url(),holder.ivGoodsImg);
+		holder.tvGoodsName.setText(selectGoodsList.get(position).getGoods_name());
 		holder.llItem.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -58,7 +59,7 @@ public class ChooseItemAdapter extends RecyclerView.Adapter<ChooseItemAdapter.Vi
 
 	@Override
 	public int getItemCount() {
-		return goodsList.size();
+		return selectGoodsList.size();
 	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {

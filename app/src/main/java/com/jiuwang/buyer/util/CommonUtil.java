@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1242,6 +1243,20 @@ public class CommonUtil {
 			e.printStackTrace();
 		}
 		return  i;
+	}
+
+
+
+	public static long[] longToString(long data) {
+
+		long D = data / (24 * 60 * 60 * 1000);
+		long H = (data % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000);
+		long M = (data % (24 * 60 * 60 * 1000) % (60 * 60 * 1000)) / (60 * 1000);
+		long S = (data % (24 * 60 * 60 * 1000) % (60 * 60 * 1000) % (60 * 1000)) / 1000;
+		String str = D + "天" + H + "时" + M + "分" + S + "秒";
+		long[] longs = new long[]{D,H,M,S};
+		return longs;
+
 	}
 
 }

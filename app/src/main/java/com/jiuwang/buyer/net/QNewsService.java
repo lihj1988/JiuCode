@@ -1,6 +1,7 @@
 package com.jiuwang.buyer.net;
 
 
+import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.bean.MoneyNumberBean;
 import com.jiuwang.buyer.bean.SuccessBean;
 import com.jiuwang.buyer.entity.BaseEntity;
@@ -10,6 +11,7 @@ import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
+import com.jiuwang.buyer.entity.SelectGoodsEntity;
 
 import java.util.HashMap;
 
@@ -47,6 +49,17 @@ public interface QNewsService {
 	//抢购数据
 	@POST("admin/project/project_action.jsp")
 	Observable<ProjectEntity> selectProjectList(
+			@QueryMap HashMap<String, String> map
+	);
+	//抢购-获取可选择的商品
+	@POST("admin/project/aution_user_action.jsp")
+	Observable<SelectGoodsEntity> selectChooseGoods(
+			@QueryMap HashMap<String, String> map
+	);
+
+	//抢购-报名
+	@POST("admin/project/aution_user_action.jsp")
+	Observable<BaseResultEntity> enroll(
 			@QueryMap HashMap<String, String> map
 	);
 	//添加购物车

@@ -1,6 +1,7 @@
 package com.jiuwang.buyer.net;
 
 
+import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.bean.MoneyNumberBean;
 import com.jiuwang.buyer.bean.SuccessBean;
 import com.jiuwang.buyer.entity.BaseEntity;
@@ -10,6 +11,7 @@ import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
+import com.jiuwang.buyer.entity.SelectGoodsEntity;
 
 import java.util.HashMap;
 
@@ -96,6 +98,36 @@ public class HttpUtils {
 
 		QClitent.getInstance()
 				.selectProjectList(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+
+	}
+	/**
+	 * 抢购-获取选择商品
+	 *
+	 * @param map
+	 * @return
+	 */
+	public static void selectChooseGoods(HashMap<String,String> map, Consumer<SelectGoodsEntity> consumer, Consumer<Throwable> throwableConsumer) {
+
+		QClitent.getInstance()
+				.selectChooseGoods(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+
+	}
+	/**
+	 * 抢购-报名
+	 *
+	 * @param map
+	 * @return
+	 */
+	public static void enroll(HashMap<String,String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+
+		QClitent.getInstance()
+				.enroll(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);

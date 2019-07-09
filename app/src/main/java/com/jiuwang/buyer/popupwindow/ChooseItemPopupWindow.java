@@ -2,6 +2,7 @@ package com.jiuwang.buyer.popupwindow;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +15,20 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.ChooseItemAdapter;
 import com.jiuwang.buyer.bean.GoodsBean;
+import com.jiuwang.buyer.bean.SelectGoodsBean;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * author：lihj
@@ -34,12 +43,15 @@ public class ChooseItemPopupWindow extends PopupWindow {
 	private View mMenuView;
 	private Activity context;
 	private XRecyclerView itemRecyclerView;
-	private TextView  cancle;
+	private TextView cancle;
+	private List<SelectGoodsBean> selectGoodsList;
+	private String project_id;
 
-
-	public ChooseItemPopupWindow(Activity context) {
+	public ChooseItemPopupWindow(Activity context, String project_id, List<SelectGoodsBean> selectGoodsList) {
 		super(context);
 		this.context = context;
+		this.project_id = project_id;
+		this.selectGoodsList = selectGoodsList;
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mMenuView = inflater.inflate(R.layout.popup_chooseitem, null);
@@ -75,16 +87,43 @@ public class ChooseItemPopupWindow extends PopupWindow {
 		List<GoodsBean> goodsList = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
 			GoodsBean goodsBean = new GoodsBean();
-			goodsBean.setGoods_name("待选"+(i+1));
+			goodsBean.setGoods_name("待选" + (i + 1));
 			goodsBean.setPic_url("");
 			goodsList.add(goodsBean);
 		}
 		itemRecyclerView = mMenuView.findViewById(R.id.itemRecyclerView);
-		AppUtils.initGridViewNothing(3,itemRecyclerView);
-		ChooseItemAdapter chooseItemAdapter = new ChooseItemAdapter(context, goodsList, new ChooseItemAdapter.ItemOnClickListener() {
+		AppUtils.initGridViewNothing(3, itemRecyclerView);
+		final ChooseItemAdapter chooseItemAdapter = new ChooseItemAdapter(context, selectGoodsList, new ChooseItemAdapter.ItemOnClickListener() {
 			@Override
 			public void click(int position) {
-				LogUtils.e(TAG,"点击了第"+(position+1)+"条");
+				LogUtils.e(TAG, "点击了第" + (position + 1) + "条");
+				//报名
+				DialogUtil.progress(context);
+				HashMap<String, String> hashMap = new HashMap<>();
+				hashMap.put("act", Constant.ACTION_ACT_ADD);
+				hashMap.put("aution_id", project_id);
+				hashMap.put("goods_id", selectGoodsList.get(position).getId());
+				HttpUtils.enroll(hashMap, new Consumer<BaseResultEntity>() {
+					@Override
+					public void accept(BaseResultEntity baseResultEntity) throws Exception {
+						if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+
+							Intent intent = new Intent();
+							intent.setAction("refreshProject");
+							context.sendBroadcast(intent);
+						}
+						DialogUtil.cancel();
+						ChooseItemPopupWindow.this.dismiss();
+						MyToastView.showToast(baseResultEntity.getMsg(), context);
+
+					}
+				}, new Consumer<Throwable>() {
+					@Override
+					public void accept(Throwable throwable) throws Exception {
+						DialogUtil.cancel();
+						MyToastView.showToast(context.getString(R.string.msg_error_operation), context);
+					}
+				});
 			}
 		});
 		itemRecyclerView.setAdapter(chooseItemAdapter);

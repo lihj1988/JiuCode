@@ -1,6 +1,10 @@
 package com.jiuwang.buyer.fragment;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,11 +26,14 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.ProjectListAdapter;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.bean.ProjectBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.ProjectEntity;
+import com.jiuwang.buyer.entity.SelectGoodsEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.popupwindow.ChooseItemPopupWindow;
+import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 
@@ -46,7 +53,7 @@ import static com.jiuwang.buyer.R.id.actionbar_text;
  * desc:
  */
 
-public class ProjectFragment extends Fragment implements XRecyclerView.LoadingListener{
+public class ProjectFragment extends Fragment implements XRecyclerView.LoadingListener {
 
 	private static final String TAG = ProjectFragment.class.getName();
 	@Bind(actionbar_text)
@@ -64,16 +71,10 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	private int page = 1;
 	private List<ProjectBean> projectList;
 	private ProjectListAdapter projectListAdapter;
-	Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
 
-
-
-		}
-	};
 	private View rootView;
-
+	private ProjectReceiver projectReceiver;
+	private ChooseItemPopupWindow chooseItemPopupWindow;
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -81,6 +82,10 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		ButterKnife.bind(this, rootView);
 		projectList = new ArrayList<>();
 		initView();
+		projectReceiver = new ProjectReceiver();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("refreshProject");
+		getActivity().registerReceiver(projectReceiver, intentFilter);
 		return rootView;
 	}
 
@@ -110,21 +115,54 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	private void setAdapter() {
 		projectListAdapter = new ProjectListAdapter(getActivity(), projectList, new ProjectListAdapter.ProjectItemOnClickListener() {
 			@Override
-			public void itemOnClick(int position) {
+			public void itemOnClick(final int position) {
 				LogUtils.e(TAG, "点击了第" + (position + 1) + "条");
-				ChooseItemPopupWindow chooseItemPopupWindow = new ChooseItemPopupWindow(MyApplication.currentActivity);
-				// 显示窗口
-				chooseItemPopupWindow.showAtLocation(rootView, Gravity.BOTTOM
-						| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
+				if(chooseItemPopupWindow!=null){
+					chooseItemPopupWindow.dismiss();
+				}
+				DialogUtil.progress(getActivity());
+				HashMap<String, String> hashMap = new HashMap<>();
+				hashMap.put("project_id", projectList.get(position).getId());
+				HttpUtils.selectChooseGoods(hashMap, new Consumer<SelectGoodsEntity>() {
+
+					@Override
+					public void accept(SelectGoodsEntity selectGoodsEntity) throws Exception {
+						DialogUtil.cancel();
+						if (Constant.HTTP_SUCCESS_CODE.equals(selectGoodsEntity.getCode())) {
+							if (selectGoodsEntity.getData() != null && selectGoodsEntity.getData().size() > 0) {
+
+								chooseItemPopupWindow = new ChooseItemPopupWindow(MyApplication.currentActivity,projectList.get(position).getId(), selectGoodsEntity.getData());
+								// 显示窗口
+								chooseItemPopupWindow.showAtLocation(rootView, Gravity.BOTTOM
+										| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
+							}else {
+								MyToastView.showToast("没有可选择的商品", getActivity());
+							}
+						} else {
+							MyToastView.showToast(selectGoodsEntity.getMsg(), getActivity());
+						}
+
+					}
+				}, new Consumer<Throwable>() {
+					@Override
+					public void accept(Throwable throwable) throws Exception {
+						DialogUtil.cancel();
+						MyToastView.showToast(getActivity().getString(R.string.msg_error), getActivity());
+					}
+				});
+
+
 			}
 		});
 		projectListView.setAdapter(projectListAdapter);
+
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		ButterKnife.unbind(this);
+		getActivity().unregisterReceiver(projectReceiver);
 	}
 
 	//	刷新
@@ -152,7 +190,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 				if (page == 1) {
 					projectList.clear();
 				}
-				if(Constant.HTTP_SUCCESS_CODE.equals(projectEntity.getCode())){
+				if (Constant.HTTP_SUCCESS_CODE.equals(projectEntity.getCode())) {
 					projectList.addAll(projectEntity.getData());
 				}
 				if (projectListAdapter != null) {
@@ -169,10 +207,17 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		}, new Consumer<Throwable>() {
 			@Override
 			public void accept(Throwable throwable) throws Exception {
-				MyToastView.showToast("请求失败",getActivity());
+				MyToastView.showToast("请求失败", getActivity());
 			}
 		});
 	}
 
+	class ProjectReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			onRefresh();
+		}
+	}
 
 }

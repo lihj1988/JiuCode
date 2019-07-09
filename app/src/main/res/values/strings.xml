@@ -25,4 +25,6 @@
 	<string name="title_home">Home</string>
 	<string name="title_dashboard">Dashboard</string>
 	<string name="title_notifications">Notifications</string>
+	<string name="msg_error">获取数据失败</string>
+	<string name="msg_error_operation">操作失败</string>
 </resources>

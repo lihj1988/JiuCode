@@ -23,6 +23,7 @@ public class GoodsBean implements Serializable {
 	 */
 
 	private String pic_url;
+	private String filename;
 	private String id;
 	private String goods_code;
 	private String goods_name;
@@ -32,6 +33,7 @@ public class GoodsBean implements Serializable {
 	private String notes;
 	private String deliver_place;
 	private String order_count;
+	private String project_id;
 
 	public String getId() {
 		return id;
@@ -111,5 +113,21 @@ public class GoodsBean implements Serializable {
 
 	public void setOrder_count(String order_count) {
 		this.order_count = order_count;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public String getProject_id() {
+		return project_id;
+	}
+
+	public void setProject_id(String project_id) {
+		this.project_id = project_id;
 	}
 }
