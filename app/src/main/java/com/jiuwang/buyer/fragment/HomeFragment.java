@@ -126,7 +126,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 					}
 
 					listData.addAll(homeResultEntity.getData());
-					listData.addAll(homeResultEntity.getData());
+//					listData.addAll(homeResultEntity.getData());
 
 					if (mAdapter != null) {
 						mAdapter.notifyDataSetChanged();

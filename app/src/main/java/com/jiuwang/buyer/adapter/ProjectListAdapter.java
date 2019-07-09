@@ -10,9 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.entity.ProjectBean;
+import com.jiuwang.buyer.bean.ProjectBean;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.NetURL;
 
 import java.util.List;
 
@@ -40,14 +39,25 @@ public class ProjectListAdapter  extends RecyclerView.Adapter<ProjectListAdapter
 
 	@Override
 	public void onBindViewHolder(ProjectListAdapter.ViewHolder holder, final int position) {
-		holder.tvProjectName.setText(projectList.get(position).getGoods_name());
+		holder.tvProjectName.setText(projectList.get(position).getProject_name());
+
 		holder.llItem.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				projectItemOnClickListener.itemOnClick(position);
 			}
 		});
-		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+projectList.get(position).getPic_url(),holder.ivPic);
+		holder.tvSalePeice.setText(projectList.get(position).getSale_price());
+
+		if(CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(),projectList.get(position).getStart_time())==1){
+			holder.tvTimeName.setText("距离开始：");
+
+		}else {
+			holder.tvTimeName.setText("距离结束：");
+
+		}
+
+//		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+projectList.get(position).getPic_url(),holder.ivPic);
 
 	}
 
@@ -62,6 +72,8 @@ public class ProjectListAdapter  extends RecyclerView.Adapter<ProjectListAdapter
 		public TextView tvHour;
 		public TextView tvMin;
 		public TextView tvSec;
+		public TextView tvTimeName;
+		public TextView tvSalePeice;
 		public LinearLayout llItem;
 
 
@@ -71,6 +83,8 @@ public class ProjectListAdapter  extends RecyclerView.Adapter<ProjectListAdapter
 			ivPic = view.findViewById(R.id.ivPic);
 			tvProjectName = view.findViewById(R.id.tvProjectName);
 			tvHour = view.findViewById(R.id.tvHour);
+			tvTimeName = view.findViewById(R.id.tvTimeName);
+			tvSalePeice = view.findViewById(R.id.tvSalePeice);
 			tvMin = view.findViewById(R.id.tvMin);
 			tvSec = view.findViewById(R.id.tvSec);
 			llItem = view.findViewById(R.id.llItem);

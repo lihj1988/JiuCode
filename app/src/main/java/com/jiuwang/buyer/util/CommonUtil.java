@@ -11,7 +11,6 @@ import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.ParseException;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
@@ -39,7 +38,9 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -1206,6 +1207,41 @@ public class CommonUtil {
 		abstract void failCallBack(Throwable throwable);
 	}
 
-	;
+	/**
+	 * 校验时间
+	 * @return
+	 */
+	public static String getNowTime(){
+		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String date = sDateFormat.format(new java.util.Date());
+		return  date;
+	}
+
+	/**
+	 * 校验时间
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	public static int getTimeCompareSize(String startTime, String endTime){
+		int i=0;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//年-月-日 时-分
+		try {
+			Date date1 = dateFormat.parse(startTime);//开始时间
+			Date date2 = dateFormat.parse(endTime);//结束时间
+			// 1 结束时间小于开始时间 2 开始时间与结束时间相同 3 结束时间大于开始时间
+			if (date2.getTime()<date1.getTime()){
+				i= 1;
+			}else if (date2.getTime()==date1.getTime()){
+				i= 2;
+			}else if (date2.getTime()>date1.getTime()){
+				//正常情况下的逻辑操作.
+				i= 3;
+			}
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
+		}
+		return  i;
+	}
 
 }

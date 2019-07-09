@@ -9,6 +9,7 @@ import com.jiuwang.buyer.entity.GoodsDetailsEntity;
 import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
+import com.jiuwang.buyer.entity.ProjectEntity;
 
 import java.util.HashMap;
 
@@ -24,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class HttpUtils {
 	/**
-	 * 登录
+	 * 注册
 	 *
 	 * @param map
 	 * @return
@@ -79,6 +80,22 @@ public class HttpUtils {
 
 		QClitent.getInstance()
 				.selectGoodsDetails(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+
+	}
+
+	/**
+	 * 获取抢购数据
+	 *
+	 * @param map
+	 * @return
+	 */
+	public static void selectProjectList(HashMap<String,String> map, Consumer<ProjectEntity> consumer, Consumer<Throwable> throwableConsumer) {
+
+		QClitent.getInstance()
+				.selectProjectList(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);

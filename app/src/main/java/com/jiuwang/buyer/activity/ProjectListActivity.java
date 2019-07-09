@@ -7,7 +7,7 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.ProjectListAdapter;
 import com.jiuwang.buyer.base.BaseActivity;
-import com.jiuwang.buyer.entity.ProjectBean;
+import com.jiuwang.buyer.bean.ProjectBean;
 
 import java.util.ArrayList;
 import java.util.List;

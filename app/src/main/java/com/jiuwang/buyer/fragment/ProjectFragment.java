@@ -22,15 +22,21 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.ProjectListAdapter;
 import com.jiuwang.buyer.base.MyApplication;
-import com.jiuwang.buyer.entity.ProjectBean;
+import com.jiuwang.buyer.bean.ProjectBean;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.ProjectEntity;
+import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.popupwindow.ChooseItemPopupWindow;
 import com.jiuwang.buyer.util.LogUtils;
+import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
 import static com.jiuwang.buyer.R.id.actionbar_text;
 
@@ -61,17 +67,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			if (projectListAdapter != null) {
-				projectListAdapter.notifyDataSetChanged();
-			} else {
-				setAdapter();
-			}
 
-			if (page == 1) {
-				projectListView.refreshComplete();
-			} else {
-				projectListView.loadMoreComplete();
-			}
 
 
 		}
@@ -147,22 +143,35 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	}
 
 	private void initData() {
-		if (page == 1) {
-			projectList.clear();
-		}
-		for (int i = 0; i < (page - 1) + 5; i++) {
-			ProjectBean projectBean = new ProjectBean();
-			projectBean.setNotes("deac" + page);
-			projectBean.setEnd_time("2019-07-04 12:00:00");
-			projectBean.setStart_time("2019-07-04 11:00:00");
-			projectBean.setGoods_name("11111");
-			projectBean.setPrice("256.00");
-			projectBean.setPic_url("");
-			projectList.add(projectBean);
-		}
-		handler.sendEmptyMessageDelayed(0, 2000);
-
-
+		HashMap<String, String> map = new HashMap<>();
+		map.put("currPage", String.valueOf(page));
+		map.put("pageSize", Constant.PAGESIZE);
+		HttpUtils.selectProjectList(map, new Consumer<ProjectEntity>() {
+			@Override
+			public void accept(ProjectEntity projectEntity) throws Exception {
+				if (page == 1) {
+					projectList.clear();
+				}
+				if(Constant.HTTP_SUCCESS_CODE.equals(projectEntity.getCode())){
+					projectList.addAll(projectEntity.getData());
+				}
+				if (projectListAdapter != null) {
+					projectListAdapter.notifyDataSetChanged();
+				} else {
+					setAdapter();
+				}
+				if (page == 1) {
+					projectListView.refreshComplete();
+				} else {
+					projectListView.loadMoreComplete();
+				}
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+				MyToastView.showToast("请求失败",getActivity());
+			}
+		});
 	}
 
 

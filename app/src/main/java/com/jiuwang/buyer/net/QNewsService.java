@@ -9,6 +9,7 @@ import com.jiuwang.buyer.entity.GoodsDetailsEntity;
 import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
+import com.jiuwang.buyer.entity.ProjectEntity;
 
 import java.util.HashMap;
 
@@ -43,6 +44,11 @@ public interface QNewsService {
 			@QueryMap HashMap<String, String> map
 	);
 
+	//抢购数据
+	@POST("admin/project/project_action.jsp")
+	Observable<ProjectEntity> selectProjectList(
+			@QueryMap HashMap<String, String> map
+	);
 	//添加购物车
 	@POST("car_action.jsp")
 	Observable<BaseResultEntity> addCar(
