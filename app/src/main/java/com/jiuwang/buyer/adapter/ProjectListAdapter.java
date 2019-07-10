@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.bean.ProjectBean;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 
 import java.text.ParseException;
@@ -82,50 +81,54 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 					}
 				});
 			} else {
-				if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStop_time()) != 1) {
-					holder.llTime.setVisibility(View.VISIBLE);
-					holder.tvTimeName.setText("距离结束：");
-					long currentTime = System.currentTimeMillis();
-					//转成Date
-					Date date = new Date(currentTime);
-					//获取当前时间戳
-					date.getTime();
-					//定义 yyyy-MM-dd HH:mm:ss的格式
-					//格林尼治+或-
-					df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-					Date parse = df.parse(projectList.get(position).getStop_time());
-					long time = parse.getTime();
-					long l = time - currentTime;
+				if(!"".equals(projectList.get(position).getStop_time())){
+					if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStop_time()) != 1) {
+						holder.llTime.setVisibility(View.VISIBLE);
+						holder.tvTimeName.setText("距离结束：");
+						long currentTime = System.currentTimeMillis();
+						//转成Date
+						Date date = new Date(currentTime);
+						//获取当前时间戳
+						date.getTime();
+						//定义 yyyy-MM-dd HH:mm:ss的格式
+						//格林尼治+或-
+						df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+						Date parse = df.parse(projectList.get(position).getStop_time());
+						long time = parse.getTime();
+						long l = time - currentTime;
 //					LogUtils.e(TAG, CommonUtil.longToString(l) + "");
-					holder.tvDay.setText(String.valueOf(CommonUtil.longToString(l)[0]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[0]):String.valueOf(CommonUtil.longToString(l)[0]));
-					holder.tvHour.setText(String.valueOf(CommonUtil.longToString(l)[1]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[1]):String.valueOf(CommonUtil.longToString(l)[1]));
-					holder.tvMin.setText(String.valueOf(CommonUtil.longToString(l)[2]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[2]):String.valueOf(CommonUtil.longToString(l)[2]));
-					holder.tvSec.setText(String.valueOf(CommonUtil.longToString(l)[3]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[3]):String.valueOf(CommonUtil.longToString(l)[3]));
-					exeTimer( l,  position,holder);
-					holder.llItem.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
+						holder.tvDay.setText(String.valueOf(CommonUtil.longToString(l)[0]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[0]):String.valueOf(CommonUtil.longToString(l)[0]));
+						holder.tvHour.setText(String.valueOf(CommonUtil.longToString(l)[1]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[1]):String.valueOf(CommonUtil.longToString(l)[1]));
+						holder.tvMin.setText(String.valueOf(CommonUtil.longToString(l)[2]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[2]):String.valueOf(CommonUtil.longToString(l)[2]));
+						holder.tvSec.setText(String.valueOf(CommonUtil.longToString(l)[3]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[3]):String.valueOf(CommonUtil.longToString(l)[3]));
+						exeTimer( l,  position,holder);
+						holder.llItem.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
 
-							projectItemOnClickListener.itemOnClick(position);
-						}
-					});
-				} else {
+								projectItemOnClickListener.itemOnClick(position);
+							}
+						});
+					} else {
+						holder.llTime.setVisibility(View.INVISIBLE);
+						holder.tvTimeName.setText("已结束");
+						holder.llItem.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+
+								MyToastView.showToast("活动已结束",context);
+							}
+						});
+					}
+				}else {
 					holder.llTime.setVisibility(View.INVISIBLE);
-					holder.tvTimeName.setText("已结束");
-					holder.llItem.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-
-							MyToastView.showToast("活动已结束",context);
-						}
-					});
+					holder.tvTimeName.setText("距离结束：");
 				}
+
 
 
 			}
 			holder.tvProjectName.setText(projectList.get(position).getProject_name());
-
-
 			holder.tvSalePeice.setText(projectList.get(position).getSale_price());
 		} catch (ParseException e) {
 			e.printStackTrace();

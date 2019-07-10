@@ -1,7 +1,6 @@
 package com.jiuwang.buyer.net;
 
 
-import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.bean.MoneyNumberBean;
 import com.jiuwang.buyer.bean.SuccessBean;
 import com.jiuwang.buyer.entity.BaseEntity;
@@ -201,6 +200,18 @@ public class HttpUtils {
 	public static void getchagepass(String act, String newpass, String oldpass , Consumer<SuccessBean> consumer, Consumer<Throwable> throwableConsumer) {
 		QClitent.getInstance()
 				.getchagepass(act,newpass,oldpass)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}
+
+	/**
+	 * 忘记密码-获取验证码
+	 * @param throwableConsumer
+	 */
+	public static void getVerify(HashMap<String,String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.getVerify(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);

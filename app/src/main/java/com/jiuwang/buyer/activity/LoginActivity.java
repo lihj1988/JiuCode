@@ -125,7 +125,9 @@ public class LoginActivity extends BaseActivity {
 				startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
 				break;
 			case R.id.findTextView:
+				startActivity(new Intent(LoginActivity.this,ForgetActivity.class));
 				break;
+
 		}
 	}
 }
