@@ -216,5 +216,16 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 	}
+	/**
+	 * 忘记密码-重置密码
+	 * @param throwableConsumer
+	 */
+	public static void onForget(HashMap<String,String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.onForget(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}
 
 }

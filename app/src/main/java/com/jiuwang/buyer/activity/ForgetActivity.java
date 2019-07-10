@@ -27,8 +27,8 @@ public class ForgetActivity extends BaseActivity {
 	private RelativeLayout rg_left;
 	private EditText etPhone, etMessage, etPassword, etConfirm;
 	private TextView tvVerify, tvDaoJiShi, tv;
-	private Button btRegist;
-	private String phone, password, verifyCode, confirm;
+	private Button bt_submit;
+	private String user_cd, password, verifyCode, confirm;
 	private String result;
 	// 防止用户连续点击，获取多个验证码
 	// 获取验证码标记，控制一分只能点击一次
@@ -67,7 +67,7 @@ public class ForgetActivity extends BaseActivity {
 				finish();
 			}
 		});
-		btRegist.setOnClickListener(new OnClickListener() {
+		bt_submit.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -88,49 +88,19 @@ public class ForgetActivity extends BaseActivity {
 		etConfirm = (EditText) findViewById(R.id.et_confirm);
 		tvVerify = (TextView) findViewById(R.id.tv_verify);
 		tvDaoJiShi = (TextView) findViewById(R.id.tv_daojishi);
-		btRegist = (Button) findViewById(R.id.bt_regist);
+		bt_submit = (Button) findViewById(R.id.bt_submit);
 	}
 
 	public void getVerify() {
 
-		phone = etPhone.getText().toString();
-		if (phone.equals("") || phone == null) {
-			MyToastView.showToast("手机号不能为空", this);
+		user_cd = etPhone.getText().toString();
+		if (user_cd.equals("") || user_cd == null) {
+			MyToastView.showToast("用户名不能为空", this);
 			return;
 		}
-		if (!CommonUtil.isMobileNO(phone)) {
-			MyToastView.showToast("手机号格式不正确", getApplicationContext());
-			return;
-		}
+
 		if (CommonUtil.getNetworkRequest(this)) {
-//			manager = new VerifyManager(this, false, "");
-//			if (!boo1) {
-//				boo1 = true;
-//				manager.getUidCode(new AsyncHttpResponseHandler(this) {
-//					@Override
-//					public void onSuccess(int statusCode, Header[] headers,
-//							byte[] responseBody) {
-//						// TODO Auto-generated method stub
-//						String str = new String(responseBody);
-//						if (CommonMainParser.IsForNet(str)) {
-//							JSONObject obj;
-//							try {
-//								obj = new JSONObject(str);
-//								result = obj.getString("result");
-//								getVerify_real();
-//							} catch (JSONException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
-//						} else {
-//							MyToastView.showToast(
-//									CommonMainParser.getServierInfosParser(str),
-//									ForgetActivity.this);
-//						}
-//					}
-//
-//				});
-//			}
+			getVerify_real();
 
 		}
 	}
@@ -138,7 +108,7 @@ public class ForgetActivity extends BaseActivity {
 	protected void getVerify_real() {
 		// TODO Auto-generated method stub
 		HashMap<String, String> map = new HashMap<>();
-		map.put("user_cd","lihj");
+		map.put("user_cd",user_cd);
 		HttpUtils.getVerify(map, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
@@ -157,48 +127,6 @@ public class ForgetActivity extends BaseActivity {
 
 			}
 		});
-
-
-//		manager.getVerify(etPhone.getText().toString(), result,
-//				new AsyncHttpResponseHandler(this) {
-//					@Override
-//					public void onSuccess(int statusCode, Header[] headers,
-//							byte[] responseBody) {
-//						String he = new String(responseBody);
-//						Log.i("headers", he);
-//						String str = new String(responseBody);
-//						if (CommonMainParser.IsForNet(str)) {
-//							/**
-//							 * 倒计时
-//							 */
-//							Log.i("Str", str);
-//							tvDaoJiShi.setVisibility(View.VISIBLE);
-//							tvDaoJiShi.setText("60秒后重新发送");
-//							tvVerify.setVisibility(View.INVISIBLE);
-//							handler.post(runnable);
-//						} else {
-//							MyToastView.showToast(
-//									CommonMainParser.getServierInfosParser(str),
-//									ForgetActivity.this);
-//							boo1 = false;
-//						}
-//
-//					}
-//
-//					@Override
-//					public void onFailure(int statusCode, Header[] headers,
-//							byte[] responseBody, Throwable error) {
-//						super.onFailure(statusCode, headers, responseBody,
-//								error);
-//						boo1 = false;
-//					}
-//
-//					@Override
-//					public void onFinish() {
-//						super.onFinish();
-//					}
-//				});
-
 	}
 
 	private int recLen = 60;
@@ -222,77 +150,41 @@ public class ForgetActivity extends BaseActivity {
 
 	public void onForget() {
 		// TODO Auto-generated method stub
-		phone = etPhone.getText().toString();
+		user_cd = etPhone.getText().toString();
 		password = etPassword.getText().toString();
 		confirm = etConfirm.getText().toString();
 		verifyCode = etMessage.getText().toString();
 		getVerify_real();
-//		if (phone.equals("") || phone == null) {
-//			MyToastView.showToast("手机号不能为空", getApplicationContext());
-//			return;
-//		}
-//		if (!CommonUtil.isMobileNO(phone)) {
-//			MyToastView.showToast("手机号格式不正确", getApplicationContext());
-//			return;
-//		}
-//		if (verifyCode.equals("") || verifyCode == null) {
-//			MyToastView.showToast("验证码不能为空", getApplicationContext());
-//			return;
-//		}
-//		if (password.equals("") || password == null) {
-//			MyToastView.showToast("密码不能为空", getApplicationContext());
-//			return;
-//		} else if (password.length() > 18 || password.length() < 8) {
-//			MyToastView.showToast("密码长度格式不正确,请输入8—20位密码",
-//					getApplicationContext());
-//			return;
-//		}
-//		if (!(password.equals(confirm))) {
-//			MyToastView.showToast("确认密码与新密码不一致", getApplicationContext());
-//			return;
-//		}
+		if (user_cd.equals("") || user_cd == null) {
+			MyToastView.showToast("手机号不能为空", getApplicationContext());
+			return;
+		}
+		if (!CommonUtil.isMobileNO(user_cd)) {
+			MyToastView.showToast("手机号格式不正确", getApplicationContext());
+			return;
+		}
+		if (verifyCode.equals("") || verifyCode == null) {
+			MyToastView.showToast("验证码不能为空", getApplicationContext());
+			return;
+		}
+		if (password.equals("") || password == null) {
+			MyToastView.showToast("密码不能为空", getApplicationContext());
+			return;
+		} else if (password.length() > 18 || password.length() < 8) {
+			MyToastView.showToast("密码长度格式不正确,请输入8—20位密码",
+					getApplicationContext());
+			return;
+		}
+		if (!(password.equals(confirm))) {
+			MyToastView.showToast("确认密码与新密码不一致", getApplicationContext());
+			return;
+		}
 
-//		if (CommonUtil.getNetworkRequest(ForgetActivity.this)) {
-//			LoginManager manager = new LoginManager(ForgetActivity.this, true,
-//					"正在找回密码...");
-//			manager.forget(password, phone, verifyCode, confirm,
-//					new AsyncHttpResponseHandler(ForgetActivity.this) {
-//						@Override
-//						public void onSuccess(int statusCode, Header[] headers,
-//								byte[] responseBody) {
-//							String str = new String(responseBody);
-//							if (CommonMainParser.IsForNet(str)) {
-//								MyToastView.showToast("修改密码成功",
-//										ForgetActivity.this);
-//								/**
-//								 * 自动登陆调用 登陆接口
-//								 */
-//								// toLoginNetConnection();
-//								finish();
-//
-//							} else {
-//								MyToastView.showToast(CommonMainParser
-//										.getServierInfosParser(str),
-//										ForgetActivity.this);
-//
-//							}
-//
-//						};
-//
-//						@Override
-//						public void onFailure(int statusCode, Header[] headers,
-//								byte[] responseBody, Throwable error) {
-//							MyToastView.showToast("访问网络失败，请稍后再试 ",
-//									ForgetActivity.this);
-//
-//						};
-//
-//						@Override
-//						public void onFinish() {
-//							super.onFinish();
-//						}
-//					});
-//		}
+		if (CommonUtil.getNetworkRequest(ForgetActivity.this)) {
+
+			//密码重置
+
+		}
 	}
 
 }

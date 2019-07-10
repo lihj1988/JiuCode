@@ -81,20 +81,20 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void callBack(BaseEntity<LoginEntity> loginEntity) {
 				DialogUtil.cancel();
-				if("0".equals(loginEntity.getCode())){
+				if ("0".equals(loginEntity.getCode())) {
 					Intent intent = new Intent();
-					intent.setClass(LoginActivity.this,MainActivity.class);
+					intent.setClass(LoginActivity.this, MainActivity.class);
 					startActivity(intent);
-				}else {
-					MyToastView.showToast(loginEntity.getMsg(),LoginActivity.this);
+				} else {
+					MyToastView.showToast(loginEntity.getMsg(), LoginActivity.this);
 				}
 			}
 
 			@Override
 			public void failCallBack(Throwable throwable) {
 				DialogUtil.cancel();
-				MyToastView.showToast("登录失败",LoginActivity.this);
-				LogUtils.e(TAG,throwable.getMessage());
+				MyToastView.showToast("登录失败", LoginActivity.this);
+				LogUtils.e(TAG, throwable.getMessage());
 			}
 		});
 	}
@@ -119,13 +119,15 @@ public class LoginActivity extends BaseActivity {
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.subBtn:
-				getToken();
+				if (CommonUtil.getNetworkRequest(LoginActivity.this)) {
+					getToken();
+				}
 				break;
 			case R.id.registerTextView:
-				startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+				startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
 				break;
 			case R.id.findTextView:
-				startActivity(new Intent(LoginActivity.this,ForgetActivity.class));
+				startActivity(new Intent(LoginActivity.this, ForgetActivity.class));
 				break;
 
 		}

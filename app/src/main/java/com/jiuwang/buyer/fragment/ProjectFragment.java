@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.adapter.ProjectListAdapter;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.GoodsBean;
@@ -33,6 +34,7 @@ import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.popupwindow.ChooseItemPopupWindow;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
@@ -117,39 +119,42 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 			@Override
 			public void itemOnClick(final int position) {
 				LogUtils.e(TAG, "点击了第" + (position + 1) + "条");
-				if(chooseItemPopupWindow!=null){
-					chooseItemPopupWindow.dismiss();
-				}
-				DialogUtil.progress(getActivity());
-				HashMap<String, String> hashMap = new HashMap<>();
-				hashMap.put("project_id", projectList.get(position).getId());
-				HttpUtils.selectChooseGoods(hashMap, new Consumer<SelectGoodsEntity>() {
+				if (CommonUtil.getNetworkRequest(getActivity())) {
+					if(chooseItemPopupWindow!=null){
+						chooseItemPopupWindow.dismiss();
+					}
+					DialogUtil.progress(getActivity());
+					HashMap<String, String> hashMap = new HashMap<>();
+					hashMap.put("project_id", projectList.get(position).getId());
+					HttpUtils.selectChooseGoods(hashMap, new Consumer<SelectGoodsEntity>() {
 
-					@Override
-					public void accept(SelectGoodsEntity selectGoodsEntity) throws Exception {
-						DialogUtil.cancel();
-						if (Constant.HTTP_SUCCESS_CODE.equals(selectGoodsEntity.getCode())) {
-							if (selectGoodsEntity.getData() != null && selectGoodsEntity.getData().size() > 0) {
+						@Override
+						public void accept(SelectGoodsEntity selectGoodsEntity) throws Exception {
+							DialogUtil.cancel();
+							if (Constant.HTTP_SUCCESS_CODE.equals(selectGoodsEntity.getCode())) {
+								if (selectGoodsEntity.getData() != null && selectGoodsEntity.getData().size() > 0) {
 
-								chooseItemPopupWindow = new ChooseItemPopupWindow(MyApplication.currentActivity,projectList.get(position).getId(), selectGoodsEntity.getData());
-								// 显示窗口
-								chooseItemPopupWindow.showAtLocation(rootView, Gravity.BOTTOM
-										| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
-							}else {
-								MyToastView.showToast("没有可选择的商品", getActivity());
+									chooseItemPopupWindow = new ChooseItemPopupWindow(MyApplication.currentActivity,projectList.get(position).getId(), selectGoodsEntity.getData());
+									// 显示窗口
+									chooseItemPopupWindow.showAtLocation(rootView, Gravity.BOTTOM
+											| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
+								}else {
+									MyToastView.showToast("没有可选择的商品", getActivity());
+								}
+							} else {
+								MyToastView.showToast(selectGoodsEntity.getMsg(), getActivity());
 							}
-						} else {
-							MyToastView.showToast(selectGoodsEntity.getMsg(), getActivity());
-						}
 
-					}
-				}, new Consumer<Throwable>() {
-					@Override
-					public void accept(Throwable throwable) throws Exception {
-						DialogUtil.cancel();
-						MyToastView.showToast(getActivity().getString(R.string.msg_error), getActivity());
-					}
-				});
+						}
+					}, new Consumer<Throwable>() {
+						@Override
+						public void accept(Throwable throwable) throws Exception {
+							DialogUtil.cancel();
+							MyToastView.showToast(getActivity().getString(R.string.msg_error), getActivity());
+						}
+					});
+				}
+
 
 
 			}

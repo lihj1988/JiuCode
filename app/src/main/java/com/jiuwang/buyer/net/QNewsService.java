@@ -95,8 +95,14 @@ public interface QNewsService {
 	);
 
 	//忘记密码-获取验证码
-	@POST("forgrt_action.jsp")
+	@POST("forgrt_password_action.jsp")
 	Observable<BaseResultEntity> getVerify(
+			@QueryMap HashMap<String, String> map
+	);
+
+	//忘记密码-修改密码
+	@POST("forgrt_password_action.jsp")
+	Observable<BaseResultEntity> onForget(
 			@QueryMap HashMap<String, String> map
 	);
 
