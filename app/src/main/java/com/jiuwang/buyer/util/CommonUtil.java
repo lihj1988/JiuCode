@@ -85,62 +85,6 @@ public class CommonUtil {
 	}
 
 
-	public static String getStatus(String status) {
-		String statusReturn = "";
-		if ("0".equals(status)) {
-			statusReturn = "草稿";
-		} else if ("1".equals(status) || "2".equals(status)) {
-			statusReturn = "审核中";
-		} else if ("3".equals(status)) {
-			statusReturn = "审核通过";
-		}
-		return statusReturn;
-	}
-
-	public static String getTransType(String status) {
-		String transType = "";
-		if ("1".equals(status)) {
-			transType = "汽运";
-		} else if ("2".equals(status)) {
-			transType = "火运";
-		}
-		return transType;
-	}
-
-	public static String getTransSettleType(String status) {
-		String transSettleType = "";
-		if ("1".equals(status)) {
-			transSettleType = "包到价";
-		} else if ("2".equals(status)) {
-			transSettleType = "代付";
-		} else if ("3".equals(status)) {
-			transSettleType = "到付";
-		}
-		return transSettleType;
-	}
-
-	public static String getBigContractType(String status) {
-		String contractType = "";
-		if ("1".equals(status)) {
-			contractType = "直销";
-		} else if ("2".equals(status)) {
-			contractType = "回库";
-		}
-		return contractType;
-	}
-
-	public static String getContrctResult(String status) {
-		String contract_result = "";
-		if ("0".equals(status)) {
-			contract_result = "不通过";
-		} else if ("1".equals(status)) {
-			contract_result = "审核通过";
-		} else if ("2".equals(status)) {
-			contract_result = "提交下一节点审核";
-		}
-		return contract_result;
-	}
-
 	/**
 	 * double保留两位小数
 	 *
@@ -236,47 +180,6 @@ public class CommonUtil {
 		return true;
 	}
 
-	/**
-	 * 登录失败结果
-	 */
-	public static String getServierInfosParser(String result) {
-		String msg = null;
-		String results = null;
-		try {
-			JSONObject jsonOBject = new JSONObject(result);
-			results = jsonOBject.getString("msgcode");
-			msg = jsonOBject.getString("msg");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (results == null) {
-			return "访问失败";
-		}
-		if (results.equals("0") || results.equals("0") || results.equals("0")) {
-			if (msg == null) {
-				return "访问失败";
-			} else if (msg.equals("null")) {
-				return "访问失败";
-			}
-			return msg;
-		}
-		return msg;
-
-	}
-
-	public static void setEditInit(EditText editView) {
-		editView.setFocusable(false);
-		editView.setCursorVisible(false);
-	}
-
-	public static void getFocusable(EditText editView) {
-		editView.setCursorVisible(true);
-		editView.findFocus();
-		editView.setFocusable(true);
-		editView.setFocusableInTouchMode(true);
-		editView.requestFocus();
-	}
-
 	/*
 	 * 判断字符串是否为空
 	 *
@@ -292,58 +195,6 @@ public class CommonUtil {
 		return false;
 	}
 
-	// 判断JSON返回是否为空
-	public static String getStringNodeValue(JSONObject o, String name) {
-		// TODO Auto-generated method stub
-		boolean isHas = o.has(name) && (!o.isNull(name));
-		try {
-			return isHas ? o.getString(name) : "";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
-
-	// 判断JSON返回是否为空
-	public static JSONObject getStringNoValue(JSONObject o, String name) {
-		// TODO Auto-generated method stub
-		boolean isHas = o.has(name) && (!o.isNull(name));
-		try {
-			return isHas ? o.getJSONObject(name) : null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public static JSONObject getStringJsonObjectValue(JSONObject o, String name) {
-		boolean isHas = o.has(name) && (!o.isNull(name));
-		try {
-			return isHas ? o.getJSONObject(name) : null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public static boolean getAppSatus(Context context, String pageName) {
-		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-		List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(20);
-		//判断程序是否在栈顶
-		if (list.get(0).topActivity.getPackageName().equals(pageName)) {
-			return true;
-		} else {
-			//判断程序是否在栈里
-			for (ActivityManager.RunningTaskInfo info : list) {
-				if (info.topActivity.getPackageName().equals(pageName)) {
-					return true;
-				}
-			}
-			return false;//栈里找不到，返回false
-		}
-	}
-
-
 	/**
 	 * 开启activity
 	 */
@@ -353,89 +204,6 @@ public class CommonUtil {
 		context.startActivity(intent);
 	}
 
-//    public static LoadingDialog setDialog_wait(Context context, String number) {
-//        // TODO Auto-generated method stub
-//        mLoadingDialog = new LoadingDialog(context);
-//        if (mLoadingDialog == null) {
-//            mLoadingDialog = new LoadingDialog(context);
-//        }
-//        if ("1".equals(number)) {
-//            mLoadingDialog.setText("正在加载车辆信息");
-//        }
-//        if ("2".equals(number)) {
-//            mLoadingDialog.setText("正在登陆");
-//        }
-//        if ("3".equals(number)) {
-//            mLoadingDialog.setText("正在加载地址信息");
-//        }
-//        if ("4".equals(number)) {
-//            mLoadingDialog.setText("正在加载历史运输单");
-//        }
-//        if ("5".equals(number)) {
-//            mLoadingDialog.setText("正在加载个人信息");
-//        }
-//        if ("6".equals(number)) {
-//            mLoadingDialog.setText("正在加载车长信息");
-//        }
-//        if ("7".equals(number)) {
-//            mLoadingDialog.setText("正在加载车型信息");
-//        }
-//        if ("8".equals(number)) {
-//            mLoadingDialog.setText("正在加载");
-//        }
-//        if ("9".equals(number)) {
-//            mLoadingDialog.setText("正在加载");
-//        }
-//        if ("10".equals(number)) {
-//            mLoadingDialog.setText("正在加载");
-//        }
-//        if ("11".equals(number)) {
-//            mLoadingDialog.setText("正在加载我的常用路线信息");
-//        }
-//        if ("12".equals(number)) {
-//            mLoadingDialog.setText("正在加载");
-//        }
-//        if ("13".equals(number)) {
-//            mLoadingDialog.setText("正在注册");
-//        }
-//        if ("14".equals(number)) {
-//            mLoadingDialog.setText("正在调度");
-//        }
-//        if ("15".equals(number)) {
-//            mLoadingDialog.setText("正在加载调度明细");
-//        }
-//        if ("16".equals(number)) {
-//            mLoadingDialog.setText("正在撤销调度单");
-//        }
-//        if ("17".equals(number)) {
-//            mLoadingDialog.setText("正在登陆...");
-//        }
-//        mLoadingDialog.setCancelEnable(true);
-//        mLoadingDialog.show();
-//        return mLoadingDialog;
-//    }
-
-	public static boolean isWeight(String doubleNumber) {
-		// String numRegex = "(([1-9][0-9]*)\\.([0-9]{2}))|[0]\\.([0-9]{2})";
-		String numRegex_number = "^[+]?(([1-9]\\d*[.]?)|(0.))(\\d{0,2})?$";
-		String numRegex = "^[\\d&&[^0]]{1}$";
-		if (TextUtils.isEmpty(doubleNumber)) {
-			return false;
-		} else {
-			return doubleNumber.matches(numRegex_number)
-					|| doubleNumber.matches(numRegex);
-		}
-	}
-
-
-	public static boolean isQuantityt(String quantity) {
-		String numRegex_number = "^\\+?[1-9][0-9]*$";
-		if (TextUtils.isEmpty(quantity)) {
-			return false;
-		} else {
-			return quantity.matches(numRegex_number);
-		}
-	}
 
 	/**
 	 * 手机号格式正确
@@ -454,18 +222,6 @@ public class CommonUtil {
 		} else {
 			return mobiles.matches(telRegex);
 		}
-	}
-
-	// 1.欢迎页面调用服务器版本。2.登录页面调用获得服务器当前时间。
-	public static boolean getNetworkRequest_welcome(Context mActivity,
-	                                                String number) {
-		boolean flag_network = false;
-		if (isNetworkAvailable((mActivity))) {
-			flag_network = true;
-		} else {
-//            noNet_dialog(mActivity, number);
-		}
-		return flag_network;
 	}
 
 //    protected static void noNet_dialog(final Context mActivity,

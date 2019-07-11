@@ -1,6 +1,8 @@
 package com.jiuwang.buyer.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -20,6 +22,7 @@ import com.jiuwang.buyer.entity.AddressEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.DialogUtil;
+import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,8 +108,7 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 		moreImageView.setImageResource(R.drawable.ic_action_add);
 		mArrayList = new ArrayList<>();
 		AppUtils.initListView(AddressActivity.this, addressListView, true, false);
-		addressListAdapter = new AddressListAdapter(mArrayList);
-		addressListView.setAdapter(addressListAdapter);
+
 		addressListView.setLoadingListener(this);
 		addressListView.refresh();
 	}
@@ -135,6 +137,11 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 						addressListView.loadMoreComplete();
 					}
 					tipsTextView.setVisibility(View.GONE);
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(addressEntity.getCode())) {
+					MyToastView.showToast(addressEntity.getMsg(), AddressActivity.this);
+					Intent intent = new Intent(AddressActivity.this, LoginActivity.class);
+					startActivity(intent);
+					finish();
 				}
 			}
 		}, new Consumer<Throwable>() {
@@ -147,7 +154,8 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 
 	public void setAdapter() {
 
-
+		addressListAdapter = new AddressListAdapter(mArrayList);
+		addressListView.setAdapter(addressListAdapter);
 	}
 
 
@@ -198,13 +206,16 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 
 	}
 
-	@OnClick({R.id.backImageView, R.id.tipsTextView})
+	@OnClick({R.id.backImageView, R.id.tipsTextView, R.id.moreImageView})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.backImageView:
 				returnActivity();
 				break;
 			case R.id.tipsTextView:
+				break;
+			case R.id.moreImageView:
+				startActivity(new Intent(AddressActivity.this, AddressAddActivity.class).putExtra("mode", "add"));
 				break;
 		}
 	}
@@ -218,5 +229,13 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 	@Override
 	public void onLoadMore() {
 		page++;
+	}
+
+	class AddressBroadCast extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			initData();
+		}
 	}
 }

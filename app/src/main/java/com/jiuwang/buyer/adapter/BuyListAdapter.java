@@ -60,9 +60,9 @@ public class BuyListAdapter extends RecyclerView.Adapter<BuyListAdapter.ViewHold
                 goods_num += Integer.parseInt(temp.get("goods_num"));
                 arrayList.add(temp);
             }
-            GoodsBuyListAdapter mAdapter = new GoodsBuyListAdapter(mApplication, mActivity, arrayList);
-            holder.mListView.setLayoutManager(new LinearLayoutManager(mActivity));
-            holder.mListView.setAdapter(mAdapter);
+//            GoodsBuyListAdapter mAdapter = new GoodsBuyListAdapter(mApplication, mActivity, arrayList);
+//            holder.mListView.setLayoutManager(new LinearLayoutManager(mActivity));
+//            holder.mListView.setAdapter(mAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }

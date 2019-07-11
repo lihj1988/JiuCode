@@ -101,14 +101,13 @@
             android:id="@+id/bt_submit"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_below="@+id/relativeLayout2"
             android:layout_marginLeft="@dimen/padding_size_20"
             android:layout_marginRight="@dimen/padding_size_20"
             android:layout_marginTop="@dimen/padding_size_20"
-            android:background="@drawable/btn_selecter"
+            android:background="@drawable/btn_enable_selector"
             android:text="确认"
             android:textColor="@android:color/white"
-            android:textSize="20sp"/>
+            android:textSize="@dimen/textsize_16"/>
     </LinearLayout>
 
 

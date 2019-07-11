@@ -30,4 +30,8 @@
 	<string name="load_fail">数据加载失败，点击重试</string>
 	<string name="loading">加载中，请稍候...</string>
 	<string name="nothing">没有数据，点击重试</string>
+	<string name="address_consignee_name">请填写收货人姓名</string>
+	<string name="address_consignee_telephone">请填写收货人电话号</string>
+	<string name="address_pro">请填写所在区域</string>
+	<string name="address_info">请填写详细地址</string>
 </resources>

@@ -90,6 +90,11 @@ public interface QNewsService {
 	Observable<AddressEntity> selectAddressList(
 			@QueryMap HashMap<String,String> map
 	);
+	//收货地址-添加
+	@POST("admin/linkman/linkman_action.jsp")
+	Observable<BaseResultEntity> addressInfo(
+			@QueryMap HashMap<String,String> map
+	);
 
 
 	//获得购物车数量和可用余额

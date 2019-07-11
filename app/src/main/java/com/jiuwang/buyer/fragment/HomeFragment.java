@@ -19,6 +19,9 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.AddressAddActivity;
+import com.jiuwang.buyer.activity.ForgetActivity;
+import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.SearchActivity;
 import com.jiuwang.buyer.adapter.GoodsAdapter;
@@ -118,7 +121,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 			@Override
 			public void accept(HomeResultEntity homeResultEntity) throws Exception {
 
-				if(Constant.HTTP_SUCCESS_CODE.equals(homeResultEntity.getCode())){
+				if (Constant.HTTP_SUCCESS_CODE.equals(homeResultEntity.getCode())) {
 					if (page == 1) {
 						listData.clear();
 						urls = homeResultEntity.getPic_list();
@@ -134,13 +137,18 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 					} else {
 						setAdapter();
 					}
-				}else {
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(homeResultEntity.getCode())) {
 					MyToastView.showToast(homeResultEntity.getMsg(),getActivity());
+					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					startActivity(intent);
+					getActivity().finish();
+				} else {
+					MyToastView.showToast(homeResultEntity.getMsg(), getActivity());
 				}
 
-				if(page==1){
+				if (page == 1) {
 					xRecyclerView.refreshComplete();
-				}else {
+				} else {
 					xRecyclerView.loadMoreComplete();
 				}
 
@@ -148,17 +156,17 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		}, new Consumer<Throwable>() {
 			@Override
 			public void accept(Throwable throwable) throws Exception {
-				MyToastView.showToast("请求失败",getActivity());
+				MyToastView.showToast("请求失败", getActivity());
 			}
 		});
 
 	}
 
-	private void setTopImage(){
-		if(urls!=null){
+	private void setTopImage() {
+		if (urls != null) {
 			for (int i = 0; i < urls.size(); i++) {
 				ADInfo adInfo = new ADInfo();
-				adInfo.setUrl(NetURL.BASEURL+urls.get(i));
+				adInfo.setUrl(NetURL.BASEURL + urls.get(i));
 				infos.add(adInfo);
 			}
 			View header = LayoutInflater.from(getActivity()).inflate(R.layout.recyclerview_home_header, (ViewGroup) getActivity().findViewById(android.R.id.content), false);
@@ -166,7 +174,6 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 			imageCycleView.setImageResources(infos, mAdCycleViewListener);
 			xRecyclerView.addHeaderView(header);
 		}
-
 
 
 	}

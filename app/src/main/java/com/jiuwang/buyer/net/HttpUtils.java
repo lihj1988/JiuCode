@@ -215,6 +215,22 @@ public class HttpUtils {
 
 	}
 
+	/**
+	 * 获取收货地址-相关操作
+	 *
+	 * @param map
+	 * @return
+	 */
+	public static void addressInfo(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+
+		QClitent.getInstance()
+				.addressInfo(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+
+	}
+
 
 	/**
 	 * 获得购物车和可用余额

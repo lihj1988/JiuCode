@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.adapter.ProjectListAdapter;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.ProjectBean;
@@ -145,6 +146,11 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 								} else {
 									MyToastView.showToast("没有可选择的商品", getActivity());
 								}
+							} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(selectGoodsEntity.getCode())) {
+								MyToastView.showToast(selectGoodsEntity.getMsg(), getActivity());
+								Intent intent = new Intent(getActivity(), LoginActivity.class);
+								startActivity(intent);
+								getActivity().finish();
 							} else {
 								MyToastView.showToast(selectGoodsEntity.getMsg(), getActivity());
 							}
@@ -200,21 +206,26 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 				}
 				if (Constant.HTTP_SUCCESS_CODE.equals(projectEntity.getCode())) {
 					projectList.addAll(projectEntity.getData());
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectEntity.getCode())) {
+
+					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					startActivity(intent);
+					getActivity().finish();
 				}
-				if(projectList!=null&&projectList.size()>0){
+				if (projectList != null && projectList.size() > 0) {
 					stateTextView.setVisibility(View.GONE);
 
-				if (projectListAdapter != null) {
-					projectListAdapter.notifyDataSetChanged();
+					if (projectListAdapter != null) {
+						projectListAdapter.notifyDataSetChanged();
+					} else {
+						setAdapter();
+					}
+					if (page == 1) {
+						projectListView.refreshComplete();
+					} else {
+						projectListView.loadMoreComplete();
+					}
 				} else {
-					setAdapter();
-				}
-				if (page == 1) {
-					projectListView.refreshComplete();
-				} else {
-					projectListView.loadMoreComplete();
-				}
-				}else {
 					stateTextView.setVisibility(View.VISIBLE);
 					stateTextView.setText(getActivity().getString(R.string.nothing));
 				}

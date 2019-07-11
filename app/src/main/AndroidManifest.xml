@@ -41,6 +41,8 @@
 		<activity android:name=".activity.RechargeActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.ForgetActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.AddressActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.AddressAddActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.BuySetup1Activity" android:screenOrientation="portrait"/>
 
 	</application>
 

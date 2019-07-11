@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.BuySetup1Activity;
+import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.adapter.MyCarAdapter;
 import com.jiuwang.buyer.bean.CarBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
@@ -31,6 +34,7 @@ import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -134,6 +138,11 @@ public class CarFragment extends Fragment {
 //					} else {
 					setAdapter();
 //					}
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(myCarEntity.getCode())) {
+					MyToastView.showToast(myCarEntity.getMsg(), getActivity());
+					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					startActivity(intent);
+					getActivity().finish();
 				}
 			}
 		}, new Consumer<Throwable>() {
@@ -199,7 +208,7 @@ public class CarFragment extends Fragment {
 
 	//结算
 	private void settlement() {
-		StringBuffer carBuilder = new StringBuffer();
+
 		List<CarGoodsBean> selectedList = new ArrayList<CarGoodsBean>();
 		for (int i = 0; i < carBeanList.size(); i++) {
 
@@ -211,38 +220,15 @@ public class CarFragment extends Fragment {
 		}
 
 		if (selectedList.size() == 0) {
-			MyToastView.showToast("请选择您要结算的商品",getActivity());
+			MyToastView.showToast("请选择您要结算的商品", getActivity());
 			return;
 		}
-		for (int i = 0; i < selectedList.size(); i++) {
-			carBuilder.append(selectedList.get(i).getId());
-			if (i < selectedList.size() - 1) {
-				carBuilder.append(",");
-			}
-		}
 
-		DialogUtil.progress(getActivity());
-		if (CommonUtil.getNetworkRequest(getActivity())) {
-			HashMap<String, String> map = new HashMap<>();
-			map.put("act", Constant.ACTION_ACT_ADD);
-			map.put("id", carBuilder.toString());
-			HttpUtils.settlement(map, new Consumer<BaseResultEntity>() {
-				@Override
-				public void accept(BaseResultEntity baseResultEntity) throws Exception {
-					DialogUtil.cancel();
-					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity)) {
-						initData();
-					}
-					MyToastView.showToast(baseResultEntity.getMsg(), getActivity());
-				}
-			}, new Consumer<Throwable>() {
-				@Override
-				public void accept(Throwable throwable) throws Exception {
-					DialogUtil.cancel();
-					MyToastView.showToast(getActivity().getString(R.string.msg_error_operation), getActivity());
-				}
-			});
-		}
+		Intent intent = new Intent(getActivity(), BuySetup1Activity.class);
+		intent.putExtra("data", (Serializable) selectedList);
+		startActivity(intent);
+
+
 	}
 
 	private void setTotalData() {

@@ -1,5 +1,6 @@
 package com.jiuwang.buyer.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -86,12 +87,12 @@ public class ForgetActivity extends BaseActivity {
 		setTopView(topView);
 		tv = findViewById(R.id.actionbar_text);
 		tv.setText("找回密码");
-		rg_left =  findViewById(R.id.onclick_layout_left);
+		rg_left = findViewById(R.id.onclick_layout_left);
 		etPhone = findViewById(R.id.et_phone);
-		etMessage =  findViewById(R.id.et_messRegist);
-		etPassword =  findViewById(R.id.et_password);
-		etConfirm =  findViewById(R.id.et_confirm);
-		tvVerify =  findViewById(R.id.tv_verify);
+		etMessage = findViewById(R.id.et_messRegist);
+		etPassword = findViewById(R.id.et_password);
+		etConfirm = findViewById(R.id.et_confirm);
+		tvVerify = findViewById(R.id.tv_verify);
 		onclick_layout_right = findViewById(R.id.onclick_layout_right);
 		bt_submit = (Button) findViewById(R.id.bt_submit);
 		onclick_layout_right.setVisibility(View.INVISIBLE);
@@ -117,16 +118,16 @@ public class ForgetActivity extends BaseActivity {
 	protected void getVerify_real() {
 		// TODO Auto-generated method stub
 		HashMap<String, String> map = new HashMap<>();
-		map.put("act","2");
-		map.put("mobile_number",phone);
+		map.put("act", "2");
+		map.put("mobile_number", phone);
 		HttpUtils.getVerify(map, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
 //				Log.i("Str", str);
-				if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
-					MyToastView.showToast("验证码已发送",ForgetActivity.this);
-				}else {
-					MyToastView.showToast(baseResultEntity.getMsg(),ForgetActivity.this);
+				if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+					MyToastView.showToast("验证码已发送", ForgetActivity.this);
+				} else {
+					MyToastView.showToast(baseResultEntity.getMsg(), ForgetActivity.this);
 					runnable = null;
 				}
 
@@ -161,6 +162,7 @@ public class ForgetActivity extends BaseActivity {
 
 	public void onForget() {
 		// TODO Auto-generated method stub
+		bt_submit.setEnabled(false);
 		phone = etPhone.getText().toString();
 		password = etPassword.getText().toString();
 		confirm = etConfirm.getText().toString();
@@ -168,26 +170,38 @@ public class ForgetActivity extends BaseActivity {
 //		getVerify_real();
 		if (phone.equals("") || phone == null) {
 			MyToastView.showToast("手机号不能为空", getApplicationContext());
+			bt_submit.setEnabled(true);
+
 			return;
 		}
 		if (!CommonUtil.isMobileNO(phone)) {
 			MyToastView.showToast("手机号格式不正确", getApplicationContext());
+			bt_submit.setEnabled(true);
+
 			return;
 		}
 		if (verifyCode.equals("") || verifyCode == null) {
 			MyToastView.showToast("验证码不能为空", getApplicationContext());
+			bt_submit.setEnabled(true);
+
 			return;
 		}
 		if (password.equals("") || password == null) {
 			MyToastView.showToast("密码不能为空", getApplicationContext());
+			bt_submit.setEnabled(true);
+
 			return;
 		} else if (password.length() > 18 || password.length() < 8) {
 			MyToastView.showToast("密码长度格式不正确,请输入8—20位密码",
 					getApplicationContext());
+			bt_submit.setEnabled(true);
+
 			return;
 		}
 		if (!(password.equals(confirm))) {
 			MyToastView.showToast("确认密码与新密码不一致", getApplicationContext());
+			bt_submit.setEnabled(true);
+
 			return;
 		}
 
@@ -196,23 +210,32 @@ public class ForgetActivity extends BaseActivity {
 			//密码重置
 			DialogUtil.progress(ForgetActivity.this);
 			HashMap<String, String> map = new HashMap<>();
-			map.put("mobile_number",phone);
-			map.put("newpwd",confirm);
-			map.put("mobile_yzm",verifyCode);
+			map.put("mobile_number", phone);
+			map.put("newpwd", confirm);
+			map.put("mobile_yzm", verifyCode);
 			HttpUtils.onForget(map, new Consumer<BaseResultEntity>() {
 				@Override
 				public void accept(BaseResultEntity baseResultEntity) throws Exception {
-					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
+					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+						finish();
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+
+						Intent intent = new Intent(ForgetActivity.this, LoginActivity.class);
+						startActivity(intent);
 						finish();
 					}
-					MyToastView.showToast(baseResultEntity.getMsg(),ForgetActivity.this);
+					bt_submit.setEnabled(true);
+					MyToastView.showToast(baseResultEntity.getMsg(), ForgetActivity.this);
 					DialogUtil.cancel();
 				}
 			}, new Consumer<Throwable>() {
 				@Override
 				public void accept(Throwable throwable) throws Exception {
+					bt_submit.setEnabled(true);
 					DialogUtil.cancel();
-					MyToastView.showToast(getString(R.string.msg_error_operation),ForgetActivity.this);
+					MyToastView.showToast(getString(R.string.msg_error_operation), ForgetActivity.this);
+					bt_submit.setEnabled(true);
+
 				}
 			});
 		}

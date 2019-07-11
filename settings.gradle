@@ -1,1 +1,1 @@
-include ':app', ':wheelview', ':pickerview', ':xrecyclerview'
+include ':app', ':wheelview', ':pickerview', ':xrecyclerview', ':standardbuy'

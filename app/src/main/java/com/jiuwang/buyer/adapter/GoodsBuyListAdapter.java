@@ -11,9 +11,15 @@ import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.bean.CarGoodsBean;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -25,12 +31,12 @@ public class GoodsBuyListAdapter extends RecyclerView.Adapter<GoodsBuyListAdapte
 
     private Activity mActivity;
     private MyApplication mApplication;
-    private ArrayList<HashMap<String, String>> mArrayList;
+    private List<CarGoodsBean> mArrayList;
 
-    public GoodsBuyListAdapter(MyApplication application, Activity activity, ArrayList<HashMap<String, String>> arrayList) {
+    public GoodsBuyListAdapter(Activity activity, List<CarGoodsBean> mArrayList) {
         this.mActivity = activity;
-        this.mArrayList = arrayList;
-        this.mApplication = application;
+        this.mArrayList = mArrayList;
+
     }
 
     @Override
@@ -41,16 +47,17 @@ public class GoodsBuyListAdapter extends RecyclerView.Adapter<GoodsBuyListAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final HashMap<String, String> hashMap = mArrayList.get(position);
-        Double goods_price = Double.parseDouble(hashMap.get("goods_price"));
-        int goods_num = Integer.parseInt(hashMap.get("goods_num"));
+        final CarGoodsBean carGoodsBean = mArrayList.get(position);
+        Double goods_price = Double.parseDouble(carGoodsBean.getSale_price());
+        int goods_num = Integer.parseInt(carGoodsBean.getQuantity());
 //        加载图片
 //        mApplication.mFinalBitmap.display(holder.mImageView, hashMap.get("goods_image_url"));
-        holder.nameTextView.setText(hashMap.get("goods_name"));
-        String info = "￥ <font color='#FF5001'>" + goods_price + "</font><br>";
-        info = info + "x <font color='#FF5001'>" + goods_num + "</font><br>";
-        info = info + "共 <font color='#FF5001'>" + (goods_price * goods_num) + "</font>";
+        holder.nameTextView.setText(carGoodsBean.getGoods_name());
+        String info = "￥ <font color='#FF5001'>" +  AppUtils.decimalFormat(goods_price,"0")+ " 元"+"</font><br>";
+        info = info + " <font color='#FF5001'>" + goods_num + " 件"+ "</font><br>";
+        info = info + "共 <font color='#FF5001'>" + AppUtils.decimalFormat((goods_price * goods_num),"0") + " 元"+ "</font>";
         holder.infoTextView.setText(Html.fromHtml(info));
+        CommonUtil.loadImage(mActivity, NetURL.PIC_BASEURL+carGoodsBean.getPic_url(),holder.mImageView);
 
     }
 
