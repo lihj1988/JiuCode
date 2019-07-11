@@ -40,7 +40,7 @@ import io.reactivex.functions.Consumer;
 public class MyCarAdapter extends BaseAdapter {
 	private Context context;
 	private List<CarBean> list;
-	private  ItemCheckStatusChangeListener itemCheckStatusChangeListener;
+	private ItemCheckStatusChangeListener itemCheckStatusChangeListener;
 
 	public MyCarAdapter(Context context, List<CarBean> list, ItemCheckStatusChangeListener itemCheckStatusChangeListener) {
 		this.context = context;
@@ -88,12 +88,12 @@ public class MyCarAdapter extends BaseAdapter {
 				if (data.ischeck()) {
 					data.setIscheck(false);
 					finalViewHolder.radioButton.setChecked(false);
-					changeAllListCbState(position,false);
+					changeAllListCbState(position, false);
 
 				} else {
 					data.setIscheck(true);
 					finalViewHolder.radioButton.setChecked(true);
-					changeAllListCbState( position,true);
+					changeAllListCbState(position, true);
 //					changeAllListCbState(data.getGoods_detail(), true);
 
 				}
@@ -129,7 +129,7 @@ public class MyCarAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View v) {
 						String quantity = String.valueOf(Integer.parseInt(carGoodsBean.getQuantity()) + 1);
-						cartInfo(Constant.ACTION_ACT_UPDATA,position,finalI1, quantity);
+						cartInfo(Constant.ACTION_ACT_UPDATA, position, finalI1, quantity);
 					}
 				});
 
@@ -141,7 +141,7 @@ public class MyCarAdapter extends BaseAdapter {
 //							return;
 						} else {
 							String quantity = String.valueOf(Integer.parseInt(carGoodsBean.getQuantity()) - 1);
-							cartInfo(Constant.ACTION_ACT_UPDATA, position,finalI1, quantity);
+							cartInfo(Constant.ACTION_ACT_UPDATA, position, finalI1, quantity);
 						}
 
 					}
@@ -149,7 +149,7 @@ public class MyCarAdapter extends BaseAdapter {
 				delTextView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						cartInfo(Constant.ACTION_ACT_DELETE, position,finalI1, "");
+						cartInfo(Constant.ACTION_ACT_DELETE, position, finalI1, "");
 					}
 				});
 				CommonUtil.loadImage(context, NetURL.PIC_BASEURL + carGoodsBean.getPic_url(), goodsImageView);
@@ -172,15 +172,15 @@ public class MyCarAdapter extends BaseAdapter {
 					@Override
 					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 						list.get(position).getGoods_detail().get(finalI).setIscheck(b);
-						if(b){
+						if (b) {
 							list.get(position).setIscheck(true);
-						}else {
+						} else {
 							for (int j = 0; j < list.get(position).getGoods_detail().size(); j++) {
-								if(list.get(position).getGoods_detail().get(j).ischeck()){
+								if (list.get(position).getGoods_detail().get(j).ischeck()) {
 									list.get(position).setIscheck(true);
 									break;
 								}
-								if(j==list.get(position).getGoods_detail().size()-1){
+								if (j == list.get(position).getGoods_detail().size() - 1) {
 									list.get(position).setIscheck(false);
 								}
 							}
@@ -196,7 +196,7 @@ public class MyCarAdapter extends BaseAdapter {
 		return view;
 	}
 
-	private void changeAllListCbState(int postion,boolean b) {
+	private void changeAllListCbState(int postion, boolean b) {
 		for (int i = 0; i < list.get(postion).getGoods_detail().size(); i++) {
 			list.get(postion).getGoods_detail().get(i).setIscheck(b);
 		}
@@ -207,7 +207,7 @@ public class MyCarAdapter extends BaseAdapter {
 	/**
 	 * 购物车相关操作
 	 */
-	public void cartInfo(String act, final int position, final int childPosition , final String quantity) {
+	public void cartInfo(final String act, final int position, final int childPosition, final String quantity) {
 		DialogUtil.progress(MyApplication.currentActivity);
 		HashMap<String, String> hashMap = new HashMap<>();
 		hashMap.put("act", act);
@@ -220,7 +220,11 @@ public class MyCarAdapter extends BaseAdapter {
 //				Intent intent = new Intent();
 //				intent.setAction("refreshCar");
 //				context.sendBroadcast(intent);
-				list.get(position).getGoods_detail().get(childPosition).setQuantity(quantity);
+				if (act.equals(Constant.ACTION_ACT_DELETE)) {
+					list.get(position).getGoods_detail().remove(childPosition);
+				} else {
+					list.get(position).getGoods_detail().get(childPosition).setQuantity(quantity);
+				}
 				notifyDataSetChanged();
 				DialogUtil.cancel();
 			}
@@ -233,9 +237,10 @@ public class MyCarAdapter extends BaseAdapter {
 		});
 	}
 
-	public interface ItemCheckStatusChangeListener{
-		  void checkStatusChange();
+	public interface ItemCheckStatusChangeListener {
+		void checkStatusChange();
 	}
+
 	static class ViewHolder {
 		@Bind(R.id.check_box)
 		CheckBox radioButton;

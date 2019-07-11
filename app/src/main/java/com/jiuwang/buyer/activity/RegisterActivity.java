@@ -35,6 +35,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
 
+import static com.jiuwang.buyer.R.id.tv_gainmessage;
+
 
 
 /*
@@ -75,7 +77,7 @@ public class RegisterActivity extends BaseActivity {
 	EditText etPhone;
 	@Bind(R.id.et_messagecode)
 	EditText etMessagecode;
-	@Bind(R.id.tv_gainmessage)
+	@Bind(tv_gainmessage)
 	TextView tvGainmessage;
 	@Bind(R.id.subBtn)
 	Button subBtn;
@@ -158,10 +160,10 @@ public class RegisterActivity extends BaseActivity {
 			MyToastView.showToast("请输入手机号码", this);
 			return;
 		}
-//		if (TextUtils.isEmpty(messagecode)) {
-//			MyToastView.showToast("请输入验证码", this);
-//			return;
-//		}
+		if (TextUtils.isEmpty(messagecode)) {
+			MyToastView.showToast("请输入验证码", this);
+			return;
+		}
 		register();
 	}
 
@@ -182,7 +184,7 @@ public class RegisterActivity extends BaseActivity {
 
 	}
 
-	@OnClick({R.id.subBtn, R.id.tv_login, R.id.tv_gainmessage, R.id.onclick_layout_left})
+	@OnClick({R.id.subBtn, R.id.tv_login, tv_gainmessage, R.id.onclick_layout_left})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.subBtn:
@@ -192,8 +194,13 @@ public class RegisterActivity extends BaseActivity {
 			case R.id.tv_login:
 				finish();
 				break;
-			case R.id.tv_gainmessage:
+			case tv_gainmessage:
+				tvGainmessage.setEnabled(false);
 				//获取验证码
+				tvGainmessage.setVisibility(View.VISIBLE);
+				tvGainmessage.setText("60秒后重新发送");
+//							tvVerify.setVisibility(View.INVISIBLE);
+				handler.post(runnable);
 
 				String phone = etPhone.getText().toString().trim();
 				if (!TextUtils.isEmpty(phone)) {
@@ -206,6 +213,24 @@ public class RegisterActivity extends BaseActivity {
 					return;
 				}
 				//获取短信验证网络请求
+				HashMap<String, String> map = new HashMap<>();
+				map.put("linkman_mobile",phone);
+				map.put("act","9");
+				HttpUtils.regVerify(map, new Consumer<BaseResultEntity>() {
+					@Override
+					public void accept(BaseResultEntity baseResultEntity) throws Exception {
+//				Log.i("Str", str);
+						if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
+							MyToastView.showToast("验证码已发送",RegisterActivity.this);
+						}
+
+					}
+				}, new Consumer<Throwable>() {
+					@Override
+					public void accept(Throwable throwable) throws Exception {
+
+					}
+				});
 				break;
 			case R.id.onclick_layout_left:
 				finish();
@@ -221,6 +246,7 @@ public class RegisterActivity extends BaseActivity {
 		hashMap.put("user_cd", userName);
 		hashMap.put("user_name", userName);
 		hashMap.put("mobile_number", phone);
+		hashMap.put("mobile_code", messagecode);
 		hashMap.put("new_passwd", password);
 		HttpUtils.register(hashMap, new Consumer<BaseResultEntity>() {
 			@Override
@@ -233,6 +259,7 @@ public class RegisterActivity extends BaseActivity {
 						@Override
 						public void callBack(BaseEntity<LoginEntity> loginEntity) {
 							if ("0".equals(loginEntity.getCode())) {
+								runnable = null;
 								Intent intent = new Intent();
 								intent.setClass(RegisterActivity.this, MainActivity.class);
 								startActivity(intent);
@@ -271,6 +298,7 @@ public class RegisterActivity extends BaseActivity {
 				tvGainmessage.setText("获取验证码");
 				recLen = 60;
 				boo1 = false;
+				tvGainmessage.setEnabled(true);
 			}
 		}
 	};

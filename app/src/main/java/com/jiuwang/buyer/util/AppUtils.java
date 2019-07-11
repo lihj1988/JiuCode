@@ -17,7 +17,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.MyApplication;
 
 import java.io.File;
@@ -633,6 +635,16 @@ public class AppUtils {
 		xRecyclerView.setLayoutManager(layoutManager);
 		xRecyclerView.setLoadingMoreEnabled(false);
 		xRecyclerView.setPullRefreshEnabled(false);
+	}
+	public static void initListView(Context context, XRecyclerView xRecyclerView,boolean refresh,boolean load){
+		LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		xRecyclerView.setLayoutManager(layoutManager);
+		xRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+		xRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+		xRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+		xRecyclerView.setPullRefreshEnabled(refresh);
+		xRecyclerView.setLoadingMoreEnabled(load);
 	}
 
 

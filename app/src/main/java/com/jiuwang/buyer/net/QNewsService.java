@@ -3,6 +3,7 @@ package com.jiuwang.buyer.net;
 
 import com.jiuwang.buyer.bean.MoneyNumberBean;
 import com.jiuwang.buyer.bean.SuccessBean;
+import com.jiuwang.buyer.entity.AddressEntity;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.GoodsDetailsEntity;
@@ -78,6 +79,18 @@ public interface QNewsService {
 	Observable<BaseResultEntity> cartInfo(
 			@QueryMap HashMap<String, String> map
 	);
+	//购物车结算
+	@POST("admin/order/order_action.jsp")
+	Observable<BaseResultEntity> settlement(
+			@QueryMap HashMap<String, String> map
+	);
+
+	//收货地址-查询
+	@POST("admin/linkman/linkman_action.jsp")
+	Observable<AddressEntity> selectAddressList(
+			@QueryMap HashMap<String,String> map
+	);
+
 
 	//获得购物车数量和可用余额
 	@POST("/public/select_shopcar_count.jsp")
@@ -85,6 +98,8 @@ public interface QNewsService {
 	Observable<MoneyNumberBean> getNumberdata(
 			@Field("act") String act//写死getShopCarCount
 	);
+
+
     //修改密码
 	@POST("/sys/group/user_pwd_action.jsp")
 	@FormUrlEncoded
@@ -94,14 +109,18 @@ public interface QNewsService {
 			@Field("password") String password//旧密码
 	);
 
-	//忘记密码-获取验证码
-	@POST("forgrt_password_action.jsp")
+	//注册-获取验证码
+	@POST("reg_action.jsp")
+	Observable<BaseResultEntity> regVerify(
+			@QueryMap HashMap<String, String> map
+	);//忘记密码-获取验证码
+	@POST("forget_password_action.jsp")
 	Observable<BaseResultEntity> getVerify(
 			@QueryMap HashMap<String, String> map
 	);
 
 	//忘记密码-修改密码
-	@POST("forgrt_password_action.jsp")
+	@POST("set_new_password_action.jsp")
 	Observable<BaseResultEntity> onForget(
 			@QueryMap HashMap<String, String> map
 	);

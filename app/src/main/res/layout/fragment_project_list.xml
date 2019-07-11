@@ -6,8 +6,5 @@
 
     <include layout="@layout/include_title"></include>
 
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/projectListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <include layout="@layout/include_recyclerview"></include>
 </LinearLayout>

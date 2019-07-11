@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.AddressActivity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.OrderActivity;
@@ -197,6 +198,8 @@ public class MineFragment extends Fragment {
 			case R.id.waitRefundRelativeLayout:
 				break;
 			case R.id.addressTextView:
+				Intent intentAddress = new Intent(mActivity, AddressActivity.class);
+				startActivity(intentAddress);
 				break;
 			case R.id.settingTextView:
 				break;

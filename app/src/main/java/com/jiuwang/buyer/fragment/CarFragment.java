@@ -22,10 +22,13 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.MyCarAdapter;
 import com.jiuwang.buyer.bean.CarBean;
+import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
 
 import java.text.NumberFormat;
@@ -151,6 +154,7 @@ public class CarFragment extends Fragment {
 		});
 		carListView.setAdapter(cartListAdapter);
 	}
+
 	int totalNum;
 	double totalAmount;
 
@@ -165,7 +169,7 @@ public class CarFragment extends Fragment {
 		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				if(carBeanList!=null){
+				if (carBeanList != null) {
 					for (int i = 0; i < carBeanList.size(); i++) {
 						carBeanList.get(i).setIscheck(b);
 						for (int j = 0; j < carBeanList.get(i).getGoods_detail().size(); j++) {
@@ -174,9 +178,9 @@ public class CarFragment extends Fragment {
 
 					}
 					cartListAdapter.notifyDataSetChanged();
-					if(b){
+					if (b) {
 						setTotalData();
-					}else {
+					} else {
 						number.setText("0");
 						tvCartTotal.setText("￥0.00");
 					}
@@ -185,26 +189,80 @@ public class CarFragment extends Fragment {
 			}
 
 		});
+		tvCartBuyOrDel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				settlement();
+			}
+		});
+	}
+
+	//结算
+	private void settlement() {
+		StringBuffer carBuilder = new StringBuffer();
+		List<CarGoodsBean> selectedList = new ArrayList<CarGoodsBean>();
+		for (int i = 0; i < carBeanList.size(); i++) {
+
+			for (int j = 0; j < carBeanList.get(i).getGoods_detail().size(); j++) {
+				if (carBeanList.get(i).getGoods_detail().get(j).ischeck()) {
+					selectedList.add(carBeanList.get(i).getGoods_detail().get(j));
+				}
+			}
+		}
+
+		if (selectedList.size() == 0) {
+			MyToastView.showToast("请选择您要结算的商品",getActivity());
+			return;
+		}
+		for (int i = 0; i < selectedList.size(); i++) {
+			carBuilder.append(selectedList.get(i).getId());
+			if (i < selectedList.size() - 1) {
+				carBuilder.append(",");
+			}
+		}
+
+		DialogUtil.progress(getActivity());
+		if (CommonUtil.getNetworkRequest(getActivity())) {
+			HashMap<String, String> map = new HashMap<>();
+			map.put("act", Constant.ACTION_ACT_ADD);
+			map.put("id", carBuilder.toString());
+			HttpUtils.settlement(map, new Consumer<BaseResultEntity>() {
+				@Override
+				public void accept(BaseResultEntity baseResultEntity) throws Exception {
+					DialogUtil.cancel();
+					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity)) {
+						initData();
+					}
+					MyToastView.showToast(baseResultEntity.getMsg(), getActivity());
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+					DialogUtil.cancel();
+					MyToastView.showToast(getActivity().getString(R.string.msg_error_operation), getActivity());
+				}
+			});
+		}
 	}
 
 	private void setTotalData() {
 		totalNum = 0;
 		totalAmount = 0.00;
 		for (int i = 0; i < carBeanList.size(); i++) {
-			if(carBeanList.get(i).ischeck()){
+			if (carBeanList.get(i).ischeck()) {
 				for (int j = 0; j < carBeanList.get(i).getGoods_detail().size(); j++) {
-					if(carBeanList.get(i).getGoods_detail().get(j).ischeck()){
+					if (carBeanList.get(i).getGoods_detail().get(j).ischeck()) {
 						totalNum += parseInt(carBeanList.get(i).getGoods_detail().get(j).getQuantity());
-						totalAmount += Double.parseDouble(carBeanList.get(i).getGoods_detail().get(j).getQuantity())*Double.parseDouble(carBeanList.get(i).getGoods_detail().get(j).getSale_price());
+						totalAmount += Double.parseDouble(carBeanList.get(i).getGoods_detail().get(j).getQuantity()) * Double.parseDouble(carBeanList.get(i).getGoods_detail().get(j).getSale_price());
 					}
 				}
 			}
 
 		}
-		number.setText(totalNum+"");
+		number.setText(totalNum + "");
 		NumberFormat nf = NumberFormat.getInstance();
 		nf.setGroupingUsed(false);
-		tvCartTotal.setText(nf.format(CommonUtil.getTwoDecimal(2,totalAmount)));
+		tvCartTotal.setText(nf.format(CommonUtil.getTwoDecimal(2, totalAmount)));
 	}
 
 	@Override

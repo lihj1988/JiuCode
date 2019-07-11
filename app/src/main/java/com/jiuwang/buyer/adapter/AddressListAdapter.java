@@ -8,10 +8,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.util.TextUtil;
+import com.jiuwang.buyer.bean.AddressBean;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -22,9 +21,9 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 
 	private onItemClickListener itemClickListener;
 	private onItemLongClickListener itemLongClickListener;
-	private ArrayList<HashMap<String, String>> mArrayList;
+	private List<AddressBean> mArrayList;
 
-	public AddressListAdapter(ArrayList<HashMap<String, String>> arrayList) {
+	public AddressListAdapter(List<AddressBean> arrayList) {
 		this.mArrayList = arrayList;
 		this.itemClickListener = null;
 	}
@@ -37,25 +36,25 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, int position) {
 
-		final HashMap<String, String> hashMap = mArrayList.get(position);
+		final AddressBean addressBean = mArrayList.get(position);
 
-		holder.nameTextView.setText(hashMap.get("true_name"));
+		holder.nameTextView.setText(addressBean.getConsignee_name());
 
-		if (TextUtil.isEmpty(hashMap.get("tel_phone"))) {
-			holder.phoneTextView.setText(hashMap.get("mob_phone"));
-		} else {
-			holder.phoneTextView.setText(hashMap.get("tel_phone"));
-		}
+//		if (TextUtil.isEmpty(addressBean.getConsignee_telephone())) {
+			holder.phoneTextView.setText(addressBean.getConsignee_telephone());
+//		} else {
+//			holder.phoneTextView.setText(hashMap.get("tel_phone"));
+//		}
 
-		if (hashMap.get("is_default").equals("1")) {
-			holder.addressTextView.setText("[默认] ");
-			holder.addressTextView.append(hashMap.get("area_info"));
-		} else {
-			holder.addressTextView.setText(hashMap.get("area_info"));
-		}
+//		if (hashMap.get("is_default").equals("1")) {
+//			holder.addressTextView.setText("[默认] ");
+			holder.addressTextView.append(addressBean.getDestination_address());
+//		} else {
+//			holder.addressTextView.setText(hashMap.get("area_info"));
+//		}
 
-		holder.addressTextView.append(" ");
-		holder.addressTextView.append(hashMap.get("address"));
+//		holder.addressTextView.append(" ");
+//		holder.addressTextView.append(hashMap.get("address"));
 
 		holder.mRelativeLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
