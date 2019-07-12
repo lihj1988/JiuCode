@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Layout.Main">
-
-    <include
-        android:id="@+id/toolbarInclude"
-        style="@style/Include.Wrap"
-        layout="@layout/include_toolbar" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Layout.Main"
+    android:orientation="vertical">
+    <include layout="@layout/include_topview"></include>
+   <include layout="@layout/include_title"></include>
 
     <ScrollView
+        android:layout_weight="1"
         style="@style/ScrollView.Main"
         android:layout_below="@+id/toolbarInclude">
 
@@ -58,4 +57,4 @@
         android:layout_height="48dip"
         android:text="去支付" />
 
-</RelativeLayout>
+</LinearLayout>

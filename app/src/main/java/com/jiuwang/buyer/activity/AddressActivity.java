@@ -22,6 +22,7 @@ import com.jiuwang.buyer.entity.AddressEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.DialogUtil;
+import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import io.reactivex.functions.Consumer;
 
 public class AddressActivity extends BaseActivity implements XRecyclerView.LoadingListener {
 
+	private static final String TAG = AddressActivity.class.getName();
 	@Bind(R.id.backImageView)
 	ImageView backImageView;
 	@Bind(R.id.titleTextView)
@@ -156,6 +158,27 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 
 		addressListAdapter = new AddressListAdapter(mArrayList);
 		addressListView.setAdapter(addressListAdapter);
+		addressListAdapter.setOnItemClickListener(new AddressListAdapter.onItemClickListener() {
+			@Override
+			public void onItemClick(int position) {
+				LogUtils.e(TAG,"onItemClick--"+position+"");
+				if("choose".equals(modelString)){
+					LogUtils.e(TAG,"选择地址");
+					Intent intent = new Intent();
+					intent.putExtra("address",mArrayList.get(position-1));
+					setResult(RESULT_OK,intent);
+//					onActivityResult(MyApplication.CODE_CHOOSE_ADDRESS,RESULT_OK,intent);
+					finish();
+				}
+			}
+		});
+		addressListAdapter.setOnItemLongClickListener(new AddressListAdapter.onItemLongClickListener() {
+			@Override
+			public void onItemLongClick(int position) {
+				LogUtils.e(TAG,"onItemLongClick---"+position+"");
+
+			}
+		});
 	}
 
 

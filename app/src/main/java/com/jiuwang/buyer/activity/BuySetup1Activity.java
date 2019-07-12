@@ -3,13 +3,11 @@ package com.jiuwang.buyer.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,7 +15,9 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.BuyListAdapter;
 import com.jiuwang.buyer.adapter.GoodsBuyListAdapter;
+import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.bean.AddressBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseResultEntity;
@@ -45,7 +45,7 @@ import io.reactivex.functions.Consumer;
 */
 
 
-public class BuySetup1Activity extends AppCompatActivity {
+public class BuySetup1Activity extends BaseActivity {
 
 	private Activity mActivity;
 	private MyApplication mApplication;
@@ -56,18 +56,12 @@ public class BuySetup1Activity extends AppCompatActivity {
 	private HashMap<String, String> messageHashMap;
 
 	private String address_id;
-	private String vat_hash;
-	private String offpay_hash;
-	private String offpay_hash_batch;
-	private String pay_name;
-	private String invoice_id;
-	private String voucher;
-	private String pd_pay;
-	private String password;
-	private String fcode;
-	private String rcb_pay;
-	private String rpt;
-	private String pay_message;
+	private String destination_prov_cd;
+	private String destination_city_cd;
+	private String destination_area_cd;
+	private String destination_address;
+	private String consignee_name;
+	private String consignee_telephone;
 
 	private ImageView backImageView;
 	private TextView titleTextView;
@@ -82,6 +76,7 @@ public class BuySetup1Activity extends AppCompatActivity {
 	private TextView addressTextView;
 	private TextView addressTitleTextView;
 	private RelativeLayout addressRelativeLayout;
+	private LinearLayout topView;
 
 	private Button confirmTextView;
 	private List<CarGoodsBean> carGoodsList;
@@ -92,44 +87,59 @@ public class BuySetup1Activity extends AppCompatActivity {
 		if (res == RESULT_OK) {
 			switch (req) {
 				case MyApplication.CODE_CHOOSE_ADDRESS:
-					address_id = data.getStringExtra("address_id");
-					nameTextView.setText(data.getStringExtra("true_name"));
-					phoneTextView.setText(data.getStringExtra("tel_phone"));
-					addressTextView.setText(data.getStringExtra("area_info"));
-					addressTextView.append(" ");
-					addressTextView.append(data.getStringExtra("address"));
-					changeAddress(data);
-					break;
-			}
-		} else {
-			switch (req) {
-				case MyApplication.CODE_CHOOSE_ADDRESS:
-					DialogUtil.query(
-							mActivity,
-							"确认您的选择",
-							"添加收货地址？",
-							new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									DialogUtil.cancel();
-									Intent intent = new Intent(mActivity, AddressActivity.class);
-									intent.putExtra("model", "choose");
-									mApplication.startActivity(mActivity, intent, MyApplication.CODE_CHOOSE_ADDRESS);
-								}
-							},
-							new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									DialogUtil.cancel();
-									mApplication.finishActivity(mActivity);
-								}
-							}
-					);
+					AddressBean addressBean = (AddressBean) data.getSerializableExtra("address");
+					setAddress(addressBean);
 					break;
 				default:
 					break;
 			}
+
 		}
+//		else {
+//			switch (req) {
+//				case MyApplication.CODE_CHOOSE_ADDRESS:
+//					DialogUtil.query(
+//							mActivity,
+//							"确认您的选择",
+//							"添加收货地址？",
+//							new View.OnClickListener() {
+//								@Override
+//								public void onClick(View v) {
+//									DialogUtil.cancel();
+//									Intent intent = new Intent(mActivity, AddressActivity.class);
+//									intent.putExtra("model", "choose");
+//									mApplication.startActivity(mActivity, intent, MyApplication.CODE_CHOOSE_ADDRESS);
+//								}
+//							},
+//							new View.OnClickListener() {
+//								@Override
+//								public void onClick(View v) {
+//									DialogUtil.cancel();
+//									mApplication.finishActivity(mActivity);
+//								}
+//							}
+//					);
+//					break;
+//				default:
+//					break;
+//			}
+//		}
+	}
+
+	//设置地址
+	private void setAddress(AddressBean addressBean) {
+		address_id = addressBean.getId();
+		destination_prov_cd = addressBean.getDestination_prov_cd();
+		destination_city_cd = addressBean.getDestination_city_cd();
+		destination_area_cd = addressBean.getDestination_area_cd();
+		destination_area_cd = addressBean.getDestination_area_cd();
+		consignee_name = addressBean.getConsignee_name();
+		consignee_telephone = addressBean.getConsignee_telephone();
+		destination_address = addressBean.getDestination_address();
+		nameTextView.setText(consignee_name);
+		phoneTextView.setText(consignee_telephone);
+		addressTextView.setText(destination_address);
+
 	}
 
 	@Override
@@ -158,6 +168,7 @@ public class BuySetup1Activity extends AppCompatActivity {
 		titleTextView = (TextView) findViewById(R.id.titleTextView);
 
 		mListView = (XRecyclerView) findViewById(R.id.mainListView);
+		topView = (LinearLayout) findViewById(R.id.topView);
 
 		nameTextView = (TextView) findViewById(R.id.nameTextView);
 		phoneTextView = (TextView) findViewById(R.id.phoneTextView);
@@ -166,6 +177,7 @@ public class BuySetup1Activity extends AppCompatActivity {
 		addressRelativeLayout = (RelativeLayout) findViewById(R.id.addressRelativeLayout);
 		confirmTextView = (Button) findViewById(R.id.confirmTextView);
 		tvAmount = (TextView) findViewById(R.id.tvAmount);
+		setTopView(topView);
 
 	}
 
@@ -186,29 +198,9 @@ public class BuySetup1Activity extends AppCompatActivity {
 				carBuilder.append(",");
 			}
 		}
-		tvAmount.setText("￥"+AppUtils.decimalFormat(amount,"0")+"元");
+		tvAmount.setText("￥" + AppUtils.decimalFormat(amount, "0") + "元");
 		goodsIds = carBuilder.toString();
 
-//        ifcart = mActivity.getIntent().getStringExtra("ifcart");
-//        cart_id = mActivity.getIntent().getStringExtra("cart_id");
-		address_id = "";
-		vat_hash = "";
-		offpay_hash = "";
-		offpay_hash_batch = "";
-		pay_name = "";
-		invoice_id = "";
-		voucher = "";
-		pd_pay = "";
-		password = "";
-		fcode = "";
-		rcb_pay = "";
-		rpt = "";
-		pay_message = "";
-
-//        if (TextUtil.isEmpty(ifcart) || TextUtil.isEmpty(cart_id) || TextUtil.isEmpty(cart_id)) {
-//            MyToastView.showToast("数据错误", mActivity);
-//            mApplication.finishActivity(mActivity);
-//        }
 
 		titleTextView.setText("确认订单信息");
 
@@ -269,35 +261,10 @@ public class BuySetup1Activity extends AppCompatActivity {
 		DialogUtil.progress(mActivity);
 
 
-
 	}
 
 
-	//解析信息
-	private void parseInfo() {
 
-		vat_hash = mHashMap.get("vat_hash");
-
-		try {
-			JSONObject jsonObject = new JSONObject(mHashMap.get("address_api"));
-			offpay_hash = jsonObject.getString("offpay_hash");
-			offpay_hash_batch = jsonObject.getString("offpay_hash_batch");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		String temp = "订单支付：" + mHashMap.get("order_amount") + " 元（含运费）";
-		confirmTextView.setText(temp);
-		pay_name = "online";
-		invoice_id = "0";
-		voucher = "";
-		pd_pay = "0";
-		password = "";
-		fcode = "";
-		rcb_pay = "";
-		rpt = "";
-
-	}
 
 	//解析 cartList
 	private void parseCartList() {
@@ -362,101 +329,36 @@ public class BuySetup1Activity extends AppCompatActivity {
 
 	}
 
-	//更换地址
-	private void changeAddress(final Intent intent) {
-
-		DialogUtil.progress(mActivity);
-//        KeyAjaxParams ajaxParams = new KeyAjaxParams(mApplication);
-//        ajaxParams.putAct("member_buy");
-//        ajaxParams.putOp("change_address");
-//        ajaxParams.put("freight_hash", mHashMap.get("freight_hash"));
-//        ajaxParams.put("city_id", intent.getStringExtra("city_id"));
-//        ajaxParams.put("area_id", intent.getStringExtra("area_id"));
-//        mApplication.mFinalHttp.post(mApplication.apiUrlString, ajaxParams, new AjaxCallBack<Object>() {
-//            @Override
-//            public void onSuccess(Object o) {
-//                super.onSuccess(o);
-//                DialogUtil.cancel();
-//                if (TextUtil.isJson(o.toString())) {
-//                    String error = mApplication.getJsonError(o.toString());
-//                    if (TextUtil.isEmpty(error)) {
-//                        String data = mApplication.getJsonData(o.toString());
-//                        try {
-//                            JSONObject jsonObject = new JSONObject(data);
-//                            offpay_hash = jsonObject.getString("offpay_hash");
-//                            offpay_hash_batch = jsonObject.getString("offpay_hash_batch");
-//                        } catch (JSONException e) {
-//                            changeAddressFailure(intent);
-//                            e.printStackTrace();
-//                        }
-//                    } else {
-//                        changeAddressFailure(intent);
-//                    }
-//                } else {
-//                    changeAddressFailure(intent);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t, int errorNo, String strMsg) {
-//                super.onFailure(t, errorNo, strMsg);
-//                changeAddressFailure(intent);
-//                DialogUtil.cancel();
-//            }
-//        });
-
-	}
-
-	//更换地址失败
-	private void changeAddressFailure(final Intent intent) {
-
-		DialogUtil.query(
-				mActivity,
-				"确认您的选择",
-				"数据加载失败，是否重试？",
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						DialogUtil.cancel();
-						changeAddress(intent);
-					}
-				},
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						mApplication.finishActivity(mActivity);
-						DialogUtil.cancel();
-					}
-				}
-		);
-
-	}
-
 	//确认订单信息
 	private void confirmOrderInfo() {
+		if(address_id!=null&&!address_id.equals("")){
+			DialogUtil.progress(BuySetup1Activity.this);
+			if (CommonUtil.getNetworkRequest(BuySetup1Activity.this)) {
+				HashMap<String, String> map = new HashMap<>();
+				map.put("act", Constant.ACTION_ACT_ADD);
+				map.put("id", goodsIds);
+				HttpUtils.settlement(map, new Consumer<BaseResultEntity>() {
+					@Override
+					public void accept(BaseResultEntity baseResultEntity) throws Exception {
+						DialogUtil.cancel();
+						if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity)) {
+							//跳转付款页面 拿到订单号到付款页面
 
-				DialogUtil.progress(BuySetup1Activity.this);
-		if (CommonUtil.getNetworkRequest(BuySetup1Activity.this)) {
-			HashMap<String, String> map = new HashMap<>();
-			map.put("act", Constant.ACTION_ACT_ADD);
-			map.put("id", goodsIds);
-			HttpUtils.settlement(map, new Consumer<BaseResultEntity>() {
-				@Override
-				public void accept(BaseResultEntity baseResultEntity) throws Exception {
-					DialogUtil.cancel();
-					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity)) {
-						//跳转付款页面 拿到订单号到付款页面
+						}
+						MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
 					}
-					MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
-				}
-			}, new Consumer<Throwable>() {
-				@Override
-				public void accept(Throwable throwable) throws Exception {
-					DialogUtil.cancel();
-					MyToastView.showToast(getString(R.string.msg_error_operation),BuySetup1Activity.this);
-				}
-			});
+				}, new Consumer<Throwable>() {
+					@Override
+					public void accept(Throwable throwable) throws Exception {
+						DialogUtil.cancel();
+						MyToastView.showToast(getString(R.string.msg_error_operation), BuySetup1Activity.this);
+					}
+				});
+			}else {
+				MyToastView.showToast("请选择收货地址", BuySetup1Activity.this);
+			}
 		}
+
 
 	}
 

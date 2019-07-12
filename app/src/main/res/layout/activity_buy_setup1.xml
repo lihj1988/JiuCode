@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
                 style="@style/Layout.Main">
+    <include layout="@layout/include_topview"></include>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,30 +106,30 @@
         </ScrollView>
 
         <LinearLayout
-            android:padding="@dimen/padding_size_10"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_size_10">
 
             <TextView
                 android:id="@+id/tvAmount"
-                android:textColor="@color/red"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/red"
                 android:textStyle="bold"/>
 
             <Button
-                android:paddingLeft="@dimen/padding_size_10"
-                android:paddingRight="@dimen/padding_size_10"
                 android:id="@+id/confirmTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="48dip"
                 android:background="@drawable/btn_selecter"
                 android:gravity="center"
+                android:paddingLeft="@dimen/padding_size_10"
+                android:paddingRight="@dimen/padding_size_10"
                 android:text="提交订单"
                 android:textColor="@color/white"/>
         </LinearLayout>
     </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

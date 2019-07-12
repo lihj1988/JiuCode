@@ -1,5 +1,7 @@
 package com.jiuwang.buyer.bean;
 
+import com.jiuwang.buyer.constant.Constant;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,32 +14,6 @@ import java.util.List;
 public class OrderBean implements Serializable {
 
 
-//	{
-//		"msg": "",
-//			"code": "0",
-//			"data": [
-//		{
-//			    "order_id": "订单号",
-//				"order_amount": "订单金额",
-//				"order_count": "订单件数",
-//				"order_state": "订单状态",
-//				"evaluation_state": "评价状态",
-//				"store_list": [
-//			{
-//				"store_name": "店铺名称",
-//					"store_desc": "店铺描述",
-//					"detail_list": [
-//				{
-//					"goods_price": "价格",
-//						"goods_num": "数量",
-//						"pic_url": "图片地址"
-//				}
-//                    ]
-//			}
-//            ]
-//		}
-//    ]
-//	}
 
 	/**
 	 * store_name : 店铺名称
@@ -55,6 +31,12 @@ public class OrderBean implements Serializable {
 	private String order_amount;
 	private String order_count;
 	private String order_state;
+	private String timeout_express;//有效时间
+	private String product_code;//有效时间
+	private String total_amount;//总金额
+	private String subject;//商品的标题/交易标题/订单标题/订单关键字等
+	private String out_trade_no;//商户网站唯一订单号
+	private String body;//对一笔交易的具体描述信息。如果是多种商品，请将商品描述字符串累加传给body
 	private List<DetailListBean> detail_list;
 
 	public String getStore_name() {
@@ -111,6 +93,54 @@ public class OrderBean implements Serializable {
 
 	public void setDetail_list(List<DetailListBean> detail_list) {
 		this.detail_list = detail_list;
+	}
+
+	public String getTimeout_express() {
+		return timeout_express;
+	}
+
+	public void setTimeout_express(String timeout_express) {
+		this.timeout_express = timeout_express;
+	}
+
+	public String getTotal_amount() {
+		return total_amount;
+	}
+
+	public void setTotal_amount(String total_amount) {
+		this.total_amount = total_amount;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public String getOut_trade_no() {
+		return out_trade_no;
+	}
+
+	public void setOut_trade_no(String out_trade_no) {
+		this.out_trade_no = out_trade_no;
+	}
+
+	public String getProduct_code() {
+		return Constant.ALIPAY_PRODUCT_CODE;
+	}
+
+	public void setProduct_code(String product_code) {
+		this.product_code = product_code;
+	}
+
+	public String getBody() {
+		return body;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
 	}
 
 	public static class DetailListBean {

@@ -1,18 +1,45 @@
 package com.jiuwang.buyer.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.bean.AuthResult;
+import com.jiuwang.buyer.bean.OrderBean;
+import com.jiuwang.buyer.bean.PayResult;
+import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Map;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /*
 *
@@ -21,198 +48,215 @@ import com.jiuwang.buyer.util.MyToastView;
 */
 public class BuySetup2Activity extends AppCompatActivity {
 
-    private Activity mActivity;
-    private MyApplication mApplication;
+	@Bind(R.id.topView)
+	LinearLayout topView;
+	@Bind(R.id.actionbar_text)
+	TextView actionbarText;
+	@Bind(R.id.return_img)
+	ImageView returnImg;
+	@Bind(R.id.onclick_layout_left)
+	RelativeLayout onclickLayoutLeft;
+	@Bind(R.id.onclick_layout_right)
+	Button onclickLayoutRight;
+	@Bind(R.id.iv_find)
+	ImageView ivFind;
+	@Bind(R.id.snTextView)
+	TextView snTextView;
+	@Bind(R.id.payListTextView)
+	TextView payListTextView;
+	@Bind(R.id.aliPayTextView)
+	RadioButton aliPayRadioButton;
+	@Bind(R.id.wxPayTextView)
+	RadioButton wxPayRadioButton;
+	@Bind(R.id.listRadioGroup)
+	RadioGroup listRadioGroup;
+	@Bind(R.id.payTextView)
+	TextView payTextView;
+	private Activity mActivity;
+	private MyApplication mApplication;
 
-    private String pay_sn;
+	private String pay_sn;
+	private static final int SDK_PAY_FLAG = 1;
+	private static final int SDK_AUTH_FLAG = 2;
+	@SuppressLint("HandlerLeak")
+	private Handler mHandler = new Handler() {
+		@SuppressWarnings("unused")
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case SDK_PAY_FLAG: {
+					@SuppressWarnings("unchecked")
+					PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+					/**
+					 * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+					 */
+					String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+					String resultStatus = payResult.getResultStatus();
+					// 判断resultStatus 为9000则代表支付成功
+					if (TextUtils.equals(resultStatus, Constant.ALIPAY_RESULTSTATUS)) {
+						// 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+						showAlert(BuySetup2Activity.this, getString(R.string.pay_success) + payResult);
+					} else {
+						// 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+						showAlert(BuySetup2Activity.this, getString(R.string.pay_failed) + payResult);
+					}
+					break;
+				}
+				case SDK_AUTH_FLAG: {
+					@SuppressWarnings("unchecked")
+					AuthResult authResult = new AuthResult((Map<String, String>) msg.obj, true);
+					String resultStatus = authResult.getResultStatus();
 
-    private ImageView backImageView;
-    private TextView titleTextView;
+					// 判断resultStatus 为“9000”且result_code
+					// 为“200”则代表授权成功，具体状态码代表含义可参考授权接口文档
+					if (TextUtils.equals(resultStatus,  Constant.ALIPAY_RESULTSTATUS) && TextUtils.equals(authResult.getResultCode(), "200")) {
+						// 获取alipay_open_id，调支付时作为参数extern_token 的value
+						// 传入，则支付账户为该授权账户
+						showAlert(BuySetup2Activity.this, getString(R.string.auth_success) + authResult);
+					} else {
+						// 其他状态值则为授权失败
+						showAlert(BuySetup2Activity.this, getString(R.string.auth_failed) + authResult);
+					}
+					break;
+				}
+				default:
+					break;
+			}
+		};
+	};
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+			returnActivity();
+			return true;
+		}
+		return super.dispatchKeyEvent(event);
+	}
 
-    private TextView snTextView;
-    private RadioButton aliPayRadioButton;
-    private RadioButton wxPayRadioButton;
-    private TextView payTextView;
+	@Override
+	protected void onCreate(Bundle bundle) {
+		super.onCreate(bundle);
+		setContentView(R.layout.activity_buy_setup2);
+		ButterKnife.bind(this);
+		initView();
+		initData();
+	}
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-            returnActivity();
-            return true;
-        }
-        return super.dispatchKeyEvent(event);
-    }
+	//初始化控件
+	private void initView() {
 
-    @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        setContentView(R.layout.activity_buy_setup2);
-        initView();
-        initData();
-        initEven();
-        getPayment();
-    }
 
-    //初始化控件
-    private void initView() {
+	}
 
-        backImageView = (ImageView) findViewById(R.id.backImageView);
-        titleTextView = (TextView) findViewById(R.id.titleTextView);
+	//初始化数据
+	private void initData() {
 
-        snTextView = (TextView) findViewById(R.id.snTextView);
-        aliPayRadioButton = (RadioButton) findViewById(R.id.aliPayTextView);
-        wxPayRadioButton = (RadioButton) findViewById(R.id.wxPayTextView);
-        payTextView = (TextView) findViewById(R.id.payTextView);
+		mActivity = this;
+		mApplication = (MyApplication) getApplication();
 
-    }
+		pay_sn = mActivity.getIntent().getStringExtra("pay_sn");
 
-    //初始化数据
-    private void initData() {
+		if (!mActivity.getIntent().getStringExtra("payment_code").equals("online")) {
+			MyToastView.showToast("不支持的支付方式", mActivity);
+			mApplication.finishActivity(mActivity);
+		}
 
-        mActivity = this;
-        mApplication = (MyApplication) getApplication();
+		actionbarText.setText("订单支付");
+		snTextView.append("：");
+		snTextView.append(pay_sn);
+		aliPayRadioButton.setVisibility(View.GONE);
+		wxPayRadioButton.setVisibility(View.GONE);
 
-        pay_sn = mActivity.getIntent().getStringExtra("pay_sn");
+	}
 
-        if (!mActivity.getIntent().getStringExtra("payment_code").equals("online")) {
-            MyToastView.showToast( "不支持的支付方式",mActivity);
-            mApplication.finishActivity(mActivity);
-        }
 
-        titleTextView.setText("订单支付");
-        snTextView.append("：");
-        snTextView.append(pay_sn);
-        aliPayRadioButton.setVisibility(View.GONE);
-        wxPayRadioButton.setVisibility(View.GONE);
 
-    }
 
-    //初始化事件
-    private void initEven() {
+	//返回&销毁Activity
+	private void returnActivity() {
 
-        backImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnActivity();
-            }
-        });
+		DialogUtil.query(
+				mActivity,
+				"确认您的选择",
+				"取消支付？",
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						DialogUtil.cancel();
+						mApplication.finishActivity(mActivity);
+					}
+				}
+		);
 
-        payTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (aliPayRadioButton.isChecked()) {
-//                    String link = mApplication.apiUrlString + "act=member_payment&op=pay_new&key="
-//                            + mApplication.userKeyString + "&pay_sn=" + pay_sn
-//                            + "&password=&rcb_pay=0&pd_pay=0&payment_code=alipay";
-//                    Intent intent = new Intent(mActivity, BrowserActivity.class);
-//                    intent.putExtra("model", "payment");
-//                    intent.putExtra("link", link);
-//                    mApplication.startActivity(mActivity, intent);
-//                    mApplication.finishActivity(mActivity);
-                }
-                if (wxPayRadioButton.isChecked()) {
-                    MyToastView.showToast( "不支付的支付方式",mActivity);
+	}
 
-                }
-            }
-        });
+	@OnClick({R.id.onclick_layout_left, R.id.payTextView})
+	public void onViewClicked(View view) {
+		switch (view.getId()) {
+			case R.id.onclick_layout_left:
+				returnActivity();
+				break;
+			case R.id.payTextView://支付
+				if (aliPayRadioButton.isChecked()) {
+					OrderBean orderBean = new OrderBean();
+					orderBean.setTimeout_express("30m");
+					orderBean.setProduct_code(Constant.ALIPAY_PRODUCT_CODE);
+					orderBean.setTotal_amount("0.01");
+					orderBean.setBody("我是测试数据");
+					orderBean.setOut_trade_no(OrderInfoUtil2_0.getOutTradeNo());
+					JSONObject object = new JSONObject();
+					try {
+						object.put("timeout_express",orderBean.getTimeout_express());
+						object.put("product_code",orderBean.getProduct_code());
+						object.put("total_amount",orderBean.getTotal_amount());
+						object.put("subject",orderBean.getSubject());
+						object.put("body",orderBean.getBody());
+						object.put("out_trade_no",orderBean.getOut_trade_no());
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 
-    }
+					Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID,object.toString(), Constant.RSA2);
+					String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
+					String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
+					final String orderInfo = orderParam + "&" + sign;
 
-    //获取可用的支付列表
-    private void getPayment() {
+					final Runnable payRunnable = new Runnable() {
 
-        DialogUtil.progress(mActivity);
+						@Override
+						public void run() {
+							PayTask alipay = new PayTask(BuySetup2Activity.this);
+							Map<String, String> result = alipay.payV2(orderInfo, true);
+							Log.i("msp", result.toString());
 
-//        KeyAjaxParams ajaxParams = new KeyAjaxParams(mApplication);
-//        ajaxParams.putAct("member_payment");
-//        ajaxParams.putOp("payment_list");
-//
-//        mApplication.mFinalHttp.post(mApplication.apiUrlString, ajaxParams, new AjaxCallBack<Object>() {
-//            @Override
-//            public void onSuccess(Object o) {
-//                super.onSuccess(o);
-//                DialogUtil.cancel();
-//                if (TextUtil.isJson(o.toString())) {
-//                    String error = mApplication.getJsonError(o.toString());
-//                    if (TextUtil.isEmpty(error)) {
-//                        String data = mApplication.getJsonData(o.toString());
-//                        try {
-//                            JSONObject jsonObject = new JSONObject(data);
-//                            String payment_list = jsonObject.getString("payment_list");
-//                            if (payment_list.contains("alipay")) {
-//                                aliPayRadioButton.setChecked(true);
-//                                aliPayRadioButton.setVisibility(View.VISIBLE);
-//                            }
-//                            if (payment_list.contains("wx")) {
-//                                wxPayRadioButton.setVisibility(View.VISIBLE);
-//                                if (aliPayRadioButton.getVisibility() == View.GONE) {
-//                                    wxPayRadioButton.setChecked(true);
-//                                }
-//                            }
-//                        } catch (JSONException e) {
-//                            getPaymentFailure();
-//                            e.printStackTrace();
-//                        }
-//                    } else {
-//                        getPaymentFailure();
-//                    }
-//                } else {
-//                    getPaymentFailure();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t, int errorNo, String strMsg) {
-//                super.onFailure(t, errorNo, strMsg);
-//                DialogUtil.cancel();
-//                getPaymentFailure();
-//            }
-//        });
+							Message msg = new Message();
+							msg.what = SDK_PAY_FLAG;
+							msg.obj = result;
+							mHandler.sendMessage(msg);
+						}
+					};
 
-    }
+					// 必须异步调用
+					Thread payThread = new Thread(payRunnable);
+					payThread.start();
+				}
+				if (wxPayRadioButton.isChecked()) {
+					MyToastView.showToast("不支付的支付方式", mActivity);
 
-    //更换地址失败
-    private void getPaymentFailure() {
+				}
+				break;
+		}
+	}
 
-        DialogUtil.query(
-                mActivity,
-                "确认您的选择",
-                "读取数据失败，是否重试？",
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DialogUtil.cancel();
-                        getPayment();
-                    }
-                },
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mApplication.finishActivity(mActivity);
-                        DialogUtil.cancel();
-                    }
-                }
-        );
 
-    }
+	private static void showAlert(Context ctx, String info) {
+		showAlert(ctx, info, null);
+	}
 
-    //返回&销毁Activity
-    private void returnActivity() {
-
-        DialogUtil.query(
-                mActivity,
-                "确认您的选择",
-                "取消支付？",
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DialogUtil.cancel();
-                        mApplication.finishActivity(mActivity);
-                    }
-                }
-        );
-
-    }
-
+	private static void showAlert(Context ctx, String info, DialogInterface.OnDismissListener onDismiss) {
+		new AlertDialog.Builder(ctx)
+				.setMessage(info)
+				.setPositiveButton(R.string.confirm, null)
+				.setOnDismissListener(onDismiss)
+				.show();
+	}
 }
