@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="#FFeeeeee"
-    style="@style/Layout.Linear">
+              style="@style/Layout.Linear">
 
     <include layout="@layout/include_topview"></include>
     <include layout="@layout/include_title"></include>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/mainTabLayout"
+        app:tabIndicatorColor="@color/red"
         style="@style/Layout.Tab" />
 
     <View style="@style/View.Line" />

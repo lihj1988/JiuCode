@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
@@ -30,6 +32,7 @@ import com.jiuwang.buyer.util.MyToastView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -76,7 +79,14 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 	public List<OrderBean> orderArrayList; //订单数组
 	private int page = 1;
 	private int position = 0;
-
+	Handler handler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			Bundle data = msg.getData();
+			int position = data.getInt("position");
+			selectOrder(position);
+		}
+	};
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
@@ -98,8 +108,9 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 		setContentView(R.layout.activity_order);
 		ButterKnife.bind(this);
 		initView();
-		initData();
 		initEven();
+		initData();
+
 	}
 
 	//初始化控件
@@ -137,7 +148,8 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 
 		//根据传进来的值设置位置
 		position = mActivity.getIntent().getIntExtra("position", 0);
-		selectOrder(position);
+
+//		selectOrder(position);
 
 
 	}
@@ -148,8 +160,13 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 		mTabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
 			@Override
 			public void onTabSelected(Tab tab) {
-				tag = tab.getPosition() + "";
-				selectOrder(tab.getPosition());
+//				tag = tab.getPosition() + "";
+				Message message = new Message();
+				Bundle bundle = new Bundle();
+				bundle.putInt("position",tab.getPosition());
+				message.setData(bundle);
+				message.what = 0;
+				handler.sendMessage(message);
 			}
 
 			@Override
@@ -180,6 +197,15 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 			HashMap<String, String> hashMap = new HashMap<>();
 			hashMap.put("currPage", String.valueOf(page));
 			hashMap.put("pageSize", Constant.PAGESIZE);
+			if(position==0){
+
+			}else if(position==1){
+				hashMap.put("status", "0");
+			}else if(position==2){
+				hashMap.put("status", "1");
+			}else if(position==3){
+				hashMap.put("status", "2");
+			}
 			HttpUtils.selectOrder(hashMap, new Consumer<OrderEntity>() {
 				@Override
 				public void accept(OrderEntity orderEntity) throws Exception {
@@ -253,12 +279,14 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 	@Override
 	public void onRefresh() {
 		page = 1;
-		selectOrder(position);
+		xrvOrder.refreshComplete();
+//		selectOrder(position);
 	}
 
 	@Override
 	public void onLoadMore() {
 		page++;
-		selectOrder(position);
+		xrvOrder.loadMoreComplete();
+//		selectOrder(position);
 	}
 }
