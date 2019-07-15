@@ -82,7 +82,7 @@ public class BaseActivity extends FragmentActivity{
 		}
 		return false;
 	}
-	private void fullScreen(Activity activity) {
+	public void fullScreen(Activity activity) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				Window window = activity.getWindow();

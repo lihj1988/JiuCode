@@ -1,6 +1,7 @@
 package com.jiuwang.buyer.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,12 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.CarBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
-import com.jiuwang.buyer.constant.NetURL;
 
 import java.util.HashMap;
 import java.util.List;
@@ -92,6 +93,13 @@ public class MyCarAdapter extends BaseAdapter {
 
 				} else {
 					data.setIscheck(true);
+					for (int i = 0; i < list.size(); i++) {
+						if(i==position){
+							list.get(i).setIscheck(true);
+						}else {
+							list.get(i).setIscheck(false);
+						}
+					}
 					finalViewHolder.radioButton.setChecked(true);
 					changeAllListCbState(position, true);
 //					changeAllListCbState(data.getGoods_detail(), true);
@@ -220,13 +228,21 @@ public class MyCarAdapter extends BaseAdapter {
 //				Intent intent = new Intent();
 //				intent.setAction("refreshCar");
 //				context.sendBroadcast(intent);
+				DialogUtil.cancel();
 				if (act.equals(Constant.ACTION_ACT_DELETE)) {
 					list.get(position).getGoods_detail().remove(childPosition);
 				} else {
 					list.get(position).getGoods_detail().get(childPosition).setQuantity(quantity);
 				}
-				notifyDataSetChanged();
-				DialogUtil.cancel();
+				if(list.get(position).getGoods_detail().size()==0){
+					Intent intent = new Intent();
+					intent.setAction("refreshCar");
+					context.sendBroadcast(intent);
+				}else {
+					notifyDataSetChanged();
+
+				}
+
 			}
 		}, new Consumer<Throwable>() {
 			@Override

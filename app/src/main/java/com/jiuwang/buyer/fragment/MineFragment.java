@@ -170,15 +170,20 @@ public class MineFragment extends Fragment {
 		ButterKnife.unbind(this);
 	}
 
-	@OnClick({R.id.waitPaymentRelativeLayout, R.id.waitDeliverRelativeLayout, R.id.waitReceiptRelativeLayout,
+	@OnClick({R.id.orderTextView, R.id.waitPaymentRelativeLayout, R.id.waitDeliverRelativeLayout, R.id.waitReceiptRelativeLayout,
 			R.id.waitEvaluateRelativeLayout, R.id.waitRefundRelativeLayout, R.id.addressTextView, R.id.settingTextView,
 			R.id.tv_exit, R.id.civAuther, R.id.recharge})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
+			case R.id.orderTextView:
+				Intent intentAll = new Intent(mActivity, OrderActivity.class);
+				intentAll.putExtra("position", 0);
+				startActivity(intentAll);
+				break;
 			case R.id.waitPaymentRelativeLayout:
 				Intent intent = new Intent(mActivity, OrderActivity.class);
 				intent.putExtra("position", 1);
-				MyApplication.getInstance().startActivityLoginSuccess(mActivity, intent);
+				startActivity( intent);
 				break;
 			case R.id.waitDeliverRelativeLayout:
 				Intent intentWaitDeliver = new Intent(mActivity, OrderActivity.class);

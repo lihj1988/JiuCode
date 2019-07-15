@@ -1,64 +1,81 @@
 package com.jiuwang.buyer.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.adapter.BasePagerAdapter;
 import com.jiuwang.buyer.adapter.OrderListAdapter;
+import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.OrderBean;
-import com.jiuwang.buyer.util.ControlUtil;
-import com.jiuwang.buyer.util.DialogUtil;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.OrderEntity;
+import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
+
+import static android.support.design.widget.TabLayout.MODE_FIXED;
+import static android.support.design.widget.TabLayout.OnTabSelectedListener;
+import static android.support.design.widget.TabLayout.Tab;
 
 
 
 /*
-*
-* 作者：Yokey软件工作室
-*
-* 企鹅：1002285057
-*
-* 网址：www.yokey.top
-*
 * 作用：我的实物订单
-*
-* 更新：2016-04-17
-*
 */
 
-public class OrderActivity extends AppCompatActivity {
+public class OrderActivity extends BaseActivity implements XRecyclerView.LoadingListener {
 
+	private static final String TAG = OrderActivity.class.getName();
+	@Bind(R.id.mainTabLayout)
+	TabLayout mTabLayout;
+	@Bind(R.id.xrvOrder)
+	XRecyclerView xrvOrder;
+	@Bind(R.id.topView)
+	LinearLayout topView;
+	@Bind(R.id.actionbar_text)
+	TextView actionbarText;
+	@Bind(R.id.return_img)
+	ImageView returnImg;
+	@Bind(R.id.onclick_layout_left)
+	RelativeLayout onclickLayoutLeft;
+	@Bind(R.id.onclick_layout_right)
+	Button onclickLayoutRight;
+	@Bind(R.id.iv_find)
+	ImageView ivFind;
 	private Activity mActivity;
 	private MyApplication mApplication;
 
 	private boolean firstBoolean;
-
-	private ImageView backImageView;
-	private TextView titleTextView;
-
-	private TabLayout mTabLayout;
-	private ViewPager mViewPager;
-
 	private TextView mTextView;
 	private OrderListAdapter mAdapter;
-	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private String tag = "0";
 	//公用变量
 	public List<OrderBean> orderArrayList; //订单数组
+	private int page = 1;
+	private int position = 0;
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
@@ -72,13 +89,14 @@ public class OrderActivity extends AppCompatActivity {
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		getJson(tag);
+//		getJson(tag);
 	}
 
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		setContentView(R.layout.activity_viewpager);
+		setContentView(R.layout.activity_order);
+		ButterKnife.bind(this);
 		initView();
 		initData();
 		initEven();
@@ -86,13 +104,14 @@ public class OrderActivity extends AppCompatActivity {
 
 	//初始化控件
 	private void initView() {
+		setTopView(topView);
+		onclickLayoutRight.setVisibility(View.INVISIBLE);
+		Drawable dividerDrawable = ContextCompat.getDrawable(OrderActivity.this, R.drawable.divider_sample);
+		xrvOrder.addItemDecoration(xrvOrder.new DividerItemDecoration(dividerDrawable));
+		AppUtils.initListView(OrderActivity.this, xrvOrder, true, true);
+		xrvOrder.setLoadingListener(this);
+		xrvOrder.refresh();
 
-		backImageView = (ImageView) findViewById(R.id.backImageView);
-		titleTextView = (TextView) findViewById(R.id.titleTextView);
-
-		mTabLayout = (TabLayout) findViewById(R.id.mainTabLayout);
-		mViewPager = (ViewPager) findViewById(R.id.mainViewPager);
-		mTextView = (TextView) findViewById(R.id.tipsTextView);
 	}
 
 	//初始化数据
@@ -100,45 +119,25 @@ public class OrderActivity extends AppCompatActivity {
 		orderArrayList = new ArrayList<>();
 		mActivity = this;
 		mApplication = (MyApplication) getApplication();
-
 		firstBoolean = true;
+		actionbarText.setText("我的订单");
 
-		titleTextView.setText("我的订单");
-
-		List<View> mViewList = new ArrayList<>();
-		mViewList.add(mActivity.getLayoutInflater().inflate(R.layout.include_list_view, null));
-		mViewList.add(mActivity.getLayoutInflater().inflate(R.layout.include_list_view, null));
-		mViewList.add(mActivity.getLayoutInflater().inflate(R.layout.include_list_view, null));
-		mViewList.add(mActivity.getLayoutInflater().inflate(R.layout.include_list_view, null));
-		mViewList.add(mActivity.getLayoutInflater().inflate(R.layout.include_list_view, null));
-		mViewList.add(mActivity.getLayoutInflater().inflate(R.layout.include_list_view, null));
 		List<String> mTitleList = new ArrayList<>();
 		mTitleList.add("全部");
 		mTitleList.add("待支付");
-		mTitleList.add("待发货");
-		mTitleList.add("待收货");
-		mTitleList.add("待评价");
+		mTitleList.add("已支付");
+//		mTitleList.add("待收货");
+//		mTitleList.add("待评价");
 		mTitleList.add("已完成");
-//		mTextView = new TextView[mTitleList.size()];
-		mAdapter = new OrderListAdapter(mApplication, mActivity, orderArrayList);
-		RecyclerView mListView = new RecyclerView(OrderActivity.this);
-		mSwipeRefreshLayout = new SwipeRefreshLayout(OrderActivity.this);
-//        for (int i = 0; i < mTitleList.size(); i++) {
-//            mTabLayout.addTab(mTabLayout.newTab().setText(mTitleList.get(i)));
-//            mTextView[i] = (TextView) mViewList.get(i).findViewById(R.id.tipsTextView);
-//            mListView[i] = (RecyclerView) mViewList.get(i).findViewById(R.id.mainListView);
-//            mSwipeRefreshLayout[i] = (SwipeRefreshLayout) mViewList.get(i).findViewById(R.id.mainSwipeRefreshLayout);
-//            mAdapter[i] = new OrderListAdapter(mApplication, mActivity, mApplication.orderArrayList[i]);
-//            mListView[i].setLayoutManager(new LinearLayoutManager(this));
-//            mListView[i].setAdapter(mAdapter[i]);
-//        }
-		ControlUtil.setTabLayout(mActivity, mTabLayout, new BasePagerAdapter(mViewList, mTitleList), mViewPager);
-		mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+		for (int i = 0; i < mTitleList.size(); i++) {
+			//添加tab
+			mTabLayout.addTab(mTabLayout.newTab().setText(mTitleList.get(i)));
+		}
+		mTabLayout.setTabMode(MODE_FIXED);
 
 		//根据传进来的值设置位置
-		int position = mActivity.getIntent().getIntExtra("position", 0);
-		mViewPager.setCurrentItem(position);
-		setControl();
+		position = mActivity.getIntent().getIntExtra("position", 0);
+		selectOrder(position);
 
 
 	}
@@ -146,162 +145,25 @@ public class OrderActivity extends AppCompatActivity {
 	//初始化事件
 	private void initEven() {
 
-		backImageView.setOnClickListener(new View.OnClickListener() {
+		mTabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
 			@Override
-			public void onClick(View view) {
-				returnActivity();
-			}
-		});
-
-
-		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						//根据已选标签进行获取数据
-						getJson(tag);
-					}
-				}, 1000);
-			}
-		});
-
-
-		if (mTextView.getText().toString().equals("订单数据加载失败\n\n点击重试")) {
-			mTextView.setText("加载中...");
-			getJson(tag);
-		}
-
-		mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-			@Override
-			public void onTabSelected(TabLayout.Tab tab) {
+			public void onTabSelected(Tab tab) {
 				tag = tab.getPosition() + "";
+				selectOrder(tab.getPosition());
 			}
 
 			@Override
-			public void onTabUnselected(TabLayout.Tab tab) {
+			public void onTabUnselected(Tab tab) {
 
 			}
 
 			@Override
-			public void onTabReselected(TabLayout.Tab tab) {
+			public void onTabReselected(Tab tab) {
 
 			}
 		});
 
-//        for (OrderListAdapter adapter : mAdapter) {
-//            adapter.setOnItemChange(new OrderListAdapter.onItemChange() {
-//                @Override
-//                public void onChange() {
-//                    getJson();
-//                }
-//            });
-//        }
-
-	}
-
-	//获取JSON数据
-	private void getJson(String tag) {
-
-		if (firstBoolean) {
-			DialogUtil.progress(mActivity);
-			firstBoolean = false;
-		}
-
-//        KeyAjaxParams ajaxParams = new KeyAjaxParams(mApplication);
-//        ajaxParams.putAct("member_order");
-//        ajaxParams.putOp("order_list");
 //
-//        mApplication.mFinalHttp.post(mApplication.apiUrlString, ajaxParams, new AjaxCallBack<Object>() {
-//            @Override
-//            public void onSuccess(Object o) {
-//                super.onSuccess(o);
-//                DialogUtil.cancel();
-//                if (TextUtil.isJson(o.toString())) {
-//                    String error = mApplication.getJsonError(o.toString());
-//                    if (TextUtil.isEmpty(error)) {
-//                        String data = mApplication.getJsonData(o.toString());
-//                        try {
-//                            JSONObject jsonObject = new JSONObject(data);
-//                            JSONArray jsonArray = new JSONArray(jsonObject.getString("order_group_list"));
-//                            for (ArrayList arrayList : mApplication.orderArrayList) {
-//                                arrayList.clear();
-//                            }
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                mApplication.orderArrayList[0].add(new HashMap<>(TextUtil.jsonObjectToHashMap(jsonArray.get(i).toString())));
-//                            }
-//                            for (int i = 0; i < mApplication.orderArrayList[0].size(); i++) {
-//                                try {
-//                                    JSONArray order_list = new JSONArray(mApplication.orderArrayList[0].get(i).get("order_list"));
-//                                    jsonObject = (JSONObject) order_list.get(0);
-//                                    switch (jsonObject.getString("order_state")) {
-//                                        case "10":
-//                                            mApplication.orderArrayList[1].add(mApplication.orderArrayList[0].get(i));
-//                                            break;
-//                                        case "20":
-//                                            mApplication.orderArrayList[2].add(mApplication.orderArrayList[0].get(i));
-//                                            break;
-//                                        case "30":
-//                                            mApplication.orderArrayList[3].add(mApplication.orderArrayList[0].get(i));
-//                                            break;
-//                                        case "40":
-//                                            if (jsonObject.getString("evaluation_state").equals("0")) {
-//                                                mApplication.orderArrayList[4].add(mApplication.orderArrayList[0].get(i));
-//                                            } else {
-//                                                mApplication.orderArrayList[5].add(mApplication.orderArrayList[0].get(i));
-//                                            }
-//                                            break;
-//                                    }
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                            setControl();
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                            getJsonFailure();
-//                        }
-//                    } else {
-//                        getJsonFailure();
-//                    }
-//                } else {
-//                    getJsonFailure();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t, int errorNo, String strMsg) {
-//                super.onFailure(t, errorNo, strMsg);
-//                DialogUtil.cancel();
-//                getJsonFailure();
-//            }
-//        });
-
-	}
-
-	//设置控件状态
-	private void setControl() {
-
-		if (orderArrayList.size() == 0) {
-			mTextView.setVisibility(View.VISIBLE);
-			mTextView.setText("暂无订单");
-		} else {
-			mTextView.setVisibility(View.GONE);
-		}
-
-
-		mSwipeRefreshLayout.setRefreshing(false);
-		mAdapter.notifyDataSetChanged();
-
-	}
-
-	//读取JSON数据失败
-	private void getJsonFailure() {
-
-
-		mTextView.setText("订单数据加载失败\n\n点击重试");
-
 
 	}
 
@@ -312,4 +174,91 @@ public class OrderActivity extends AppCompatActivity {
 
 	}
 
+	private void selectOrder(int position) {
+
+		if (CommonUtil.getNetworkRequest(OrderActivity.this)) {
+			HashMap<String, String> hashMap = new HashMap<>();
+			hashMap.put("currPage", String.valueOf(page));
+			hashMap.put("pageSize", Constant.PAGESIZE);
+			HttpUtils.selectOrder(hashMap, new Consumer<OrderEntity>() {
+				@Override
+				public void accept(OrderEntity orderEntity) throws Exception {
+					if (Constant.HTTP_SUCCESS_CODE.equals(orderEntity.getCode())) {
+
+						if (page == 1) {
+							orderArrayList.clear();
+						}
+						if (orderEntity.getDate() != null) {
+							for (int i = 0; i < orderEntity.getDate().size(); i++) {
+								List<OrderBean.DetailListBean> detailsList = new ArrayList<OrderBean.DetailListBean>();
+								String[] goods_name = orderEntity.getDate().get(i).getGoods_name().split(",");
+								String[] quantity = orderEntity.getDate().get(i).getQuantity().split(",");
+								String[] sale_price = orderEntity.getDate().get(i).getSale_price().split(",");
+								String[] pic_url = orderEntity.getDate().get(i).getPic_url().split(",");
+								for (int j = 0; j < goods_name.length; j++) {
+									OrderBean.DetailListBean detailListBean = new OrderBean.DetailListBean();
+									detailListBean.setGoods_name(goods_name[j]);
+									detailListBean.setGoods_num(quantity[j]);
+									detailListBean.setGoods_price(sale_price[j]);
+									detailListBean.setPic_url(pic_url[j]);
+//									detailListBean.set(goods_name[i]);
+									detailsList.add(detailListBean);
+								}
+								orderEntity.getDate().get(i).setDetail_list(detailsList);
+							}
+
+						}
+						orderArrayList.addAll(orderEntity.getDate());
+
+						if (mAdapter != null) {
+							mAdapter.notifyDataSetChanged();
+						} else {
+							setAdapter();
+						}
+						if (page == 1) {
+							xrvOrder.refreshComplete();
+						} else {
+							xrvOrder.loadMoreComplete();
+						}
+
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(orderEntity.getCode())) {
+						MyToastView.showToast(orderEntity.getMsg(), OrderActivity.this);
+						Intent intent = new Intent(OrderActivity.this, LoginActivity.class);
+						startActivity(intent);
+						finish();
+					}
+				}
+
+
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+
+				}
+			});
+		}
+
+	}
+
+	private void setAdapter() {
+		mAdapter = new OrderListAdapter(mApplication, mActivity, orderArrayList);
+		xrvOrder.setAdapter(mAdapter);
+	}
+
+	@OnClick(R.id.onclick_layout_left)
+	public void onViewClicked() {
+		returnActivity();
+	}
+
+	@Override
+	public void onRefresh() {
+		page = 1;
+		selectOrder(position);
+	}
+
+	@Override
+	public void onLoadMore() {
+		page++;
+		selectOrder(position);
+	}
 }

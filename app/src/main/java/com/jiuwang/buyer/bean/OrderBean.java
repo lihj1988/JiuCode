@@ -15,22 +15,6 @@ public class OrderBean implements Serializable {
 
 
 
-	/**
-	 * store_name : 店铺名称
-	 * store_desc : 店铺描述
-	 * order_amount : 总金额
-	 * order_state : 状态
-	 * order_count : 总件数
-	 * order_id : 订单id
-	 * detail_list : [{"goods_price":"价格","goods_num":"数量","pic_url":"图片地址"}]
-	 */
-
-	private String store_name;
-	private String store_desc;
-	private String order_id;
-	private String order_amount;
-	private String order_count;
-	private String order_state;
 	private String timeout_express;//有效时间
 	private String product_code;//有效时间
 	private String total_amount;//总金额
@@ -38,53 +22,106 @@ public class OrderBean implements Serializable {
 	private String out_trade_no;//商户网站唯一订单号
 	private String body;//对一笔交易的具体描述信息。如果是多种商品，请将商品描述字符串累加传给body
 	private List<DetailListBean> detail_list;
+	private String id;
+	private String create_time;
+	private String goods_name;
+	private String quantity;
+	private String sale_price;
+	private String producer;
+	private String grouping_name;
+	private String grouping_name_seller;
+	private String total_quantity;
+	private String pic_url;
+	private String notes;
+	private String status;
+	private String status_name;
 
-	public String getStore_name() {
-		return store_name;
+	public String getId() {
+		return id;
 	}
 
-	public void setStore_name(String store_name) {
-		this.store_name = store_name;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public String getStore_desc() {
-		return store_desc;
+	public String getCreate_time() {
+		return create_time;
 	}
 
-	public void setStore_desc(String store_desc) {
-		this.store_desc = store_desc;
+	public void setCreate_time(String create_time) {
+		this.create_time = create_time;
 	}
 
-	public String getOrder_amount() {
-		return order_amount;
+	public String getGoods_name() {
+		return goods_name;
 	}
 
-	public void setOrder_amount(String order_amount) {
-		this.order_amount = order_amount;
+	public void setGoods_name(String goods_name) {
+		this.goods_name = goods_name;
 	}
 
-	public String getOrder_count() {
-		return order_count;
+	public String getQuantity() {
+		return quantity;
 	}
 
-	public void setOrder_count(String order_count) {
-		this.order_count = order_count;
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
 	}
 
-	public String getOrder_id() {
-		return order_id;
+	public String getSale_price() {
+		return sale_price;
 	}
 
-	public void setOrder_id(String order_id) {
-		this.order_id = order_id;
+	public void setSale_price(String sale_price) {
+		this.sale_price = sale_price;
 	}
 
-	public String getOrder_state() {
-		return order_state;
+	public String getProducer() {
+		return producer;
 	}
 
-	public void setOrder_state(String order_state) {
-		this.order_state = order_state;
+	public void setProducer(String producer) {
+		this.producer = producer;
+	}
+
+	public String getGrouping_name() {
+		return grouping_name;
+	}
+
+	public void setGrouping_name(String grouping_name) {
+		this.grouping_name = grouping_name;
+	}
+
+	public String getGrouping_name_seller() {
+		return grouping_name_seller;
+	}
+
+	public void setGrouping_name_seller(String grouping_name_seller) {
+		this.grouping_name_seller = grouping_name_seller;
+	}
+
+	public String getTotal_quantity() {
+		return total_quantity;
+	}
+
+	public void setTotal_quantity(String total_quantity) {
+		this.total_quantity = total_quantity;
+	}
+
+	public String getPic_url() {
+		return pic_url;
+	}
+
+	public void setPic_url(String pic_url) {
+		this.pic_url = pic_url;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	public List<DetailListBean> getDetail_list() {
@@ -141,6 +178,22 @@ public class OrderBean implements Serializable {
 
 	public void setBody(String body) {
 		this.body = body;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getStatus_name() {
+		return status_name;
+	}
+
+	public void setStatus_name(String status_name) {
+		this.status_name = status_name;
 	}
 
 	public static class DetailListBean {

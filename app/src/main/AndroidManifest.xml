@@ -43,6 +43,7 @@
 		<activity android:name=".activity.AddressActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.AddressAddActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.BuySetup1Activity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.OrderActivity" android:screenOrientation="portrait"/>
 
 	</application>
 

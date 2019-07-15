@@ -10,6 +10,7 @@ import com.jiuwang.buyer.entity.GoodsDetailsEntity;
 import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
+import com.jiuwang.buyer.entity.OrderEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
 
@@ -93,6 +94,12 @@ public interface QNewsService {
 	//收货地址-添加
 	@POST("admin/linkman/linkman_action.jsp")
 	Observable<BaseResultEntity> addressInfo(
+			@QueryMap HashMap<String,String> map
+	);
+
+	//订单查询
+	@POST("admin/order/order_action.jsp")
+	Observable<OrderEntity> selectOrder(
 			@QueryMap HashMap<String,String> map
 	);
 

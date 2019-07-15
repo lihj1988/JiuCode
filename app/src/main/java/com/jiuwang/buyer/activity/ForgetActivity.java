@@ -45,6 +45,7 @@ public class ForgetActivity extends BaseActivity {
 		setContentView(R.layout.activity_forget);
 		intView();
 		addListener();
+		fullScreen(this);
 		// MyApplication.getInstance().addActivity(this);
 	}
 
@@ -60,7 +61,7 @@ public class ForgetActivity extends BaseActivity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				tvVerify.setEnabled(false);
+
 				getVerify();
 			}
 		});
@@ -107,6 +108,7 @@ public class ForgetActivity extends BaseActivity {
 		}
 
 		if (CommonUtil.getNetworkRequest(this)) {
+			tvVerify.setEnabled(false);
 			tvVerify.setVisibility(View.VISIBLE);
 			tvVerify.setText("60秒后重新发送");
 			handler.post(runnable);

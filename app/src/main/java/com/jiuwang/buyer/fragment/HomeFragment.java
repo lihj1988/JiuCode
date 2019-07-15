@@ -19,19 +19,17 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.activity.AddressAddActivity;
-import com.jiuwang.buyer.activity.ForgetActivity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.SearchActivity;
 import com.jiuwang.buyer.adapter.GoodsAdapter;
 import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
-import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.view.ADInfo;
 import com.jiuwang.buyer.view.ImageCycleView;
@@ -107,8 +105,6 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		xRecyclerView.setPullRefreshEnabled(true);
 		xRecyclerView.setLoadingListener(this);
 		listData = new ArrayList<GoodsBean>();
-
-
 	}
 
 	private void intDatas() {

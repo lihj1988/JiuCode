@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,11 +26,9 @@ import com.jiuwang.buyer.adapter.MyCarAdapter;
 import com.jiuwang.buyer.bean.CarBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
-import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
 
 import java.io.Serializable;
@@ -136,7 +133,7 @@ public class CarFragment extends Fragment {
 //					if (cartListAdapter != null) {
 //						cartListAdapter.notifyDataSetChanged();
 //					} else {
-					setAdapter();
+						setAdapter();
 //					}
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(myCarEntity.getCode())) {
 					MyToastView.showToast(myCarEntity.getMsg(), getActivity());
@@ -149,7 +146,13 @@ public class CarFragment extends Fragment {
 			@Override
 			public void accept(Throwable throwable) throws Exception {
 //				carListView.refreshComplete();
-				MyToastView.showToast("获取失败", getActivity());
+//				MyToastView.showToast("获取失败", getActivity());
+				tipsTextView.setVisibility(View.VISIBLE);
+				tipsTextView.setText("暂无数据");
+				carBeanList.clear();
+
+				setAdapter();
+
 			}
 		});
 	}
@@ -202,6 +205,12 @@ public class CarFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				settlement();
+			}
+		});
+		tipsTextView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				initData();
 			}
 		});
 	}

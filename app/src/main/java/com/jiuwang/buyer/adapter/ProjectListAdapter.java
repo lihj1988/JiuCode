@@ -124,9 +124,6 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 					holder.llTime.setVisibility(View.INVISIBLE);
 					holder.tvTimeName.setText("距离结束：");
 				}
-
-
-
 			}
 			holder.tvProjectName.setText(projectList.get(position).getProject_name());
 			holder.tvSalePeice.setText(projectList.get(position).getSale_price());

@@ -1,6 +1,6 @@
 package com.jiuwang.buyer.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
@@ -12,12 +12,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.activity.GoodsDetailsActivty;
 import com.jiuwang.buyer.bean.GoodsBean;
-import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.DialogUtil;
+import com.jiuwang.buyer.util.MyToastView;
 
+import java.util.HashMap;
 import java.util.List;
+
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -26,10 +33,10 @@ import java.util.List;
 public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> {
 
 	public List<GoodsBean> datas = null;
-	public Context context = null;
+	public Activity context = null;
 
 
-	public GoodsAdapter( Context context,List<GoodsBean> datas) {
+	public GoodsAdapter( Activity context,List<GoodsBean> datas) {
 		this.context = context;
 		this.datas = datas;
 	}
@@ -64,10 +71,11 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 			@Override
 			public void onClick(View v) {
 //				MyToastView.showToast("点击第"+(position+1)+"条",context);
-				Intent intent = new Intent();
-				intent.setClass(context, GoodsDetailsActivty.class);
-				intent.putExtra("goods",datas.get(position));
-				context.startActivity(intent);
+//				Intent intent = new Intent();
+//				intent.setClass(context, GoodsDetailsActivty.class);
+//				intent.putExtra("goods",datas.get(position));
+//				context.startActivity(intent);
+				addCar(datas.get(position).getId());
 			}
 		});
 		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+datas.get(position).getPic_url(),viewHolder.ivGoodsImg);
@@ -101,5 +109,36 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 			llItem = view.findViewById(R.id.llItem);
 
 		}
+	}
+
+	public void addCar(String goods_id){
+
+		HashMap<String, String> map = new HashMap<>();
+		map.put("act", Constant.ACTION_ACT_ADD);
+		map.put("goods_id",goods_id);
+		map.put("quantity",1+"");
+		DialogUtil.progress(context);
+		HttpUtils.addCar(map, new Consumer<BaseResultEntity>() {
+			@Override
+			public void accept(BaseResultEntity baseResultEntity) throws Exception {
+				DialogUtil.cancel();
+				if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
+					Intent intent = new Intent();
+					intent.setAction("refreshCar");
+					context.sendBroadcast(intent);
+
+				}else {
+
+				}
+				MyToastView.showToast(baseResultEntity.getMsg(),context);
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+				DialogUtil.cancel();
+				MyToastView.showToast("请求失败",context);
+			}
+		});
+
 	}
 }

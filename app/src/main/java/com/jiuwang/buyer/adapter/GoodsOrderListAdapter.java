@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.OrderBean;
+import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.util.CommonUtil;
 
 import java.util.List;
 
@@ -58,6 +60,8 @@ public class GoodsOrderListAdapter extends RecyclerView.Adapter<GoodsOrderListAd
         info = info + "x <font color='#FF5001'>" + goods_num + "</font><br>";
         info = info + "共 <font color='#FF5001'>" + (goods_price * goods_num) + "</font>";
         holder.infoTextView.setText(Html.fromHtml(info));
+        String pic_url[] = detailBean.getPic_url().split("\\|");
+        CommonUtil.loadImage(mApplication.getApplicationContext(), NetURL.PIC_BASEURL+pic_url[0],holder.mImageView);
 
     }
 

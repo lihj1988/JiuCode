@@ -35,6 +35,7 @@
 
 	<!--  一行展示多个数据时，居左的边距为15dp-->
 	<dimen name="padding_size_15">15dp</dimen>
+	<dimen name="padding_size_18">18dp</dimen>
 	<!-- 购物车输入框左右边距-->
 	<dimen name="padding_size_20">20dp</dimen>
 	<!--登录界面距离顶部的边距 -->

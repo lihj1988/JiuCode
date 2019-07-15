@@ -43,6 +43,17 @@ public class ControlUtil {
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
     }
+    /*
+    * 作用：设置 TabLayout
+    * 更新：2016-04-02
+    */
+    public static void setTabLayout(Activity activity, TabLayout mTabLayout) {
+
+        mTabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(activity, R.color.app_main_color));
+        mTabLayout.setTabTextColors(ContextCompat.getColor(activity, R.color.greyAdd), ContextCompat.getColor(activity, R.color.app_main_color));
+        mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+    }
 
     /*
     * 作用：强制隐藏键盘

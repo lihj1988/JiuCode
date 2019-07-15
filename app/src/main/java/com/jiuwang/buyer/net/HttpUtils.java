@@ -10,6 +10,7 @@ import com.jiuwang.buyer.entity.GoodsDetailsEntity;
 import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
+import com.jiuwang.buyer.entity.OrderEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
 
@@ -225,6 +226,22 @@ public class HttpUtils {
 
 		QClitent.getInstance()
 				.addressInfo(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+
+	}
+
+	/**
+	 * 获取收货地址-相关操作
+	 *
+	 * @param map
+	 * @return
+	 */
+	public static void selectOrder(HashMap<String, String> map, Consumer<OrderEntity> consumer, Consumer<Throwable> throwableConsumer) {
+
+		QClitent.getInstance()
+				.selectOrder(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);

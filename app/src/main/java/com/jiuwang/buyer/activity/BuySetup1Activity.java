@@ -341,9 +341,11 @@ public class BuySetup1Activity extends BaseActivity {
 					@Override
 					public void accept(BaseResultEntity baseResultEntity) throws Exception {
 						DialogUtil.cancel();
-						if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity)) {
+						if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
 							//跳转付款页面 拿到订单号到付款页面
-
+							Intent intent = new Intent();
+							intent.setAction("refreshCar");
+							sendBroadcast(intent);
 						}
 						MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
 					}
