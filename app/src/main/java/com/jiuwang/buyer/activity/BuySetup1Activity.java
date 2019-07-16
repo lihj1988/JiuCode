@@ -20,7 +20,7 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AddressBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
-import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.OrderEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
@@ -239,13 +239,6 @@ public class BuySetup1Activity extends BaseActivity {
 			}
 		});
 
-//        mAdapter.setOnTextWatcherListener(new BuyListAdapter.onTextWatcherListener() {
-//            @Override
-//            public void onTextWatcher(String id, String content) {
-//                messageHashMap.put(id, content);
-//            }
-//        });
-
 		confirmTextView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -337,15 +330,20 @@ public class BuySetup1Activity extends BaseActivity {
 				HashMap<String, String> map = new HashMap<>();
 				map.put("act", Constant.ACTION_ACT_ADD);
 				map.put("id", goodsIds);
-				HttpUtils.settlement(map, new Consumer<BaseResultEntity>() {
+				HttpUtils.settlement(map, new Consumer<OrderEntity>() {
 					@Override
-					public void accept(BaseResultEntity baseResultEntity) throws Exception {
+					public void accept(OrderEntity baseResultEntity) throws Exception {
 						DialogUtil.cancel();
 						if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
 							//跳转付款页面 拿到订单号到付款页面
 							Intent intent = new Intent();
 							intent.setAction("refreshCar");
 							sendBroadcast(intent);
+							Intent intentBuy2 = new Intent();
+							intentBuy2.setClass(BuySetup1Activity.this,BuySetup2Activity.class);
+							intentBuy2.putExtra("data",baseResultEntity.getDate().get(0));
+							intentBuy2.putExtra("pay_sn","online");
+							startActivity(intentBuy2);
 						}
 						MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
 					}

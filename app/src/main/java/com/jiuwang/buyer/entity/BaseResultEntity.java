@@ -6,8 +6,22 @@ package com.jiuwang.buyer.entity;
  */
 
 public class BaseResultEntity {
-	private String code;
+
+	/**
+	 * msg : 返回提示信息
+	 * code : 返回状态码
+	 */
+
 	private String msg;
+	private String code;
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
 
 	public String getCode() {
 		return code;
@@ -17,11 +31,5 @@ public class BaseResultEntity {
 		this.code = code;
 	}
 
-	public String getMsg() {
-		return msg;
-	}
 
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
 }

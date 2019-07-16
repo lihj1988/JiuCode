@@ -82,7 +82,7 @@ public interface QNewsService {
 	);
 	//购物车结算
 	@POST("admin/order/order_action.jsp")
-	Observable<BaseResultEntity> settlement(
+	Observable<OrderEntity> settlement(
 			@QueryMap HashMap<String, String> map
 	);
 

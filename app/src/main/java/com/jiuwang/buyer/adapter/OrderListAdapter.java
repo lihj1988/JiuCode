@@ -1,6 +1,7 @@
 package com.jiuwang.buyer.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -12,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.BuySetup2Activity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.constant.Constant;
@@ -64,7 +66,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 			}
 		});
 		switch (orderBean.getStatus()) {
-			case Constant.ORDER_STATUS_UNPAY:
+			case Constant.ORDER_STATUS_UNPAY://未付款
 				holder.rlDeal.setVisibility(View.VISIBLE);
 				holder.optionTextView.setText("取消订单");
 				holder.operaTextView.setText("去支付");
@@ -79,10 +81,15 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 					@Override
 					public void onClick(View view) {
 						//去付款
+						Intent intentBuy2 = new Intent();
+						intentBuy2.setClass(mActivity,BuySetup2Activity.class);
+						intentBuy2.putExtra("data",orderBean);
+						intentBuy2.putExtra("pay_sn","online");
+						mActivity.startActivity(intentBuy2);
 					}
 				});
 				break;
-			case Constant.ORDER_STATUS_PAYED:
+			case Constant.ORDER_STATUS_PAYED://已付款
 				holder.rlDeal.setVisibility(View.VISIBLE);
 				holder.optionTextView.setText("订单详细");
 				holder.operaTextView.setText("退货/款");

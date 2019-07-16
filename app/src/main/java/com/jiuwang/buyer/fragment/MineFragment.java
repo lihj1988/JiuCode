@@ -188,12 +188,14 @@ public class MineFragment extends Fragment {
 			case R.id.waitDeliverRelativeLayout:
 				Intent intentWaitDeliver = new Intent(mActivity, OrderActivity.class);
 				intentWaitDeliver.putExtra("position", 2);
-				MyApplication.getInstance().startActivityLoginSuccess(mActivity, intentWaitDeliver);
+//				MyApplication.getInstance().startActivityLoginSuccess(mActivity, intentWaitDeliver);
+				startActivity( intentWaitDeliver);
 				break;
 			case R.id.waitReceiptRelativeLayout:
 				Intent intentWaitReceipt = new Intent(mActivity, OrderActivity.class);
 				intentWaitReceipt.putExtra("position", 3);
-				MyApplication.getInstance().startActivityLoginSuccess(mActivity, intentWaitReceipt);
+				startActivity( intentWaitReceipt);
+//				MyApplication.getInstance().startActivityLoginSuccess(mActivity, intentWaitReceipt);
 				break;
 			case R.id.waitEvaluateRelativeLayout:
 				Intent intentWaitEvaluate = new Intent(mActivity, OrderActivity.class);

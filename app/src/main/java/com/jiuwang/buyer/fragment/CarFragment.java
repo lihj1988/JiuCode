@@ -120,6 +120,8 @@ public class CarFragment extends Fragment {
 
 						stateTextView.setVisibility(View.GONE);
 					} else {
+						number.setText("0");
+						tvCartTotal.setText("￥0.00");
 						tipsTextView.setVisibility(View.VISIBLE);
 						tipsTextView.setText("暂无数据");
 						tipsTextView.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +135,7 @@ public class CarFragment extends Fragment {
 //					if (cartListAdapter != null) {
 //						cartListAdapter.notifyDataSetChanged();
 //					} else {
-						setAdapter();
+					setAdapter();
 //					}
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(myCarEntity.getCode())) {
 					MyToastView.showToast(myCarEntity.getMsg(), getActivity());
@@ -149,6 +151,8 @@ public class CarFragment extends Fragment {
 //				MyToastView.showToast("获取失败", getActivity());
 				tipsTextView.setVisibility(View.VISIBLE);
 				tipsTextView.setText("暂无数据");
+				number.setText("0");
+				tvCartTotal.setText("￥0.00");
 				carBeanList.clear();
 
 				setAdapter();

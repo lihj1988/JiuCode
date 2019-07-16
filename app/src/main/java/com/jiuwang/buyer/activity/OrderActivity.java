@@ -107,10 +107,10 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_order);
 		ButterKnife.bind(this);
+		initData();
 		initView();
 		initEven();
-		initData();
-
+		xrvOrder.refresh();
 	}
 
 	//初始化控件
@@ -121,7 +121,7 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 		xrvOrder.addItemDecoration(xrvOrder.new DividerItemDecoration(dividerDrawable));
 		AppUtils.initListView(OrderActivity.this, xrvOrder, true, true);
 		xrvOrder.setLoadingListener(this);
-		xrvOrder.refresh();
+
 
 	}
 
@@ -148,8 +148,8 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 
 		//根据传进来的值设置位置
 		position = mActivity.getIntent().getIntExtra("position", 0);
-
-//		selectOrder(position);
+		mTabLayout.getTabAt(position).select();
+		selectOrder(position);
 
 
 	}

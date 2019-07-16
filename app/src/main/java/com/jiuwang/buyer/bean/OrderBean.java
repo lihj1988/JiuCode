@@ -196,7 +196,7 @@ public class OrderBean implements Serializable {
 		this.status_name = status_name;
 	}
 
-	public static class DetailListBean {
+	public static class DetailListBean implements Serializable{
 		/**
 		 * goods_name : 名称
 		 * goods_price : 价格

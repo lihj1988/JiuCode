@@ -134,7 +134,7 @@
                         android:id="@+id/waitDeliverTextView"
                         style="@style/TextView.Mine"
                         android:drawableTop="@drawable/ic_user_order_wait_drive"
-                        android:text="待发货" />
+                        android:text="已付款" />
 
                     <TextView
                         android:id="@+id/waitDeliverNumberTextView"
@@ -152,7 +152,7 @@
                         android:id="@+id/waitReceiptTextView"
                         style="@style/TextView.Mine"
                         android:drawableTop="@drawable/ic_user_order_wait_receipt"
-                        android:text="待收货" />
+                        android:text="已完成" />
 
                     <TextView
                         android:id="@+id/waitReceiptNumberTextView"
@@ -163,6 +163,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:visibility="invisible"
                     android:id="@+id/waitEvaluateRelativeLayout"
                     style="@style/Layout.Mine">
 
@@ -181,6 +182,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:visibility="invisible"
                     android:id="@+id/waitRefundRelativeLayout"
                     style="@style/Layout.Mine">
 

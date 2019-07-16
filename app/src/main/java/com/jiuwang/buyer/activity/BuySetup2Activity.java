@@ -1,13 +1,18 @@
 package com.jiuwang.buyer.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
@@ -123,6 +129,8 @@ public class BuySetup2Activity extends AppCompatActivity {
 			}
 		};
 	};
+	private OrderBean orderBean;
+
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
@@ -136,7 +144,9 @@ public class BuySetup2Activity extends AppCompatActivity {
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_buy_setup2);
+//		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 		ButterKnife.bind(this);
+		requestPermission();
 		initView();
 		initData();
 	}
@@ -146,25 +156,83 @@ public class BuySetup2Activity extends AppCompatActivity {
 
 
 	}
+/**
+ * 获取权限使用的 RequestCode
+	 */
+	private static final int PERMISSIONS_REQUEST_CODE = 1002;
 
+	/**
+	 * 检查支付宝 SDK 所需的权限，并在必要的时候动态获取。
+	 * 在 targetSDK = 23 以上，READ_PHONE_STATE 和 WRITE_EXTERNAL_STORAGE 权限需要应用在运行时获取。
+	 * 如果接入支付宝 SDK 的应用 targetSdk 在 23 以下，可以省略这个步骤。
+	 */
+	private void requestPermission() {
+		// Here, thisActivity is the current activity
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+				!= PackageManager.PERMISSION_GRANTED
+				|| ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+				!= PackageManager.PERMISSION_GRANTED) {
+
+			ActivityCompat.requestPermissions(this,
+					new String[]{
+							Manifest.permission.READ_PHONE_STATE,
+							Manifest.permission.WRITE_EXTERNAL_STORAGE
+					}, PERMISSIONS_REQUEST_CODE);
+
+		} else {
+//			showToast(this, getString(R.string.permission_already_granted));
+		}
+	}
+
+	/**
+	 * 权限获取回调
+	 */
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+		switch (requestCode) {
+			case PERMISSIONS_REQUEST_CODE: {
+
+				// 用户取消了权限弹窗
+				if (grantResults.length == 0) {
+					showToast(this, getString(R.string.permission_rejected));
+					return;
+				}
+
+				// 用户拒绝了某些权限
+				for (int x : grantResults) {
+					if (x == PackageManager.PERMISSION_DENIED) {
+						showToast(this, getString(R.string.permission_rejected));
+						return;
+					}
+				}
+
+				// 所需的权限均正常获取
+				showToast(this, getString(R.string.permission_granted));
+			}
+		}
+	}
 	//初始化数据
 	private void initData() {
 
 		mActivity = this;
 		mApplication = (MyApplication) getApplication();
 
-		pay_sn = mActivity.getIntent().getStringExtra("pay_sn");
-
-		if (!mActivity.getIntent().getStringExtra("payment_code").equals("online")) {
-			MyToastView.showToast("不支持的支付方式", mActivity);
-			mApplication.finishActivity(mActivity);
-		}
+//		pay_sn = mActivity.getIntent().getStringExtra("pay_sn");
+//
+//		if (!mActivity.getIntent().getStringExtra("payment_code").equals("online")) {
+//			MyToastView.showToast("不支持的支付方式", mActivity);
+//			mApplication.finishActivity(mActivity);
+//		}
 
 		actionbarText.setText("订单支付");
-		snTextView.append("：");
-		snTextView.append(pay_sn);
-		aliPayRadioButton.setVisibility(View.GONE);
-		wxPayRadioButton.setVisibility(View.GONE);
+//		snTextView.append("：");
+//		snTextView.append(pay_sn);
+		aliPayRadioButton.setVisibility(View.VISIBLE);
+		wxPayRadioButton.setVisibility(View.VISIBLE);
+		Intent intent = getIntent();
+		if(intent!=null){
+			orderBean = (OrderBean) intent.getSerializableExtra("data");
+		}
 
 	}
 
@@ -197,47 +265,52 @@ public class BuySetup2Activity extends AppCompatActivity {
 				break;
 			case R.id.payTextView://支付
 				if (aliPayRadioButton.isChecked()) {
-					OrderBean orderBean = new OrderBean();
-					orderBean.setTimeout_express("30m");
-					orderBean.setProduct_code(Constant.ALIPAY_PRODUCT_CODE);
-					orderBean.setTotal_amount("0.01");
-					orderBean.setBody("我是测试数据");
-					orderBean.setOut_trade_no(OrderInfoUtil2_0.getOutTradeNo());
-					JSONObject object = new JSONObject();
-					try {
-						object.put("timeout_express",orderBean.getTimeout_express());
-						object.put("product_code",orderBean.getProduct_code());
-						object.put("total_amount",orderBean.getTotal_amount());
-						object.put("subject",orderBean.getSubject());
-						object.put("body",orderBean.getBody());
-						object.put("out_trade_no",orderBean.getOut_trade_no());
-					} catch (JSONException e) {
-						e.printStackTrace();
+					if(orderBean!=null){
+//						orderBean.setTimeout_express(baseResultEntity.getDate().get(0).getTimeout_express());
+						orderBean.setProduct_code(Constant.ALIPAY_PRODUCT_CODE);
+						orderBean.setTotal_amount(orderBean.getTotal_amount());
+						orderBean.setBody(orderBean.getNotes());
+						orderBean.setOut_trade_no(orderBean.getId());
+						orderBean.setSubject(orderBean.getGoods_name());
+						JSONObject object = new JSONObject();
+						try {
+//							object.put("timeout_express",orderBean.getTimeout_express());
+							object.put("product_code",orderBean.getProduct_code());
+//							object.put("total_amount",orderBean.getTotal_amount());
+							object.put("total_amount","0.01");
+							object.put("subject",orderBean.getGoods_name());
+//							object.put("body",orderBean.getBody());
+//							object.put("out_trade_no",orderBean.getOut_trade_no());
+							object.put("out_trade_no",OrderInfoUtil2_0.getOutTradeNo());
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+
+						Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID,object.toString(), Constant.RSA2);
+						String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
+						String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
+						final String orderInfo = orderParam + "&" + sign;
+
+						final Runnable payRunnable = new Runnable() {
+
+							@Override
+							public void run() {
+								PayTask alipay = new PayTask(BuySetup2Activity.this);
+								Map<String, String> result = alipay.payV2(orderInfo, true);
+								Log.i("msp", result.toString());
+
+								Message msg = new Message();
+								msg.what = SDK_PAY_FLAG;
+								msg.obj = result;
+								mHandler.sendMessage(msg);
+							}
+						};
+
+						// 必须异步调用
+						Thread payThread = new Thread(payRunnable);
+						payThread.start();
 					}
 
-					Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID,object.toString(), Constant.RSA2);
-					String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
-					String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
-					final String orderInfo = orderParam + "&" + sign;
-
-					final Runnable payRunnable = new Runnable() {
-
-						@Override
-						public void run() {
-							PayTask alipay = new PayTask(BuySetup2Activity.this);
-							Map<String, String> result = alipay.payV2(orderInfo, true);
-							Log.i("msp", result.toString());
-
-							Message msg = new Message();
-							msg.what = SDK_PAY_FLAG;
-							msg.obj = result;
-							mHandler.sendMessage(msg);
-						}
-					};
-
-					// 必须异步调用
-					Thread payThread = new Thread(payRunnable);
-					payThread.start();
 				}
 				if (wxPayRadioButton.isChecked()) {
 					MyToastView.showToast("不支付的支付方式", mActivity);
@@ -258,5 +331,8 @@ public class BuySetup2Activity extends AppCompatActivity {
 				.setPositiveButton(R.string.confirm, null)
 				.setOnDismissListener(onDismiss)
 				.show();
+	}
+	private static void showToast(Context ctx, String msg) {
+		Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show();
 	}
 }

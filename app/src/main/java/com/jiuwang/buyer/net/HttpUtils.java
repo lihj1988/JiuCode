@@ -191,7 +191,7 @@ public class HttpUtils {
 	 * @param map
 	 * @return
 	 */
-	public static void settlement(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+	public static void settlement(HashMap<String, String> map, Consumer<OrderEntity> consumer, Consumer<Throwable> throwableConsumer) {
 
 		QClitent.getInstance()
 				.settlement(map)
