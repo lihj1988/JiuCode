@@ -91,13 +91,16 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 				break;
 			case Constant.ORDER_STATUS_PAYED://已付款
 				holder.rlDeal.setVisibility(View.VISIBLE);
-				holder.optionTextView.setText("订单详细");
+				holder.optionTextView.setText("确认收货");
 				holder.operaTextView.setText("退货/款");
 				holder.optionTextView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
 						//订单详细
-						MyToastView.showToast("开发中",mActivity);
+//						MyToastView.showToast("开发中",mActivity);
+
+
+
 					}
 				});
 				holder.operaTextView.setOnClickListener(new View.OnClickListener() {
