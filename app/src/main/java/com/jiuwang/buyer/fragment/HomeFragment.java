@@ -267,6 +267,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 				map.put("goods_name", serchName);
 			}
 			intDatas(map);
+			shopcarCount();
 
 		}
 	}

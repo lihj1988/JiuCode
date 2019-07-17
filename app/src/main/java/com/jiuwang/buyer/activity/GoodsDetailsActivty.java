@@ -190,6 +190,8 @@ public class GoodsDetailsActivty extends BaseActivity {
 					Intent intent = new Intent();
 					intent.setAction("refreshCar");
 					sendBroadcast(intent);
+					intent.setAction("refresh_home");
+					sendBroadcast(intent);
 
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
 					MyToastView.showToast(baseResultEntity.getMsg(), GoodsDetailsActivty.this);

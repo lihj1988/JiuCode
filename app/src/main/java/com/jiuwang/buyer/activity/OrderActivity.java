@@ -81,7 +81,7 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 	public List<OrderBean> orderArrayList; //订单数组
 	private int page = 1;
 	private int position = 0;
-	Handler handler = new Handler(){
+	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			Bundle data = msg.getData();
@@ -117,7 +117,7 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 		myReceiver = new MyReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("finish");
-		registerReceiver(myReceiver,filter);
+		registerReceiver(myReceiver, filter);
 		xrvOrder.refresh();
 	}
 
@@ -171,7 +171,7 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 //				tag = tab.getPosition() + "";
 				Message message = new Message();
 				Bundle bundle = new Bundle();
-				bundle.putInt("position",tab.getPosition());
+				bundle.putInt("position", tab.getPosition());
 				message.setData(bundle);
 				message.what = 0;
 				handler.sendMessage(message);
@@ -205,13 +205,13 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 			HashMap<String, String> hashMap = new HashMap<>();
 			hashMap.put("currPage", String.valueOf(page));
 			hashMap.put("pageSize", Constant.PAGESIZE);
-			if(position==0){
+			if (position == 0) {
 
-			}else if(position==1){
+			} else if (position == 1) {
 				hashMap.put("status", "0");
-			}else if(position==2){
+			} else if (position == 2) {
 				hashMap.put("status", "1");
-			}else if(position==3){
+			} else if (position == 3) {
 				hashMap.put("status", "2");
 			}
 			HttpUtils.selectOrder(hashMap, new Consumer<OrderEntity>() {
@@ -230,12 +230,17 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 								String[] sale_price = orderEntity.getDate().get(i).getSale_price().split(",");
 								String[] pic_url = orderEntity.getDate().get(i).getPic_url().split(",");
 								for (int j = 0; j < goods_name.length; j++) {
+
 									OrderBean.DetailListBean detailListBean = new OrderBean.DetailListBean();
 									detailListBean.setGoods_name(goods_name[j]);
 									detailListBean.setGoods_num(quantity[j]);
 									detailListBean.setGoods_price(sale_price[j]);
+									if (pic_url.length < goods_name.length) {
+										detailListBean.setPic_url(pic_url[0]);
+									}else {
+
 									detailListBean.setPic_url(pic_url[j]);
-//									detailListBean.set(goods_name[i]);
+									}
 									detailsList.add(detailListBean);
 								}
 								orderEntity.getDate().get(i).setDetail_list(detailsList);
