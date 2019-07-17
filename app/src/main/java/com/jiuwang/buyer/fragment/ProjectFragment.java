@@ -32,7 +32,6 @@ import com.jiuwang.buyer.entity.SelectGoodsEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.popupwindow.ChooseItemPopupWindow;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
@@ -134,7 +133,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 					}
 					loadingDialog.show();
 					HashMap<String, String> hashMap = new HashMap<>();
-					hashMap.put("project_id", projectList.get(position).getId());
+					hashMap.put("aution_id", projectList.get(position).getId());
 					HttpUtils.selectChooseGoods(hashMap, new Consumer<SelectGoodsEntity>() {
 
 						@Override

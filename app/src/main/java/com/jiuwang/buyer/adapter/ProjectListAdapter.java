@@ -197,7 +197,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 				//Log.v("CountDownTimerTest", "onFinish");
 
 				projectList.get(position).setStatus_name("已结束");
-				notifyDataSetChanged();
+//				notifyDataSetChanged();
 				Intent intent = new Intent();
 				intent.setAction("refreshProject");
 				context.sendBroadcast(intent);
