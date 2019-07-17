@@ -1,8 +1,14 @@
 package com.jiuwang.buyer.popupwindow;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -10,8 +16,22 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.alipay.sdk.app.EnvUtils;
+import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.BuySetup2Activity;
+import com.jiuwang.buyer.activity.OrderPayCompleteActivity;
+import com.jiuwang.buyer.bean.AuthResult;
+import com.jiuwang.buyer.bean.OrderBean;
+import com.jiuwang.buyer.bean.PayResult;
+import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * author：lihj
@@ -24,12 +44,72 @@ public class RechargePopupWindow extends PopupWindow {
 	private WindowManager.LayoutParams params;
 	private View mMenuView;
 	private Activity context;
+	private OrderBean orderBean;
 	private TextView aliPay, wxPay, cancle;
+	private static final int SDK_PAY_FLAG = 1;
+	private static final int SDK_AUTH_FLAG = 2;
+	@SuppressLint("HandlerLeak")
+	private Handler mHandler = new Handler() {
+		@SuppressWarnings("unused")
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case SDK_PAY_FLAG: {
+					@SuppressWarnings("unchecked")
+					PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+					/**
+					 * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+					 */
+					String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+					String resultStatus = payResult.getResultStatus();
+					// 判断resultStatus 为9000则代表支付成功
+					if (TextUtils.equals(resultStatus, Constant.ALIPAY_RESULTSTATUS)) {
+						// 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+//						showAlert(BuySetup2Activity.this, getString(R.string.pay_success) + payResult);
+						RechargePopupWindow.this.dismiss();
+						Intent intent = new Intent();
+						intent.setAction("minerefresh");
+						context.sendBroadcast(intent);
+						intent.setAction("rechargefinish");
+						context.sendBroadcast(intent);
+						Intent intent1 = new Intent(context,OrderPayCompleteActivity.class);
+						intent1.putExtra("totalAmount",orderBean.getTotal_amount());
+						context.startActivity(intent1);
 
+					} else {
+						// 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+//						showAlert(BuySetup2Activity.this, getString(R.string.pay_failed) + payResult);
+						MyToastView.showToast(context.getResources().getString(R.string.pay_failed),context);
+					}
+					break;
+				}
+				case SDK_AUTH_FLAG: {
+					@SuppressWarnings("unchecked")
+					AuthResult authResult = new AuthResult((Map<String, String>) msg.obj, true);
+					String resultStatus = authResult.getResultStatus();
 
-	public RechargePopupWindow(Activity context) {
+					// 判断resultStatus 为“9000”且result_code
+					// 为“200”则代表授权成功，具体状态码代表含义可参考授权接口文档
+					if (TextUtils.equals(resultStatus,  Constant.ALIPAY_RESULTSTATUS) && TextUtils.equals(authResult.getResultCode(), "200")) {
+						// 获取alipay_open_id，调支付时作为参数extern_token 的value
+						// 传入，则支付账户为该授权账户
+//						showAlert(BuySetup2Activity.this, getString(R.string.auth_success) + authResult);
+					} else {
+						// 其他状态值则为授权失败
+//						showAlert(BuySetup2Activity.this, getString(R.string.auth_failed) + authResult);
+					}
+					break;
+				}
+				default:
+					break;
+			}
+		};
+	};
+
+	public RechargePopupWindow(Activity context,OrderBean orderBean) {
 		super(context);
 		this.context = context;
+		this.orderBean = orderBean;
+		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mMenuView = inflater.inflate(R.layout.popup_recharge, null);
@@ -71,6 +151,47 @@ public class RechargePopupWindow extends PopupWindow {
 			public void onClick(View v) {
 				//支付宝支付
 				MyToastView.showToast("支付宝支付" ,context);
+				if(orderBean!=null){
+//						orderBean.setTimeout_express(baseResultEntity.getDate().get(0).getTimeout_express());
+					JSONObject object = new JSONObject();
+					try {
+//							object.put("timeout_express",orderBean.getTimeout_express());
+						object.put("product_code",orderBean.getProduct_code());
+						object.put("total_amount",orderBean.getTotal_amount());
+//							object.put("total_amount","0.01");
+						object.put("subject",orderBean.getSubject());
+//							object.put("body",orderBean.getBody());
+						object.put("out_trade_no",orderBean.getOut_trade_no());
+						object.put("business_type",orderBean.getBusiness_type());
+//							object.put("out_trade_no",OrderInfoUtil2_0.getOutTradeNo());
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+
+					Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID,object.toString(), Constant.RSA2);
+					String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
+					String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
+					final String orderInfo = orderParam + "&" + sign;
+
+					final Runnable payRunnable = new Runnable() {
+
+						@Override
+						public void run() {
+							PayTask alipay = new PayTask(context);
+							Map<String, String> result = alipay.payV2(orderInfo, true);
+							Log.i("msp", result.toString());
+
+							Message msg = new Message();
+							msg.what = SDK_PAY_FLAG;
+							msg.obj = result;
+							mHandler.sendMessage(msg);
+						}
+					};
+
+					// 必须异步调用
+					Thread payThread = new Thread(payRunnable);
+					payThread.start();
+				}
 
 			}
 		});

@@ -18,7 +18,7 @@ public class CarBean implements Serializable {
 	 */
 
 	private String grouping_cd;
-	private int count;
+	private String count;
 	private String grouping_name;
 	private boolean ischeck;//是否被选中
 	private List<CarGoodsBean> goods_detail;
@@ -31,11 +31,11 @@ public class CarBean implements Serializable {
 		this.grouping_cd = grouping_cd;
 	}
 
-	public int getCount() {
+	public String getCount() {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(String count) {
 		this.count = count;
 	}
 

@@ -133,7 +133,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 					}
 					loadingDialog.show();
 					HashMap<String, String> hashMap = new HashMap<>();
-					hashMap.put("aution_id", projectList.get(position).getId());
+					hashMap.put("project_id", projectList.get(position).getProject_id());
 					HttpUtils.selectChooseGoods(hashMap, new Consumer<SelectGoodsEntity>() {
 
 						@Override
@@ -209,6 +209,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 				}
 				if (Constant.HTTP_SUCCESS_CODE.equals(projectEntity.getCode())) {
 					projectList.addAll(projectEntity.getData());
+
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectEntity.getCode())) {
 
 					Intent intent = new Intent(getActivity(), LoginActivity.class);

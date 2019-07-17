@@ -13,6 +13,7 @@ import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
+import com.jiuwang.buyer.entity.UserEntity;
 
 import java.util.HashMap;
 
@@ -134,6 +135,12 @@ public interface QNewsService {
 	//忘记密码-修改密码
 	@POST("set_new_password_action.jsp")
 	Observable<BaseResultEntity> onForget(
+			@QueryMap HashMap<String, String> map
+	);
+
+	//用户信息查询
+	@POST("/reg_action.jsp")
+	Observable<UserEntity> selectUserInfo(
 			@QueryMap HashMap<String, String> map
 	);
 

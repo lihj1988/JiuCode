@@ -285,6 +285,7 @@ public class BuySetup2Activity extends BaseActivity {
 						orderBean.setBody(orderBean.getNotes());
 						orderBean.setOut_trade_no(orderBean.getId());
 						orderBean.setSubject(orderBean.getGoods_name());
+						orderBean.setBusiness_type("1");//1 订单付款
 						JSONObject object = new JSONObject();
 						try {
 //							object.put("timeout_express",orderBean.getTimeout_express());

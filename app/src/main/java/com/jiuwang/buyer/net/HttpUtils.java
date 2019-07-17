@@ -13,6 +13,7 @@ import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
+import com.jiuwang.buyer.entity.UserEntity;
 
 import java.util.HashMap;
 
@@ -310,6 +311,20 @@ public class HttpUtils {
 	public static void onForget(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
 		QClitent.getInstance()
 				.onForget(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}
+
+	/**
+	 * 获取用户信息
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void selectUserInfo(HashMap<String, String> map, Consumer<UserEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.selectUserInfo(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);

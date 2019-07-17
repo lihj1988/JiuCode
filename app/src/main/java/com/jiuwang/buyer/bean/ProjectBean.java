@@ -44,6 +44,7 @@ public class ProjectBean implements Serializable {
 	private String grouping_cd;
 	private String create_user;
 	private String create_username;
+	private String project_id;
 	private String create_time;
 	private String sale_price;//价格
 	private String status_name;//状态名称
@@ -184,5 +185,13 @@ public class ProjectBean implements Serializable {
 
 	public void setSale_price(String sale_price) {
 		this.sale_price = sale_price;
+	}
+
+	public String getProject_id() {
+		return project_id;
+	}
+
+	public void setProject_id(String project_id) {
+		this.project_id = project_id;
 	}
 }

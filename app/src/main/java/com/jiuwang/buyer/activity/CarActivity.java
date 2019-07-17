@@ -84,6 +84,7 @@ public class CarActivity extends BaseActivity {
 	private MyCarAdapter cartListAdapter;
 	private List<CarBean> carBeanList;
 	private MyBroadCastReceiver myBroadCastReceiver;
+	private MyReceiver myReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,10 @@ public class CarActivity extends BaseActivity {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("refreshCar");
 		registerReceiver(myBroadCastReceiver, intentFilter);
+		myReceiver = new MyReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("finish");
+		registerReceiver(myReceiver,filter);
 	}
 
 	private void initData() {
@@ -289,7 +294,11 @@ public class CarActivity extends BaseActivity {
 		super.onDestroy();
 		ButterKnife.unbind(this);
 		unregisterReceiver(myBroadCastReceiver);
+		unregisterReceiver(myReceiver);
 	}
+
+
+
 
 	class MyBroadCastReceiver extends BroadcastReceiver {
 
@@ -298,4 +307,11 @@ public class CarActivity extends BaseActivity {
 			initData();
 		}
 	}
+	class MyReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			finish();
+		}
+	}
+
 }

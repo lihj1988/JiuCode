@@ -78,6 +78,8 @@ public class RegisterActivity extends BaseActivity {
 	EditText etPhone;
 	@Bind(R.id.et_messagecode)
 	EditText etMessagecode;
+	@Bind(R.id.et_invite_code)
+	EditText et_invite_code;
 	@Bind(tv_gainmessage)
 	TextView tvGainmessage;
 	@Bind(R.id.subBtn)
@@ -94,6 +96,7 @@ public class RegisterActivity extends BaseActivity {
 	Handler handler = new Handler();
 	private boolean boo1;
 	private LoadingDialog loadingDialog;
+	private String invite_code;
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
@@ -135,6 +138,8 @@ public class RegisterActivity extends BaseActivity {
 		phone = etPhone.getText().toString().trim();
 		//短信验证码
 		messagecode = etMessagecode.getText().toString().trim();
+		//邀请码
+		invite_code = et_invite_code.getText().toString().trim();
 
 		if (TextUtils.isEmpty(userName)) {
 			MyToastView.showToast("请输入登录账号", this);
@@ -216,14 +221,14 @@ public class RegisterActivity extends BaseActivity {
 				}
 				//获取短信验证网络请求
 				HashMap<String, String> map = new HashMap<>();
-				map.put("linkman_mobile",phone);
-				map.put("act","9");
+				map.put("linkman_mobile", phone);
+				map.put("act", "9");
 				HttpUtils.regVerify(map, new Consumer<BaseResultEntity>() {
 					@Override
 					public void accept(BaseResultEntity baseResultEntity) throws Exception {
 //				Log.i("Str", str);
-						if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
-							MyToastView.showToast("验证码已发送",RegisterActivity.this);
+						if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+							MyToastView.showToast("验证码已发送", RegisterActivity.this);
 						}
 
 					}
@@ -254,6 +259,7 @@ public class RegisterActivity extends BaseActivity {
 		hashMap.put("mobile_number", phone);
 		hashMap.put("mobile_code", messagecode);
 		hashMap.put("new_passwd", password);
+		hashMap.put("invite_code", invite_code);
 		HttpUtils.register(hashMap, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
@@ -289,7 +295,6 @@ public class RegisterActivity extends BaseActivity {
 			}
 		});
 	}
-
 
 
 	Runnable runnable = new Runnable() {

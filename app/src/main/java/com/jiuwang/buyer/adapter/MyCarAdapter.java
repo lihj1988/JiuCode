@@ -160,8 +160,9 @@ public class MyCarAdapter extends BaseAdapter {
 						cartInfo(Constant.ACTION_ACT_DELETE, position, finalI1, "");
 					}
 				});
+				String[] split = carGoodsBean.getPic_url().split(",");
 
-				CommonUtil.loadImage(context, NetURL.PIC_BASEURL + carGoodsBean.getPic_url(), goodsImageView);
+				CommonUtil.loadImage(context, NetURL.PIC_BASEURL + split[0], goodsImageView);
 
 				goodsNameTextView.setText(carGoodsBean.getGoods_name());
 				tvDesc.setText(carGoodsBean.getNotes());

@@ -34,6 +34,7 @@ public class OrderBean implements Serializable {
 	private String pic_url;
 	private String notes;
 	private String status;
+	private String business_type;
 	private String status_name;
 
 	public String getId() {
@@ -194,6 +195,14 @@ public class OrderBean implements Serializable {
 
 	public void setStatus_name(String status_name) {
 		this.status_name = status_name;
+	}
+
+	public String getBusiness_type() {
+		return business_type;
+	}
+
+	public void setBusiness_type(String business_type) {
+		this.business_type = business_type;
 	}
 
 	public static class DetailListBean implements Serializable{

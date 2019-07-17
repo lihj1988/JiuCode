@@ -28,6 +28,7 @@ import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.HomeResultEntity;
+import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
@@ -84,6 +85,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		initView();
 		map = new HashMap<>();
 		intDatas(map);
+		shopcarCount();
 //		refreshMefragment();
 		if (receiver == null) {
 			receiver = new RefreshReceiver();
@@ -136,7 +138,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 						setAdapter();
 					}
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(homeResultEntity.getCode())) {
-					MyToastView.showToast(homeResultEntity.getMsg(),getActivity());
+					MyToastView.showToast(homeResultEntity.getMsg(), getActivity());
 					Intent intent = new Intent(getActivity(), LoginActivity.class);
 					startActivity(intent);
 					getActivity().finish();
@@ -218,6 +220,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		page = 1;
 		refreshTime++;
 		times = 0;
+		shopcarCount();
 		intDatas(map);
 	}
 
@@ -238,9 +241,9 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 				break;
 			case R.id.shopping_car:
 //				if (!CommonUtil.isNull(userCode)) {
-					Intent intentCar = new Intent(mActivity, CarActivity.class);
-					intentCar.putExtra("shoppingCount", shoppingCount);
-					mActivity.startActivity(intentCar);
+				Intent intentCar = new Intent(mActivity, CarActivity.class);
+				intentCar.putExtra("shoppingCount", shoppingCount);
+				mActivity.startActivity(intentCar);
 //				} else {
 //					MyToastView.showToast("请您先登录", mActivity);
 //					Intent intentLogin = new Intent(mActivity, LoginActivity.class);
@@ -257,10 +260,11 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			String serchName = intent.getStringExtra("searchName");;
+			String serchName = intent.getStringExtra("searchName");
+			;
 			intent.putExtra("search_flag", "1");//1.代表进入搜索页面
-			if(serchName!=null){
-				map.put("goods_name",serchName);
+			if (serchName != null) {
+				map.put("goods_name", serchName);
 			}
 			intDatas(map);
 
@@ -294,28 +298,36 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 	/**
 	 * 查询购物车数量
 	 */
-	public void refreshMefragment() {
+	public void shopcarCount() {
 		if (CommonUtil.getNetworkRequest(getActivity())) {
-//			HttpUtils.getNumberdata("getShopCarCount", new Consumer<MoneyNumberBean>() {
-//				@Override
-//				public void accept(MoneyNumberBean entity) throws Exception {
-//					if ("0".equals(entity.getCode())) {//0成功  1失败 2登录超时 重新登录
-//						visible_dot.setText(entity.getCount());//购物车数量
-//						shoppingCount = entity.getCount();
-//					} else if ("2".equals(entity.getCode())) {
-//						Intent intent = new Intent(getActivity(), LoginActivity.class);
-//						startActivity(intent);
-//					} else {
-//						MyToastView.showToast(entity.getMsg(), getActivity());
-//					}
-//				}
-//			}, new Consumer<Throwable>() {
-//				@Override
-//				public void accept(Throwable throwable) throws Exception {
-//				}
-//			});
+			HashMap<String, String> map = new HashMap<>();
+			map.put("act", "");
+			HttpUtils.selectCar(map, new Consumer<MyCarEntity>() {
+				@Override
+				public void accept(MyCarEntity myCarEntity) throws Exception {
+					int count = 0;
+					if (Constant.HTTP_SUCCESS_CODE.equals(myCarEntity.getCode())) {
+						if(myCarEntity.getData()!=null&&myCarEntity.getData().size()>0){
+							for (int i = 0; i < myCarEntity.getData().size(); i++) {
+								count += Integer.parseInt(myCarEntity.getData().get(i).getCount());
+							}
+						}
+						visible_dot.setText(count+"");
+
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(myCarEntity.getCode())) {
+						MyToastView.showToast(myCarEntity.getMsg(), getActivity());
+						Intent intent = new Intent(getActivity(), LoginActivity.class);
+						startActivity(intent);
+						getActivity().finish();
+					}
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+
+
+				}
+			});
 		}
 	}
-
-
 }

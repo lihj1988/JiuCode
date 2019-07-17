@@ -3,9 +3,14 @@ package com.jiuwang.buyer.fragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +28,26 @@ import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.OrderActivity;
 import com.jiuwang.buyer.activity.RechargeActivity;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.bean.UserBean;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.UserEntity;
+import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.service.UpdateVersionService;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.functions.Consumer;
 import okhttp3.Call;
 
 import static com.jiuwang.buyer.R.id.actionbar_text;
@@ -92,6 +105,8 @@ public class MineFragment extends Fragment {
 	LinearLayout userRelativeLayout;
 	@Bind(R.id.tvUserName)
 	TextView tvUserName;
+	@Bind(R.id.tvMoneyName)
+	TextView tvMoneyName;
 	@Bind(R.id.tvBalance)
 	TextView tvBalance;
 	private View view;
@@ -99,25 +114,81 @@ public class MineFragment extends Fragment {
 	private String userCode;
 	ProgressDialog progressDialog;//下载进度条
 	private String userName, token;//图片下显示的用户名
-
-
 	@Bind(R.id.return_img)
 	ImageView return_img;//返回
 	@Bind(R.id.onclick_layout_right)
 	Button onclick_layout_right;//右边筛选
 
+	private UserBean userBean;
+	private MyReceiver myReceiver;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = View.inflate(getActivity(), R.layout.fragment_mine, null);
 		ButterKnife.bind(this, view);
+		initData();
 		initView();
+		myReceiver = new MyReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("minerefresh");
+		getActivity().registerReceiver(myReceiver,filter);
 		return view;
+	}
+
+	//获取用户数据
+	private void initData() {
+
+		if (CommonUtil.getNetworkRequest(getActivity())) {
+			HashMap<String, String> map = new HashMap<>();
+			map.put("", "");
+			HttpUtils.selectUserInfo(map, new Consumer<UserEntity>() {
+				@Override
+				public void accept(UserEntity userEntity) throws Exception {
+
+					if (Constant.HTTP_SUCCESS_CODE.equals(userEntity.getCode())) {
+						userBean = userEntity.getData().get(0);
+						new Handler() {
+
+							@Override
+							public void handleMessage(Message msg) {
+
+								tvUserName.setText(userBean.getMobile_number());
+								if ("".equals(userBean.getTrial_amount())) {
+									tvBalance.setText(userBean.getAccount_balance());
+									if ("".equals(userBean.getTrial_amount())){
+										tvBalance.setText("0.00");
+									}
+									tvMoneyName.setText("账户余额：");
+
+								} else {
+									tvMoneyName.setText("体验金：");
+									tvBalance.setText(userBean.getTrial_amount());
+								}
+							}
+						}.sendEmptyMessage(0);
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(userEntity.getCode())) {
+						startActivity(new Intent(getActivity(), LoginActivity.class));
+						getActivity().finish();
+					} else {
+
+					}
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+
+				}
+			});
+		}
+
+
 	}
 
 	private void initView() {
 		actionbarText.setText("我的");
 		onclickLayoutLeft.setVisibility(View.INVISIBLE);
 		onclick_layout_right.setVisibility(View.INVISIBLE);
+
 
 	}
 
@@ -168,6 +239,7 @@ public class MineFragment extends Fragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		ButterKnife.unbind(this);
+		getActivity().unregisterReceiver(myReceiver);
 	}
 
 	@OnClick({R.id.orderTextView, R.id.waitPaymentRelativeLayout, R.id.waitDeliverRelativeLayout, R.id.waitReceiptRelativeLayout,
@@ -183,18 +255,18 @@ public class MineFragment extends Fragment {
 			case R.id.waitPaymentRelativeLayout:
 				Intent intent = new Intent(mActivity, OrderActivity.class);
 				intent.putExtra("position", 1);
-				startActivity( intent);
+				startActivity(intent);
 				break;
 			case R.id.waitDeliverRelativeLayout:
 				Intent intentWaitDeliver = new Intent(mActivity, OrderActivity.class);
 				intentWaitDeliver.putExtra("position", 2);
 //				MyApplication.getInstance().startActivityLoginSuccess(mActivity, intentWaitDeliver);
-				startActivity( intentWaitDeliver);
+				startActivity(intentWaitDeliver);
 				break;
 			case R.id.waitReceiptRelativeLayout:
 				Intent intentWaitReceipt = new Intent(mActivity, OrderActivity.class);
 				intentWaitReceipt.putExtra("position", 3);
-				startActivity( intentWaitReceipt);
+				startActivity(intentWaitReceipt);
 //				MyApplication.getInstance().startActivityLoginSuccess(mActivity, intentWaitReceipt);
 				break;
 			case R.id.waitEvaluateRelativeLayout:
@@ -228,5 +300,13 @@ public class MineFragment extends Fragment {
 		}
 	}
 
+
+
+	class MyReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			initData();
+		}
+	}
 
 }

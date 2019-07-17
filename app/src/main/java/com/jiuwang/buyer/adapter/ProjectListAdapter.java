@@ -191,18 +191,6 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 	private void exeTimer(long time, final int position,ProjectListAdapter.ViewHolder holder) {
 		new MyCountDownTimer(time, 1000,position,holder) {
 
-
-			@Override
-			public void onFinish() {
-				//Log.v("CountDownTimerTest", "onFinish");
-
-				projectList.get(position).setStatus_name("已结束");
-//				notifyDataSetChanged();
-				Intent intent = new Intent();
-				intent.setAction("refreshProject");
-				context.sendBroadcast(intent);
-
-			}
 		}.start();
 
 	}
@@ -238,9 +226,11 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 
 		@Override
 		public void onFinish() {
-			//Log.v("CountDownTimerTest", "onFinish");
-
+			Intent intent = new Intent();
+			intent.setAction("refreshProject");
+			context.sendBroadcast(intent);
 			projectList.get(position).setStatus_name("已结束");
+//			MyCountDownTimer.this.onFinish();
 			notifyDataSetChanged();
 
 		}

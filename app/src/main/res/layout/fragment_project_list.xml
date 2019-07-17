@@ -6,5 +6,6 @@
 
     <include layout="@layout/include_title"></include>
 
-    <include layout="@layout/include_recyclerview"></include>
+    <include
+        layout="@layout/include_recyclerview"></include>
 </LinearLayout>

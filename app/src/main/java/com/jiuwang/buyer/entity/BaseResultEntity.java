@@ -10,10 +10,12 @@ public class BaseResultEntity {
 	/**
 	 * msg : 返回提示信息
 	 * code : 返回状态码
+	 * count:
 	 */
 
 	private String msg;
 	private String code;
+	private String count;
 
 	public String getMsg() {
 		return msg;
@@ -31,5 +33,11 @@ public class BaseResultEntity {
 		this.code = code;
 	}
 
+	public String getCount() {
+		return count;
+	}
 
+	public void setCount(String count) {
+		this.count = count;
+	}
 }
