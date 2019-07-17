@@ -18,8 +18,8 @@ public class Constant {
 	public static final String ACTION_ACT_UPDATA = "2";
 	public static final String ACTION_ACT_DELETE = "3";
 	//支付宝AppID
-//	public static final String ALIPAY_APPID = "2016081900289879";
-	public static final String ALIPAY_APPID = "2019032063599620";//生产环境
+	public static final String ALIPAY_APPID = "2016081900289879";
+//	public static final String ALIPAY_APPID = "2019032063599620";//生产环境
 	public static final String ALIPAY_METHOD ="alipay.trade.app.pay";
 	public static final String ALIPAY_RESULTSTATUS = "9000";
 	public static final String CHARSET = "UTF-8";

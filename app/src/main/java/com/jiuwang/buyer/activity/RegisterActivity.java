@@ -26,6 +26,7 @@ import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
+import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.HashMap;
@@ -92,6 +93,7 @@ public class RegisterActivity extends BaseActivity {
 	private int recLen = 60;
 	Handler handler = new Handler();
 	private boolean boo1;
+	private LoadingDialog loadingDialog;
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
@@ -240,7 +242,11 @@ public class RegisterActivity extends BaseActivity {
 
 	//注册
 	private void register() {
-		DialogUtil.progress(RegisterActivity.this);
+
+
+		loadingDialog = new LoadingDialog(RegisterActivity.this);
+		loadingDialog.show();
+//		DialogUtil.progress(RegisterActivity.this);
 		HashMap<String, String> hashMap = new HashMap<>();
 		hashMap.put("act", Constant.ACTION_ACT_ADD);
 		hashMap.put("user_cd", userName);
@@ -251,7 +257,7 @@ public class RegisterActivity extends BaseActivity {
 		HttpUtils.register(hashMap, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
-				DialogUtil.cancel();
+				loadingDialog.dismiss();
 				if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
 					MyToastView.showToast(baseResultEntity.getMsg(), RegisterActivity.this);
 					//注册成功后登录
@@ -278,7 +284,7 @@ public class RegisterActivity extends BaseActivity {
 		}, new Consumer<Throwable>() {
 			@Override
 			public void accept(Throwable throwable) throws Exception {
-				DialogUtil.cancel();
+				loadingDialog.dismiss();
 				MyToastView.showToast("注册失败", RegisterActivity.this);
 			}
 		});

@@ -14,6 +14,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:orientation="horizontal">
@@ -66,7 +67,14 @@
                     android:textColor="#ffffff"
                     android:textSize="15sp"
                     android:visibility="gone"/>
+
             </LinearLayout>
+            <ImageView
+                android:id="@+id/shopcar"
+                android:layout_marginRight="@dimen/padding_size_5"
+                android:src="@drawable/shopping_car"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -84,8 +92,7 @@
 
         <LinearLayout
             android:layout_weight="3"
-            android:paddingBottom="@dimen/spacing_tinyer"
-            android:paddingTop="@dimen/spacing_tinyer"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"

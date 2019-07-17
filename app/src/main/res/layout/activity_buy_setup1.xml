@@ -1,135 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-                style="@style/Layout.Main">
-    <include layout="@layout/include_topview"></include>
+			  style="@style/Layout.Main"
+			  android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+	<include layout="@layout/include_topview"></include>
 
-        <include
-            android:id="@+id/toolbarInclude"
-            style="@style/Include.Wrap"
-            layout="@layout/include_toolbar"/>
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+		<include
+			android:id="@+id/toolbarInclude"
+			style="@style/Include.Wrap"
+			layout="@layout/include_toolbar"/>
 
-            <LinearLayout style="@style/Layout.Linear">
+		<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1">
 
-                <com.jcodecraeer.xrecyclerview.XRecyclerView
-                    android:id="@+id/mainListView"
-                    style="@style/ListView.Main"/>
+			<LinearLayout style="@style/Layout.Linear">
 
-                <View
-                    style="@style/View.Line"
-                    android:layout_height="8dip"/>
+				<TextView
+					android:id="@+id/addressTitleTextView"
+					style="@style/TextView.ItemStoreName"
+					android:text="收货地址"/>
 
-                <TextView
-                    android:id="@+id/addressTitleTextView"
-                    style="@style/TextView.ItemStoreName"
-                    android:text="收货地址"/>
+				<View style="@style/View.Line"/>
 
-                <View style="@style/View.Line"/>
+				<RelativeLayout
+					android:id="@+id/addressRelativeLayout"
+					style="@style/Layout.Item7"
+					android:paddingBottom="8dip">
 
-                <RelativeLayout
-                    android:id="@+id/addressRelativeLayout"
-                    style="@style/Layout.Item7"
-                    android:paddingBottom="8dip">
+					<TextView
+						android:id="@+id/nameTextView"
+						style="@style/TextView.ItemAddressName"/>
 
-                    <TextView
-                        android:id="@+id/nameTextView"
-                        style="@style/TextView.ItemAddressName"/>
+					<TextView
+						android:id="@+id/phoneTextView"
+						style="@style/TextView.ItemAddressPhone"
+						android:layout_toEndOf="@+id/nameTextView"
+						android:layout_toRightOf="@+id/nameTextView"/>
 
-                    <TextView
-                        android:id="@+id/phoneTextView"
-                        style="@style/TextView.ItemAddressPhone"
-                        android:layout_toEndOf="@+id/nameTextView"
-                        android:layout_toRightOf="@+id/nameTextView"/>
+					<TextView
+						android:id="@+id/addressTextView"
+						style="@style/TextView.ItemAddressArea"
+						android:layout_below="@+id/nameTextView"/>
 
-                    <TextView
-                        android:id="@+id/addressTextView"
-                        style="@style/TextView.ItemAddressArea"
-                        android:layout_below="@+id/nameTextView"/>
+				</RelativeLayout>
 
-                </RelativeLayout>
+				<View
+					style="@style/View.Line"
+					android:layout_height="8dip"/>
 
-                <View
-                    style="@style/View.Line"
-                    android:layout_height="8dip"/>
+				<com.jcodecraeer.xrecyclerview.XRecyclerView
+					android:id="@+id/mainListView"
+					style="@style/ListView.Main"/>
 
-                <TextView
-                    android:id="@+id/invoiceTitleTextView"
-                    style="@style/TextView.ItemStoreName"
-                    android:text="发票信息"/>
+				<View
+					style="@style/View.Line"
+					android:layout_height="8dip"/>
 
-                <View style="@style/View.Line"/>
 
-                <RelativeLayout style="@style/Layout.Item">
+				<TextView
+					android:id="@+id/invoiceTitleTextView"
+					style="@style/TextView.ItemStoreName"
+					android:text="发票信息"/>
 
-                    <TextView
-                        style="@style/TextView.GoodsActivity1"
-                        android:text="不需要发票"/>
+				<View style="@style/View.Line"/>
 
-                </RelativeLayout>
+				<RelativeLayout style="@style/Layout.Item">
 
-                <View
-                    style="@style/View.Line"
-                    android:layout_height="8dip"/>
+					<TextView
+						style="@style/TextView.GoodsActivity1"
+						android:text="不需要发票"/>
 
-                <TextView
-                    android:id="@+id/paymentTitleTextView"
-                    style="@style/TextView.ItemStoreName"
-                    android:text="支付方式"/>
+				</RelativeLayout>
 
-                <View style="@style/View.Line"/>
+				<View
+					style="@style/View.Line"
+					android:layout_height="8dip"/>
 
-                <RelativeLayout style="@style/Layout.Item">
+				<TextView
+					android:id="@+id/paymentTitleTextView"
+					style="@style/TextView.ItemStoreName"
+					android:text="支付方式"/>
 
-                    <TextView
-                        style="@style/TextView.GoodsActivity1"
-                        android:text="在线支付"/>
+				<View style="@style/View.Line"/>
 
-                </RelativeLayout>
+				<RelativeLayout style="@style/Layout.Item">
 
-                <View
-                    style="@style/View.Line"
-                    android:layout_height="8dip"/>
+					<TextView
+						style="@style/TextView.GoodsActivity1"
+						android:text="在线支付"/>
 
-            </LinearLayout>
+				</RelativeLayout>
 
-        </ScrollView>
+				<View
+					style="@style/View.Line"
+					android:layout_height="8dip"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_size_10">
+			</LinearLayout>
 
-            <TextView
-                android:id="@+id/tvAmount"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/red"
-                android:textStyle="bold"/>
+		</ScrollView>
 
-            <Button
-                android:id="@+id/confirmTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="48dip"
-                android:background="@drawable/btn_selecter"
-                android:gravity="center"
-                android:paddingLeft="@dimen/padding_size_10"
-                android:paddingRight="@dimen/padding_size_10"
-                android:text="提交订单"
-                android:textColor="@color/white"/>
-        </LinearLayout>
-    </LinearLayout>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/padding_size_10">
+
+			<TextView
+				android:id="@+id/tvAmount"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:textColor="@color/red"
+				android:textStyle="bold"/>
+
+			<Button
+				android:id="@+id/confirmTextView"
+				android:layout_width="wrap_content"
+				android:layout_height="40dip"
+				android:background="@drawable/btn_selecter"
+				android:gravity="center"
+				android:paddingLeft="@dimen/padding_size_10"
+				android:paddingRight="@dimen/padding_size_10"
+				android:text="提交订单"
+				android:textColor="@color/white"/>
+		</LinearLayout>
+	</LinearLayout>
 
 
 </LinearLayout>

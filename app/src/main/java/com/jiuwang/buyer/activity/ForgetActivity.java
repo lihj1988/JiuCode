@@ -18,6 +18,7 @@ import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
+import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.HashMap;
@@ -37,6 +38,7 @@ public class ForgetActivity extends BaseActivity {
 	// 获取验证码标记，控制一分只能点击一次
 	public boolean boo1 = false;
 	private Button onclick_layout_right;
+	private LoadingDialog loadingDialog;
 	//	private VerifyManager manager;
 
 	@Override
@@ -208,9 +210,10 @@ public class ForgetActivity extends BaseActivity {
 		}
 
 		if (CommonUtil.getNetworkRequest(ForgetActivity.this)) {
-
+			loadingDialog = new LoadingDialog(ForgetActivity.this);
+			loadingDialog.show();
 			//密码重置
-			DialogUtil.progress(ForgetActivity.this);
+
 			HashMap<String, String> map = new HashMap<>();
 			map.put("mobile_number", phone);
 			map.put("newpwd", confirm);
@@ -228,13 +231,13 @@ public class ForgetActivity extends BaseActivity {
 					}
 					bt_submit.setEnabled(true);
 					MyToastView.showToast(baseResultEntity.getMsg(), ForgetActivity.this);
-					DialogUtil.cancel();
+					loadingDialog.dismiss();
 				}
 			}, new Consumer<Throwable>() {
 				@Override
 				public void accept(Throwable throwable) throws Exception {
 					bt_submit.setEnabled(true);
-					DialogUtil.cancel();
+					loadingDialog.dismiss();
 					MyToastView.showToast(getString(R.string.msg_error_operation), ForgetActivity.this);
 					bt_submit.setEnabled(true);
 

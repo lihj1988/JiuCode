@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:app="http://schemas.android.com/apk/res-auto"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:background="#ffffff"
+			  android:orientation="vertical">
+
+	<include layout="@layout/include_topview"></include>
+	<include
+		android:id="@+id/include"
+		layout="@layout/include_title"/>
+
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					style="@style/Layout.Main">
+
+		<ListView
+			android:id="@+id/carListView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:divider="@null"
+			android:listSelector="#00000000"
+			android:scrollbars="none"/>
+
+		<TextView
+			android:id="@+id/stateTextView"
+			style="@style/TextView.State"/>
+
+		<TextView
+			android:id="@+id/tipsTextView"
+			style="@style/TextView.Tips"
+			android:layout_alignParentTop="true"
+			android:layout_toRightOf="@+id/stateTextView"
+			android:layout_toEndOf="@+id/stateTextView"/>
+
+	</RelativeLayout>
+
+	<LinearLayout
+		android:id="@+id/bottom_bar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:background="@color/gray"
+		android:gravity="center_vertical"
+		android:orientation="horizontal">
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:orientation="horizontal">
+
+			<CheckBox
+				android:id="@+id/check_box"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_marginLeft="@dimen/padding_size_10"
+				android:button="@drawable/check_box_bg"
+				android:checked="false"
+				android:gravity="center"
+				android:text="全选"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:textColor="@color/brown"
+				android:textSize="@dimen/textsize_16"/>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/cart_rl_allprie_total"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:orientation="vertical"
+			android:visibility="visible">
+
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+
+				<LinearLayout
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1">
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:singleLine="true"
+						android:text="共"
+						android:textColor="@color/brown"
+						android:textSize="@dimen/textsize_14"/>
+
+					<TextView
+						android:id="@+id/number"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:singleLine="true"
+						android:text="0"
+						android:textColor="@color/red"
+						android:textSize="@dimen/textsize_14"/>
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:singleLine="true"
+						android:text="件"
+						android:textColor="@color/brown"
+						android:textSize="@dimen/textsize_14"/>
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:visibility="gone">
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp"
+						android:singleLine="true"
+						android:text="优惠:"
+						android:textColor="@color/brown"
+						android:textSize="@dimen/textsize_14"/>
+
+					<TextView
+						android:id="@+id/cheapPrice"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:singleLine="true"
+						android:text="0.00"
+						android:textColor="@color/red"
+						android:textSize="@dimen/textsize_14"/>
+
+					<TextView
+						android:id="@+id/tv_cart_select_num"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:singleLine="true"
+						android:text="元"
+						android:textColor="@color/brown"
+						android:textSize="@dimen/textsize_14"/>
+				</LinearLayout>
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:id="@+id/tv_cart_Allprice"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="总金额:"
+					android:textColor="@color/brown"
+					android:textSize="@dimen/textsize_14"/>
+
+				<TextView
+					android:id="@+id/tv_cart_total"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toRightOf="@+id/tv_cart_Allprice"
+					android:inputType="numberDecimal"
+					android:singleLine="true"
+					android:text="￥0.00"
+					android:textColor="@color/red"
+					android:textSize="@dimen/textsize_14"
+					android:textStyle="bold"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toRightOf="@+id/tv_cart_total"
+					android:singleLine="true"
+					android:text=" 元 "
+					android:textColor="@color/red"
+					android:textSize="@dimen/textsize_14"
+					android:textStyle="bold"/>
+			</LinearLayout>
+		</LinearLayout>
+
+
+		<TextView
+			android:id="@+id/tv_cart_buy_or_del"
+			android:layout_width="100dp"
+			android:layout_height="50dp"
+			android:background="@drawable/rectangle_pic"
+			android:gravity="center"
+			android:text="结算"
+			android:textColor="@android:color/white"
+			android:textSize="@dimen/textsize_16"/>
+	</LinearLayout>
+</LinearLayout>

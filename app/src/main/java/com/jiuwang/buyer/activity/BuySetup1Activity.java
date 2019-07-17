@@ -1,7 +1,10 @@
 package com.jiuwang.buyer.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -80,6 +83,7 @@ public class BuySetup1Activity extends BaseActivity {
 
 	private Button confirmTextView;
 	private List<CarGoodsBean> carGoodsList;
+	private MyReceiver myReceiver;
 
 	@Override
 	protected void onActivityResult(int req, int res, Intent data) {
@@ -158,6 +162,10 @@ public class BuySetup1Activity extends BaseActivity {
 		initView();
 		initData();
 		initEven();
+		myReceiver = new MyReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("finish");
+		registerReceiver(myReceiver,filter);
 //        getJson();
 	}
 
@@ -202,7 +210,7 @@ public class BuySetup1Activity extends BaseActivity {
 		goodsIds = carBuilder.toString();
 
 
-		titleTextView.setText("确认订单信息");
+		titleTextView.setText("确认订单");
 
 		mArrayList = new ArrayList<>();
 		AppUtils.initListView(BuySetup1Activity.this, mListView, false, false);
@@ -378,6 +386,19 @@ public class BuySetup1Activity extends BaseActivity {
 				}
 		);
 
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(myReceiver);
+	}
+
+	class MyReceiver extends BroadcastReceiver{
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			finish();
+		}
 	}
 
 }

@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.CarBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
@@ -22,7 +21,7 @@ import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.DialogUtil;
+import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.HashMap;
@@ -42,6 +41,7 @@ public class MyCarAdapter extends BaseAdapter {
 	private Context context;
 	private List<CarBean> list;
 	private ItemCheckStatusChangeListener itemCheckStatusChangeListener;
+	private LoadingDialog loadingDialog;
 
 	public MyCarAdapter(Context context, List<CarBean> list, ItemCheckStatusChangeListener itemCheckStatusChangeListener) {
 		this.context = context;
@@ -160,6 +160,7 @@ public class MyCarAdapter extends BaseAdapter {
 						cartInfo(Constant.ACTION_ACT_DELETE, position, finalI1, "");
 					}
 				});
+
 				CommonUtil.loadImage(context, NetURL.PIC_BASEURL + carGoodsBean.getPic_url(), goodsImageView);
 
 				goodsNameTextView.setText(carGoodsBean.getGoods_name());
@@ -216,7 +217,8 @@ public class MyCarAdapter extends BaseAdapter {
 	 * 购物车相关操作
 	 */
 	public void cartInfo(final String act, final int position, final int childPosition, final String quantity) {
-		DialogUtil.progress(MyApplication.currentActivity);
+		loadingDialog = new LoadingDialog(context);
+		loadingDialog.show();
 		HashMap<String, String> hashMap = new HashMap<>();
 		hashMap.put("act", act);
 		hashMap.put("id", list.get(position).getGoods_detail().get(childPosition).getId());
@@ -228,7 +230,7 @@ public class MyCarAdapter extends BaseAdapter {
 //				Intent intent = new Intent();
 //				intent.setAction("refreshCar");
 //				context.sendBroadcast(intent);
-				DialogUtil.cancel();
+				loadingDialog.dismiss();
 				if (act.equals(Constant.ACTION_ACT_DELETE)) {
 					list.get(position).getGoods_detail().remove(childPosition);
 				} else {
@@ -247,7 +249,7 @@ public class MyCarAdapter extends BaseAdapter {
 		}, new Consumer<Throwable>() {
 			@Override
 			public void accept(Throwable throwable) throws Exception {
-				DialogUtil.cancel();
+				loadingDialog.dismiss();
 				MyToastView.showToast("操作失败", context);
 			}
 		});

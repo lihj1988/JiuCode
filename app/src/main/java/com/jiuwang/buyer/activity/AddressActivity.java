@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -65,6 +66,7 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 	private List<AddressBean> mArrayList;
 	private AddressListAdapter addressListAdapter;
 	private int page = 1;
+	private AddressBroadCast addressBroadCast;
 
 	@Override
 	protected void onActivityResult(int req, int res, Intent data) {
@@ -97,6 +99,10 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 		ButterKnife.bind(this);
 		initView();
 		initData();
+		addressBroadCast = new AddressBroadCast();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("refreshAddress");
+		registerReceiver(addressBroadCast,filter);
 	}
 
 	private void initView() {
@@ -247,6 +253,12 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 	public void onRefresh() {
 		page = 1;
 		initData();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(addressBroadCast);
 	}
 
 	@Override

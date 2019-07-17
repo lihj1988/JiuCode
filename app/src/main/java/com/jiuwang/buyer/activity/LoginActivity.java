@@ -14,6 +14,7 @@ import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
+import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 
@@ -45,6 +46,7 @@ public class LoginActivity extends BaseActivity {
 	@Bind(R.id.screen)
 	LinearLayout screen;
 	private String index = "0";
+	private LoadingDialog loadingDialog;
 
 
 	@Override
@@ -76,11 +78,12 @@ public class LoginActivity extends BaseActivity {
 			MyToastView.showToast("密码不能为空", LoginActivity.this);
 			return;
 		}
-		DialogUtil.progress(LoginActivity.this);
+		loadingDialog = new LoadingDialog(LoginActivity.this);
+		loadingDialog.show();
 		CommonUtil.login(loginName, password, new CommonUtil.LoginCallBack() {
 			@Override
 			public void callBack(BaseEntity<LoginEntity> loginEntity) {
-				DialogUtil.cancel();
+				loadingDialog.dismiss();
 				if ("0".equals(loginEntity.getCode())) {
 					Intent intent = new Intent();
 					intent.setClass(LoginActivity.this, MainActivity.class);
@@ -92,7 +95,7 @@ public class LoginActivity extends BaseActivity {
 
 			@Override
 			public void failCallBack(Throwable throwable) {
-				DialogUtil.cancel();
+				loadingDialog.dismiss();
 				MyToastView.showToast("登录失败", LoginActivity.this);
 				LogUtils.e(TAG, throwable.getMessage());
 			}

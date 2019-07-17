@@ -7,9 +7,9 @@ public class ConstantValues {
 
 	public static final int PROJECT_FRAGMENT_INDEX = 1;//抢购
 	//购物车
-	public static final int CAR_FRAGMENT_INDEX = 2;//资源筛选
+//	public static final int CAR_FRAGMENT_INDEX = 2;//资源筛选
 	// 我的索引值
-	public static final int MINE_FRAGMENT_INDEX = 3;//我的合同
+	public static final int MINE_FRAGMENT_INDEX = 2;//我的合同
 
 
 }

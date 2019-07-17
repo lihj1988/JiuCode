@@ -3,7 +3,6 @@ package com.jiuwang.buyer.popupwindow;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -12,7 +11,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.activity.RechargeActivity;
 import com.jiuwang.buyer.util.MyToastView;
 
 /**
@@ -73,6 +71,7 @@ public class RechargePopupWindow extends PopupWindow {
 			public void onClick(View v) {
 				//支付宝支付
 				MyToastView.showToast("支付宝支付" ,context);
+
 			}
 		});
 		wxPay.setOnClickListener(new View.OnClickListener() {

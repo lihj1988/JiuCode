@@ -46,6 +46,8 @@
 		<activity android:name=".activity.BuySetup1Activity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.BuySetup2Activity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.OrderActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.OrderPayCompleteActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.CarActivity" android:screenOrientation="portrait"/>
 
 	</application>
 

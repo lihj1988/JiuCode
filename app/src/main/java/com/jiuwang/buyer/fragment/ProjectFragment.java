@@ -33,6 +33,7 @@ import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.popupwindow.ChooseItemPopupWindow;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
+import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 
@@ -74,6 +75,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	private View rootView;
 	private ProjectReceiver projectReceiver;
 	private ChooseItemPopupWindow chooseItemPopupWindow;
+	private LoadingDialog loadingDialog;
 
 	@Nullable
 	@Override
@@ -86,6 +88,8 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("refreshProject");
 		getActivity().registerReceiver(projectReceiver, intentFilter);
+		loadingDialog = new LoadingDialog(getActivity());
+
 		return rootView;
 	}
 
@@ -128,14 +132,14 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 					if (chooseItemPopupWindow != null) {
 						chooseItemPopupWindow.dismiss();
 					}
-					DialogUtil.progress(getActivity());
+					loadingDialog.show();
 					HashMap<String, String> hashMap = new HashMap<>();
 					hashMap.put("project_id", projectList.get(position).getId());
 					HttpUtils.selectChooseGoods(hashMap, new Consumer<SelectGoodsEntity>() {
 
 						@Override
 						public void accept(SelectGoodsEntity selectGoodsEntity) throws Exception {
-							DialogUtil.cancel();
+							loadingDialog.dismiss();
 							if (Constant.HTTP_SUCCESS_CODE.equals(selectGoodsEntity.getCode())) {
 								if (selectGoodsEntity.getData() != null && selectGoodsEntity.getData().size() > 0) {
 
@@ -159,7 +163,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 					}, new Consumer<Throwable>() {
 						@Override
 						public void accept(Throwable throwable) throws Exception {
-							DialogUtil.cancel();
+							loadingDialog.dismiss();
 							MyToastView.showToast(getActivity().getString(R.string.msg_error), getActivity());
 						}
 					});

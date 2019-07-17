@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -27,8 +26,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AuthResult;
 import com.jiuwang.buyer.bean.OrderBean;
@@ -52,7 +53,7 @@ import butterknife.OnClick;
 * 作者：lihj
 * 作用：购买第二步
 */
-public class BuySetup2Activity extends AppCompatActivity {
+public class BuySetup2Activity extends BaseActivity {
 
 	@Bind(R.id.topView)
 	LinearLayout topView;
@@ -100,10 +101,20 @@ public class BuySetup2Activity extends AppCompatActivity {
 					// 判断resultStatus 为9000则代表支付成功
 					if (TextUtils.equals(resultStatus, Constant.ALIPAY_RESULTSTATUS)) {
 						// 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-						showAlert(BuySetup2Activity.this, getString(R.string.pay_success) + payResult);
+//						showAlert(BuySetup2Activity.this, getString(R.string.pay_success) + payResult);
+						Intent intent1 = new Intent();
+						intent1.setAction("finish");
+						sendBroadcast(intent1);
+						intent1.setAction("first");
+						sendBroadcast(intent1);
+						Intent intent = new Intent(BuySetup2Activity.this,OrderPayCompleteActivity.class);
+						intent.putExtra("totalAmount",orderBean.getTotal_amount());
+						startActivity(intent);
+						finish();
 					} else {
 						// 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-						showAlert(BuySetup2Activity.this, getString(R.string.pay_failed) + payResult);
+//						showAlert(BuySetup2Activity.this, getString(R.string.pay_failed) + payResult);
+						MyToastView.showToast(getString(R.string.pay_failed),BuySetup2Activity.this);
 					}
 					break;
 				}
@@ -144,7 +155,7 @@ public class BuySetup2Activity extends AppCompatActivity {
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_buy_setup2);
-//		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 		ButterKnife.bind(this);
 		requestPermission();
 		initView();
@@ -153,7 +164,9 @@ public class BuySetup2Activity extends AppCompatActivity {
 
 	//初始化控件
 	private void initView() {
+		onclickLayoutRight.setVisibility(View.INVISIBLE);
 
+		setTopView(topView);
 
 	}
 /**
@@ -276,12 +289,12 @@ public class BuySetup2Activity extends AppCompatActivity {
 						try {
 //							object.put("timeout_express",orderBean.getTimeout_express());
 							object.put("product_code",orderBean.getProduct_code());
-//							object.put("total_amount",orderBean.getTotal_amount());
-							object.put("total_amount","0.01");
+							object.put("total_amount",orderBean.getTotal_amount());
+//							object.put("total_amount","0.01");
 							object.put("subject",orderBean.getGoods_name());
 //							object.put("body",orderBean.getBody());
-//							object.put("out_trade_no",orderBean.getOut_trade_no());
-							object.put("out_trade_no",OrderInfoUtil2_0.getOutTradeNo());
+							object.put("out_trade_no",orderBean.getOut_trade_no());
+//							object.put("out_trade_no",OrderInfoUtil2_0.getOutTradeNo());
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}

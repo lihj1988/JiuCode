@@ -195,18 +195,18 @@ public class SearchActivity extends BaseActivity implements OnClickListener{
 
     private void showSelectedResult() {
         if ("1".equals(type)) {
-            Intent it = new Intent(this, MainActivity.class);
-//			it.setAction("refremainactivity");
-            it.putExtra("serchName", mKeywordEt.getText().toString().trim());
-            startActivity(it);
-//			sendBroadcast(it, null);
+            String serchName = mKeywordEt.getText().toString();
+            Intent it = new Intent();
+            it.setAction("refresh_home");
+            it.putExtra("searchName", serchName);
+            sendBroadcast(it, null);
             finish();
 
         } else {
             String serchName = mKeywordEt.getText().toString();
             Intent it = new Intent();
-            it.setAction("refresh_fragment");
-            it.putExtra("serchName", serchName);
+            it.setAction("refresh_home");
+            it.putExtra("searchName", serchName);
             sendBroadcast(it, null);
             finish();
         }

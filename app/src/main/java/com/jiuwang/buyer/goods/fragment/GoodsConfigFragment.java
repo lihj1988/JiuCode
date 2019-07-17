@@ -11,11 +11,6 @@ import android.widget.ListView;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.GoodsDetailsActivty;
-import com.jiuwang.buyer.bean.GoodsDetailsBean;
-import com.jiuwang.buyer.goods.adaper.GoodsConfigAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 图文详情里的规格参数的Fragment
@@ -36,11 +31,14 @@ public class GoodsConfigFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_item_config, null);
         lv_config = (ListView) view.findViewById(R.id.lv_config);
         lv_config.setFocusable(false);
-        Bundle arguments = getArguments();
-        GoodsDetailsBean goods = (GoodsDetailsBean) arguments.getSerializable("goods");
-        List<GoodsDetailsBean.ConfigInfoBean> data = new ArrayList<>();
-        data.addAll(goods.getConfig_info());
-        lv_config.setAdapter(new GoodsConfigAdapter(activity, data));
+//        Bundle arguments = getArguments();
+//        GoodsDetailsBean goods = (GoodsDetailsBean) arguments.getSerializable("goods");
+//        if(goods!=null){
+//            List<GoodsDetailsBean.ConfigInfoBean> data = new ArrayList<>();
+//            data.addAll(goods.getConfig_info());
+//            lv_config.setAdapter(new GoodsConfigAdapter(activity, data));
+//        }
+
         return view;
     }
 }

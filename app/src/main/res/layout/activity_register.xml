@@ -68,14 +68,16 @@
                     android:text="密码"
                     android:paddingLeft="5dp"
                     style="@style/DetailText"/>
+
                 <EditText
+                    android:inputType="textPassword"
                     android:id="@+id/et_password"
+                    style="@style/DetailText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:background="@null"
-                    android:hint="请输入8~20位密码"
-                    style="@style/DetailText"/>
+                    android:hint="请输入8~20位密码"/>
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -98,6 +100,7 @@
                     android:paddingLeft="5dp"
                     style="@style/DetailText"/>
                 <EditText
+                    android:inputType="textPassword"
                     android:id="@+id/et_surepass"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -193,7 +196,38 @@
                 android:layout_height="@dimen/detail_divider_line"
                 android:background="@color/gray_line"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Detailpadding"
+                android:orientation="horizontal">
+                <ImageView
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/mustfill"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="邀请码"
+                    android:paddingLeft="5dp"
+                    style="@style/DetailText"/>
+                <EditText
 
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:background="@null"
+                    android:inputType="number"
+                    android:hint="请输入邀请码"
+                    android:maxLength="11"
+                    style="@style/DetailText"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/detail_divider_line"
+                android:background="@color/gray_line"/>
             <Button
                 android:id="@+id/subBtn"
                 android:layout_width="match_parent"

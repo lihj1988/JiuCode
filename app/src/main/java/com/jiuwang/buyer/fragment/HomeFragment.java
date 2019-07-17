@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.CarActivity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.SearchActivity;
@@ -72,6 +73,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 	private int times = 0;
 	private GoodsAdapter mAdapter;
 	private int page = 1;
+	private HashMap<String, String> map;
 
 
 	@Override
@@ -80,7 +82,8 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		ButterKnife.bind(this, view);
 		userCode = PreforenceUtils.getStringData("loginInfo", "userName");
 		initView();
-		intDatas();
+		map = new HashMap<>();
+		intDatas(map);
 //		refreshMefragment();
 		if (receiver == null) {
 			receiver = new RefreshReceiver();
@@ -107,12 +110,11 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		listData = new ArrayList<GoodsBean>();
 	}
 
-	private void intDatas() {
-		HashMap<String, String> map = new HashMap<>();
+	public void intDatas(HashMap<String, String> map) {
+
 		map.put("currPage", String.valueOf(page));
 		map.put("pageSize", Constant.PAGESIZE);
 		map.put("searchWord", "");
-		map.put("status", "1");
 		HttpUtils.goodsInfo(map, new Consumer<HomeResultEntity>() {
 			@Override
 			public void accept(HomeResultEntity homeResultEntity) throws Exception {
@@ -216,14 +218,14 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		page = 1;
 		refreshTime++;
 		times = 0;
-		intDatas();
+		intDatas(map);
 	}
 
 	@Override
 	public void onLoadMore() {
 		page++;
 		times++;
-		intDatas();
+		intDatas(map);
 	}
 
 	@OnClick({R.id.et_search, R.id.shopping_car})
@@ -236,9 +238,9 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 				break;
 			case R.id.shopping_car:
 //				if (!CommonUtil.isNull(userCode)) {
-//					Intent intentCar = new Intent(mActivity, CarActivity.class);
-//					intentCar.putExtra("shoppingCount", shoppingCount);
-//					mActivity.startActivity(intentCar);
+					Intent intentCar = new Intent(mActivity, CarActivity.class);
+					intentCar.putExtra("shoppingCount", shoppingCount);
+					mActivity.startActivity(intentCar);
 //				} else {
 //					MyToastView.showToast("请您先登录", mActivity);
 //					Intent intentLogin = new Intent(mActivity, LoginActivity.class);
@@ -254,8 +256,14 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 	class RefreshReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			String count = intent.getStringExtra("shoppingCount");
-			visible_dot.setText(count);
+
+			String serchName = intent.getStringExtra("searchName");;
+			intent.putExtra("search_flag", "1");//1.代表进入搜索页面
+			if(serchName!=null){
+				map.put("goods_name",serchName);
+			}
+			intDatas(map);
+
 		}
 	}
 
@@ -270,7 +278,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		// TODO Auto-generated method stub
 		super.onResume();
 
-		refreshMefragment();
+//		refreshMefragment();
 	}
 
 	@Override

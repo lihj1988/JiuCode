@@ -1,60 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Layout.Main"
-    android:orientation="vertical">
-    <include layout="@layout/include_topview"></include>
-   <include layout="@layout/include_title"></include>
+			  style="@style/Layout.Main"
+			  android:orientation="vertical">
 
-    <ScrollView
-        android:layout_weight="1"
-        style="@style/ScrollView.Main"
-        android:layout_below="@+id/toolbarInclude">
+	<include layout="@layout/include_topview"></include>
 
-        <LinearLayout style="@style/Layout.Linear">
+	<include layout="@layout/include_title"></include>
 
-            <TextView
-                android:id="@+id/snTextView"
-                style="@style/TextView.ItemStoreName"
-                android:text="订单编号" />
+	<ScrollView
+		style="@style/ScrollView.Main"
+		android:layout_below="@+id/toolbarInclude"
+		android:layout_weight="1">
 
-            <View
-                style="@style/View.Line"
-                android:layout_height="8dip" />
+		<LinearLayout style="@style/Layout.Linear">
 
-            <TextView
-                android:id="@+id/payListTextView"
-                style="@style/TextView.ItemStoreName"
-                android:text="支付方式" />
+			<TextView
+				android:id="@+id/snTextView"
+				style="@style/TextView.ItemStoreName"
+				android:text="订单编号"/>
 
-            <View style="@style/View.Line" />
+			<View
+				style="@style/View.Line"
+				android:layout_height="8dip"/>
 
-            <RadioGroup
-                android:id="@+id/listRadioGroup"
-                style="@style/RadioGroup.Pay">
+			<TextView
+				android:id="@+id/payListTextView"
+				style="@style/TextView.ItemStoreName"
+				android:text="支付方式"/>
 
-                <RadioButton
-                    android:id="@+id/aliPayTextView"
-                    style="@style/RadioButton.Pay" />
+			<View style="@style/View.Line"/>
 
-                <RadioButton
-                    android:id="@+id/wxPayTextView"
-                    style="@style/RadioButton.Pay"
-                    android:drawableEnd="@drawable/ic_pay_wx"
-                    android:drawableRight="@drawable/ic_pay_wx"
-                    android:text="微信支付" />
+			<RadioGroup
+				android:id="@+id/listRadioGroup"
+				style="@style/RadioGroup.Pay">
 
-            </RadioGroup>
+				<RadioButton
+					android:id="@+id/aliPayTextView"
+					style="@style/RadioButton.Pay"/>
 
-        </LinearLayout>
+				<RadioButton
+					android:id="@+id/wxPayTextView"
+					style="@style/RadioButton.Pay"
+					android:drawableEnd="@drawable/ic_pay_wx"
+					android:drawableRight="@drawable/ic_pay_wx"
+					android:text="微信支付"/>
 
-    </ScrollView>
+			</RadioGroup>
 
-    <TextView
-        android:id="@+id/payTextView"
-        style="@style/TextView.GoodsBuy"
-        android:layout_width="match_parent"
-        android:layout_height="48dip"
-        android:text="去支付" />
+		</LinearLayout>
+
+	</ScrollView>
+
+	<TextView
+		android:id="@+id/payTextView"
+		style="@style/TextView.GoodsBuy"
+		android:layout_width="match_parent"
+		android:layout_height="48dip"
+		android:text="去支付"/>
 
 </LinearLayout>

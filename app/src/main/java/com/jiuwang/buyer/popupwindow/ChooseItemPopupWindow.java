@@ -20,7 +20,7 @@ import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
-import com.jiuwang.buyer.util.DialogUtil;
+import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 
@@ -46,6 +46,7 @@ public class ChooseItemPopupWindow extends PopupWindow {
 	private TextView cancle;
 	private List<SelectGoodsBean> selectGoodsList;
 	private String project_id;
+	private LoadingDialog loadingDialog;
 
 	public ChooseItemPopupWindow(Activity context, String project_id, List<SelectGoodsBean> selectGoodsList) {
 		super(context);
@@ -91,6 +92,7 @@ public class ChooseItemPopupWindow extends PopupWindow {
 			goodsBean.setPic_url("");
 			goodsList.add(goodsBean);
 		}
+		loadingDialog = new LoadingDialog(context);
 		itemRecyclerView = mMenuView.findViewById(R.id.itemRecyclerView);
 		AppUtils.initGridViewNothing(3, itemRecyclerView);
 		final ChooseItemAdapter chooseItemAdapter = new ChooseItemAdapter(context, selectGoodsList, new ChooseItemAdapter.ItemOnClickListener() {
@@ -98,7 +100,7 @@ public class ChooseItemPopupWindow extends PopupWindow {
 			public void click(int position) {
 				LogUtils.e(TAG, "点击了第" + (position + 1) + "条");
 				//报名
-				DialogUtil.progress(context);
+				loadingDialog.show();
 				HashMap<String, String> hashMap = new HashMap<>();
 				hashMap.put("act", Constant.ACTION_ACT_ADD);
 				hashMap.put("aution_id", project_id);
@@ -112,7 +114,7 @@ public class ChooseItemPopupWindow extends PopupWindow {
 							intent.setAction("refreshProject");
 							context.sendBroadcast(intent);
 						}
-						DialogUtil.cancel();
+						loadingDialog.dismiss();
 						ChooseItemPopupWindow.this.dismiss();
 						MyToastView.showToast(baseResultEntity.getMsg(), context);
 
@@ -120,7 +122,7 @@ public class ChooseItemPopupWindow extends PopupWindow {
 				}, new Consumer<Throwable>() {
 					@Override
 					public void accept(Throwable throwable) throws Exception {
-						DialogUtil.cancel();
+						loadingDialog.dismiss();
 						MyToastView.showToast(context.getString(R.string.msg_error_operation), context);
 					}
 				});

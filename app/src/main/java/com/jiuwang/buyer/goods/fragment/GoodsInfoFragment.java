@@ -23,11 +23,11 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.gxz.PagerSlidingTabStrip;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.GoodsDetailsActivty;
+import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.bean.GoodsDetailsBean;
 import com.jiuwang.buyer.bean.RecommendGoodsBean;
-import com.jiuwang.buyer.goods.adaper.NetworkImageHolderView;
-import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.goods.adaper.NetworkImageHolderView;
 import com.jiuwang.buyer.widget.SlideDetailsLayout;
 
 import java.util.ArrayList;
@@ -63,6 +63,7 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
     private LayoutInflater inflater;
     private Bundle arguments;
     private GoodsDetailsBean goods;
+    private GoodsBean good;
 
     @Override
     public void onAttach(Context context) {
@@ -91,6 +92,8 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.inflater = inflater;
         View rootView = inflater.inflate(R.layout.fragment_goods_info, null);
+        arguments = getArguments();
+        good = (GoodsBean) arguments.getSerializable("good");
         initView(rootView);
         initListener();
         initData();
@@ -150,13 +153,26 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
         tabTextList = new ArrayList<>();
         tabTextList.add(tv_goods_detail);
         tabTextList.add(tv_goods_config);
-        arguments = getArguments();
+
         goods = (GoodsDetailsBean) arguments.getSerializable("goods");
-        tv_comment_count.setText(goods.getPraise_count());
-        tv_good_comment.setText(goods.getPraise());
-        if(goods.getOther_picurl()!=null){
-            CommonUtil.loadImage(getActivity(), NetURL.BASEURL+goods.getOther_picurl(),iv_ensure);
+
+//        tv_comment_count.setText(goods.getPraise_count());
+//        tv_good_comment.setText(goods.getPraise());
+        tv_goods_title.setText(good.getGoods_name());
+
+        if("".equals(good.getSale_price())){
+            tv_old_price.setVisibility(View.GONE);
+            tv_new_price.setText(good.getPrice());
+        }else {
+            tv_old_price.setVisibility(View.VISIBLE);
+            tv_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG );
+            tv_new_price.setText(good.getSale_price());
+            tv_old_price.setText(good.getPrice());
         }
+
+//        if(goods.getOther_picurl()!=null){
+//            CommonUtil.loadImage(getActivity(), NetURL.BASEURL+goods.getOther_picurl(),iv_ensure);
+//        }
 
 
     }
@@ -221,7 +237,13 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
      */
     public void setLoopView() {
         List<String> imgUrls = new ArrayList<>();
-        imgUrls.addAll(goods.getPic_list());
+        String[] split = good.getPic_url().split(",");
+        if(split!=null){
+            for (int i = 0; i < split.length; i++) {
+                imgUrls.add(NetURL.PIC_BASEURL+split[0]);
+            }
+        }
+
         //初始化商品图片轮播
         vp_item_goods_img.setPages(new CBViewHolderCreator() {
             @Override

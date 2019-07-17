@@ -54,6 +54,7 @@ public class WelcomeActivity extends BaseActivity implements Animation.Animation
 												Intent intent = new Intent();
 												intent.setClass(WelcomeActivity.this,MainActivity.class);
 												startActivity(intent);
+												finish();
 											}else {
 												CommonUtil.launchActivity(WelcomeActivity.this, LoginActivity.class);
 												finish();

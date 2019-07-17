@@ -1,7 +1,10 @@
 package com.jiuwang.buyer.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,7 +35,6 @@ import com.jiuwang.buyer.util.MyToastView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -87,6 +89,8 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 			selectOrder(position);
 		}
 	};
+	private MyReceiver myReceiver;
+
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
@@ -110,6 +114,10 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 		initData();
 		initView();
 		initEven();
+		myReceiver = new MyReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("finish");
+		registerReceiver(myReceiver,filter);
 		xrvOrder.refresh();
 	}
 
@@ -288,5 +296,18 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 		page++;
 		xrvOrder.loadMoreComplete();
 //		selectOrder(position);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(myReceiver);
+	}
+
+	class MyReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			finish();
+		}
 	}
 }

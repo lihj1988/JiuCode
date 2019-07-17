@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +33,7 @@ import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.GetJsonDataUtil;
+import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.TextUtil;
 
@@ -131,6 +131,7 @@ public class AddressAddActivity extends BaseActivity {
 	};
 	private String mode;
 	private Intent intent;
+	private LoadingDialog loadingDialog;
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
@@ -244,8 +245,8 @@ public class AddressAddActivity extends BaseActivity {
 			btSubmit.setEnabled(true);
 			return;
 		}
-
-		DialogUtil.progress(mActivity);
+		loadingDialog = new LoadingDialog(AddressAddActivity.this);
+		loadingDialog.show();
 		//添加/修改地址
 		if (CommonUtil.getNetworkRequest(AddressAddActivity.this)) {
 			HashMap<String, String> hashMap = new HashMap<>();
@@ -265,7 +266,7 @@ public class AddressAddActivity extends BaseActivity {
 			HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {
 				@Override
 				public void accept(BaseResultEntity baseResultEntity) throws Exception {
-					DialogUtil.cancel();
+					loadingDialog.dismiss();
 					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
 						Intent intent = new Intent();
 						intent.setAction("refreshAddress");
@@ -285,7 +286,7 @@ public class AddressAddActivity extends BaseActivity {
 				@Override
 				public void accept(Throwable throwable) throws Exception {
 					btSubmit.setEnabled(true);
-					DialogUtil.cancel();
+					loadingDialog.dismiss();
 					MyToastView.showToast(getString(R.string.msg_error_operation), AddressAddActivity.this);
 				}
 			});

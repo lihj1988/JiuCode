@@ -48,6 +48,7 @@
                 android:paddingRight="8dip">
 
                 <TextView
+                    android:singleLine="true"
                     android:id="@+id/goodsNameTextView"
                     style="@style/TextView.ItemGoodsName"
                     android:paddingLeft="8dip"
@@ -56,6 +57,8 @@
 
 
                 <TextView
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:id="@+id/tvDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -69,15 +72,6 @@
                     android:orientation="horizontal"
                     android:paddingLeft="8dip"
                     android:paddingRight="8dip">
-
-                    <TextView
-                        android:id="@+id/tvPrice"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:singleLine="true"
-                        android:text="￥666.66"/>
-
                     <TextView
                         android:id="@+id/tvCheapPrice"
                         android:layout_width="0dp"
@@ -86,7 +80,13 @@
                         android:singleLine="true"
                         android:text="￥666.66"
                         android:textColor="@color/red"/>
-
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="￥666.66"/>
 
                 </LinearLayout>
 
