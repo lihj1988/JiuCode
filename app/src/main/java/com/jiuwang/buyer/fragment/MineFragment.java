@@ -153,10 +153,10 @@ public class MineFragment extends Fragment {
 
 								tvUserName.setText(userBean.getMobile_number());
 								if ("".equals(userBean.getTrial_amount())) {
-									tvBalance.setText(userBean.getAccount_balance());
 									if ("".equals(userBean.getTrial_amount())){
 										tvBalance.setText("0.00");
 									}
+									tvBalance.setText("¥ "+CommonUtil.decimalFormat(Double.parseDouble(userBean.getAccount_balance()),"0")+" 元");
 									tvMoneyName.setText("账户余额：");
 
 								} else {
