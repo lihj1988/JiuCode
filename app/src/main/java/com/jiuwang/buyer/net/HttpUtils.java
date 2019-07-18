@@ -329,5 +329,18 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 	}
+	/**
+	 * 获取用户信息
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void recharge(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.recharge(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}
 
 }

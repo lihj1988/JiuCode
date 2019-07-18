@@ -19,9 +19,12 @@ import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.popupwindow.RechargePopupWindow;
-import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,6 +39,7 @@ import static com.jiuwang.buyer.R.id.return_img;
  */
 
 public class RechargeActivity extends BaseActivity {
+	private static final String TAG = RechargeActivity.class.getName();
 	@Bind(R.id.topView)
 	LinearLayout topView;
 	@Bind(R.id.actionbar_text)
@@ -84,27 +88,48 @@ public class RechargeActivity extends BaseActivity {
 			case R.id.btnNext:
 				String money = etMoney.getText().toString();
 				if (!"".equals(money)) {
-					if (CommonUtil.numberCheck(money)) {
-						String[] split = money.split(".");
-						if(split.length==2){
-							if(split[1].length()>2){
-								MyToastView.showToast("充值金额最小单位为分" ,RechargeActivity.this);
-								return;
+					Pattern pattern = Pattern.compile("^\\d+(\\.\\d{1,2})?$");
+					Matcher isNum = pattern.matcher(money.charAt(0) + "");
+					LogUtils.e(TAG,isNum.matches()+"");
+					if (isNum.matches()) {
+//						if (CommonUtil.numberCheck(money)) {
+							String[] split = money.split("\\.");
+
+							if(split.length==2){
+								if(split[0].length()>1){
+									char[] chars = split[0].toCharArray();
+									if(String.valueOf(chars[0]).equals("0")){
+										MyToastView.showToast("请填写正确的金额" ,RechargeActivity.this);
+										return;
+									}
+								}
+								if(split[1].length()>2){
+									MyToastView.showToast("充值金额最小单位为分" ,RechargeActivity.this);
+									return;
+								}
+							}else if(split.length==1){
+								char[] chars = split[0].toCharArray();
+								if(String.valueOf(chars[0]).equals("0")){
+									LogUtils.e(TAG,"请填写正确的金额");
+									MyToastView.showToast("请填写正确的金额" ,RechargeActivity.this);
+									return;
+								}
 							}
+
+							//弹出支付方式窗口
+							OrderBean orderBean = new OrderBean();
+							orderBean.setProduct_code(Constant.ALIPAY_PRODUCT_CODE);
+							orderBean.setTotal_amount(money);
+							orderBean.setBody("");
+							orderBean.setOut_trade_no(OrderInfoUtil2_0.getOutTradeNo());
+							orderBean.setSubject("充值");
+							rechargePopupWindow = new RechargePopupWindow(RechargeActivity.this,orderBean);
+							// 显示窗口
+							rechargePopupWindow.showAtLocation(rootView, Gravity.BOTTOM
+									| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
 						}
-						//弹出支付方式窗口
-						OrderBean orderBean = new OrderBean();
-						orderBean.setProduct_code(Constant.ALIPAY_PRODUCT_CODE);
-						orderBean.setTotal_amount(money);
-						orderBean.setBody("");
-						orderBean.setOut_trade_no(OrderInfoUtil2_0.getOutTradeNo());
-						orderBean.setSubject("充值");
-						orderBean.setBusiness_type("2");//2 充值
-						rechargePopupWindow = new RechargePopupWindow(RechargeActivity.this,orderBean);
-						// 显示窗口
-						rechargePopupWindow.showAtLocation(rootView, Gravity.BOTTOM
-								| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
-					}
+//					}
+
 				}else {
 					MyToastView.showToast("请输入充值金额" ,RechargeActivity.this);
 				}

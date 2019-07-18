@@ -24,7 +24,7 @@ import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 
 public interface QNewsService {
-	//登录
+	//注册
 	@POST("/reg_action.jsp")
 	Observable<BaseResultEntity> register(
 			@QueryMap HashMap<String, String> map
@@ -141,6 +141,12 @@ public interface QNewsService {
 	//用户信息查询
 	@POST("/reg_action.jsp")
 	Observable<UserEntity> selectUserInfo(
+			@QueryMap HashMap<String, String> map
+	);
+
+	//充值
+	@POST("admin/fund/receive_action.jsp")
+	Observable<BaseResultEntity> recharge(
 			@QueryMap HashMap<String, String> map
 	);
 

@@ -183,10 +183,12 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
      * 加载完商品详情执行
      */
     public void setDetailData() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("good",good);
         goodsConfigFragment = new GoodsConfigFragment();
-        goodsConfigFragment.setArguments(arguments);
+        goodsConfigFragment.setArguments(bundle);
         goodsInfoWebFragment = new GoodsInfoWebFragment();
-        goodsInfoWebFragment.setArguments(arguments);
+        goodsInfoWebFragment.setArguments(bundle);
         fragmentList.add(goodsConfigFragment);
         fragmentList.add(goodsInfoWebFragment);
 

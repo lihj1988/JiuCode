@@ -29,7 +29,7 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="203dp"
+                        android:layout_height="200dp"
                         android:background="@color/white">
 
                         <!-- 自动轮播的第三方控件 -->

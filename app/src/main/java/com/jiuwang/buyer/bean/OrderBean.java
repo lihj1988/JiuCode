@@ -36,6 +36,7 @@ public class OrderBean implements Serializable {
 	private String status;
 	private String business_type;
 	private String status_name;
+	private String pay_mode;
 
 	public String getId() {
 		return id;
@@ -203,6 +204,14 @@ public class OrderBean implements Serializable {
 
 	public void setBusiness_type(String business_type) {
 		this.business_type = business_type;
+	}
+
+	public String getPay_mode() {
+		return pay_mode;
+	}
+
+	public void setPay_mode(String pay_mode) {
+		this.pay_mode = pay_mode;
 	}
 
 	public static class DetailListBean implements Serializable{

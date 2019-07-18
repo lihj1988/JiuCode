@@ -34,5 +34,11 @@ public class Constant {
 	public static final String ORDER_STATUS_PAYED = "1";
 	public static final String ORDER_STATUS_FINISH = "2";
 
+	//业务类型
+	public static final String BUSINESSTYPE_RECHARGE = "3";//充值
+	public static final String BUSINESSTYPE_PAYMWENT = "1";//订单付款
+//	public static final String BUSINESSTYPE_PAYMWENT = "2";//返利
+//	public static final String BUSINESSTYPE_PAYMWENT = "4";//底线
+
 
 }

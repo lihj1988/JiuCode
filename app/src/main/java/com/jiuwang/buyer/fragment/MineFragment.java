@@ -30,11 +30,10 @@ import com.jiuwang.buyer.activity.RechargeActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
-import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.service.UpdateVersionService;
-import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -305,7 +304,14 @@ public class MineFragment extends Fragment {
 	class MyReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			initData();
+
+			new  Handler(){
+				@Override
+				public void handleMessage(Message msg) {
+					initData();
+				}
+			}.sendEmptyMessageDelayed(0,1500);
+
 		}
 	}
 

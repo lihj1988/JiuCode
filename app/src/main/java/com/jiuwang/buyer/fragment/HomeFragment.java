@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 
 		map.put("currPage", String.valueOf(page));
 		map.put("pageSize", Constant.PAGESIZE);
-		map.put("searchWord", "");
+//		map.put("searchWord", "");
 		HttpUtils.goodsInfo(map, new Consumer<HomeResultEntity>() {
 			@Override
 			public void accept(HomeResultEntity homeResultEntity) throws Exception {

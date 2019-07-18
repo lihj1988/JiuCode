@@ -26,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
@@ -155,7 +154,7 @@ public class BuySetup2Activity extends BaseActivity {
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_buy_setup2);
-		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+//		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 		ButterKnife.bind(this);
 		requestPermission();
 		initView();
@@ -282,20 +281,15 @@ public class BuySetup2Activity extends BaseActivity {
 //						orderBean.setTimeout_express(baseResultEntity.getDate().get(0).getTimeout_express());
 						orderBean.setProduct_code(Constant.ALIPAY_PRODUCT_CODE);
 						orderBean.setTotal_amount(orderBean.getTotal_amount());
-						orderBean.setBody(orderBean.getNotes());
 						orderBean.setOut_trade_no(orderBean.getId());
 						orderBean.setSubject(orderBean.getGoods_name());
-						orderBean.setBusiness_type("1");//1 订单付款
 						JSONObject object = new JSONObject();
 						try {
-//							object.put("timeout_express",orderBean.getTimeout_express());
 							object.put("product_code",orderBean.getProduct_code());
-							object.put("total_amount",orderBean.getTotal_amount());
-//							object.put("total_amount","0.01");
+							object.put("total_amount",0.01+"");
 							object.put("subject",orderBean.getGoods_name());
-//							object.put("body",orderBean.getBody());
 							object.put("out_trade_no",orderBean.getOut_trade_no());
-//							object.put("out_trade_no",OrderInfoUtil2_0.getOutTradeNo());
+							object.put("passback_params",Constant.BUSINESSTYPE_PAYMWENT);
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}

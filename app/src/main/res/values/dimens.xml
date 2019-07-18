@@ -15,6 +15,7 @@
 	<dimen name="font_normal">15sp</dimen>
 	<!-- 标题栏中间字体-->
 	<dimen name="text_big">18sp</dimen>
+	<dimen name="text_bigger">25sp</dimen>
 	<!--重置 确定按钮字大小-->
 	<dimen name="text_15sp">15sp</dimen>
 	<!--dialog 内容显示字体大小-->

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.GoodsDetailsActivty;
+import com.jiuwang.buyer.bean.GoodsBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,15 @@ public class GoodsDetailFragment extends Fragment implements View.OnClickListene
 	private FragmentTransaction fragmentTransaction;
 	private FragmentManager fragmentManager;
 	private View rootView;
+	private Bundle arguments;
+	private GoodsBean good;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_goods_detail, null);
+		arguments = getArguments();
+		good = (GoodsBean) arguments.getSerializable("good");
 		initView();
 		initListener();
 		return rootView;
@@ -78,9 +83,11 @@ public class GoodsDetailFragment extends Fragment implements View.OnClickListene
 	 * 商品信息Fragment页获取完数据执行
 	 */
 	public void setData() {
+		Bundle bundle = new Bundle();
+		bundle.putSerializable("good", good);
 		goodsConfigFragment = new GoodsConfigFragment();
 		goodsDetailWebFragment = new GoodsDetailWebFragment();
-
+		goodsDetailWebFragment.setArguments(bundle);
 		nowFragment = goodsDetailWebFragment;
 		fragmentManager = getChildFragmentManager();
 		//默认显示商品详情tab
