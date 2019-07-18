@@ -41,6 +41,8 @@ public class OrderPayCompleteActivity extends BaseActivity {
 	@Bind(R.id.tvTotalAmount)
 	TextView tvTotalAmount;
 	private String totalAmount;
+	private String type;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,6 +56,7 @@ public class OrderPayCompleteActivity extends BaseActivity {
 	private void initData() {
 		Intent intent = getIntent();
 		totalAmount = intent.getStringExtra("totalAmount");
+		type = intent.getStringExtra("type");
 		String info =  "订单金额 <font color='#FF5001'>" + totalAmount + " 元"+ "</font>";
 		tvTotalAmount.setText(Html.fromHtml(info));
 	}

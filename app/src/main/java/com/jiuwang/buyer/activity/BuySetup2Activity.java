@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
@@ -154,7 +155,7 @@ public class BuySetup2Activity extends BaseActivity {
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_buy_setup2);
-//		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 		ButterKnife.bind(this);
 		requestPermission();
 		initView();
@@ -237,13 +238,16 @@ public class BuySetup2Activity extends BaseActivity {
 //		}
 
 		actionbarText.setText("订单支付");
-//		snTextView.append("：");
-//		snTextView.append(pay_sn);
+
 		aliPayRadioButton.setVisibility(View.VISIBLE);
 		wxPayRadioButton.setVisibility(View.VISIBLE);
+		aliPayRadioButton.setChecked(true);
 		Intent intent = getIntent();
 		if(intent!=null){
 			orderBean = (OrderBean) intent.getSerializableExtra("data");
+			snTextView.append("：");
+//		snTextView.append(pay_sn);
+			snTextView.append(orderBean.getId());
 		}
 
 	}
@@ -286,7 +290,7 @@ public class BuySetup2Activity extends BaseActivity {
 						JSONObject object = new JSONObject();
 						try {
 							object.put("product_code",orderBean.getProduct_code());
-							object.put("total_amount",0.01+"");
+							object.put("total_amount",orderBean.getTotal_amount());
 							object.put("subject",orderBean.getGoods_name());
 							object.put("out_trade_no",orderBean.getOut_trade_no());
 							object.put("passback_params",Constant.BUSINESSTYPE_PAYMWENT);

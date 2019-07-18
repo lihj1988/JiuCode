@@ -48,6 +48,9 @@
 		<activity android:name=".activity.OrderActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.OrderPayCompleteActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.CarActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.BalanceActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.BalanceListActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.BalanceDetailsActivity" android:screenOrientation="portrait"/>
 
 	</application>
 

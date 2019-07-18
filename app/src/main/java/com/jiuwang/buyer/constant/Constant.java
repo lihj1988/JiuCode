@@ -34,11 +34,18 @@ public class Constant {
 	public static final String ORDER_STATUS_PAYED = "1";
 	public static final String ORDER_STATUS_FINISH = "2";
 
-	//业务类型
+	//业务类型 资金类型1直接付款(不扣余额) 2扣款(扣余额) 3 充值   4提现  5返利
+	public static final String BUSINESSTYPE_PAYMWENT = "1";//直接付款
+	public static final String BUSINESSTYPE_BUCKLE= "2";//扣款
 	public static final String BUSINESSTYPE_RECHARGE = "3";//充值
-	public static final String BUSINESSTYPE_PAYMWENT = "1";//订单付款
-//	public static final String BUSINESSTYPE_PAYMWENT = "2";//返利
-//	public static final String BUSINESSTYPE_PAYMWENT = "4";//底线
+	public static final String BUSINESSTYPE_CASHOUT= "4";//提现
+	public static final String BUSINESSTYPE_RETURN = "5";//返利
+	//支付方式
+	public static final String PAY_MODE_ALI = "1";//支付宝
+	public static final String PAY_MODE_WX = "2";//微信
+	public static final String PAY_MODE_BALANCE = "3";//余额
+
+
 
 
 }

@@ -13,11 +13,11 @@ import java.util.List;
 public class OrderEntity extends BaseResultEntity {
 	private List<OrderBean> data;
 
-	public List<OrderBean> getDate() {
+	public List<OrderBean> getData() {
 		return data;
 	}
 
-	public void setDate(List<OrderBean> date) {
+	public void setData(List<OrderBean> date) {
 		this.data = date;
 	}
 }

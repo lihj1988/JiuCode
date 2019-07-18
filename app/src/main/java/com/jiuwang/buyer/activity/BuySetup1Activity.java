@@ -349,7 +349,7 @@ public class BuySetup1Activity extends BaseActivity {
 							sendBroadcast(intent);
 							Intent intentBuy2 = new Intent();
 							intentBuy2.setClass(BuySetup1Activity.this,BuySetup2Activity.class);
-							intentBuy2.putExtra("data",baseResultEntity.getDate().get(0));
+							intentBuy2.putExtra("data",baseResultEntity.getData().get(0));
 							intentBuy2.putExtra("pay_sn","online");
 							startActivity(intentBuy2);
 						}

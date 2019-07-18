@@ -1,46 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent"
-			  android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-	<include layout="@layout/include_topview"></include>
+    <include layout="@layout/include_topview"></include>
 
-	<include layout="@layout/include_title"></include>
-	<LinearLayout
-		android:paddingRight="@dimen/padding_size_10"
-		android:paddingLeft="@dimen/padding_size_10"
-		android:paddingTop="@dimen/padding_size_20"
-		android:paddingBottom="@dimen/padding_size_20"
-		android:background="@color/app_main_color"
-		android:orientation="vertical"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-		<TextView
-			android:textColor="@color/white"
-			android:text="账户余额（元）"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-		<TextView
-			android:layout_marginTop="@dimen/padding_size_20"
-			android:textSize="@dimen/text_bigger"
-			android:textColor="@color/white"
-			android:text="0.00"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-	</LinearLayout>
-	<LinearLayout
-		android:orientation="vertical"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-		<TextView
+    <include layout="@layout/include_title"></include>
 
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-		<TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_main_color"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/padding_size_20"
+        android:paddingLeft="@dimen/padding_size_10"
+        android:paddingRight="@dimen/padding_size_10"
+        android:paddingTop="@dimen/padding_size_20">
 
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-	</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="账户余额（元）"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/tvBalance"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_size_20"
+            android:text="0.00"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_bigger"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llRecharge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/padding_size_10">
+
+            <ImageView
+                android:layout_width="@dimen/padding_size_25"
+                android:layout_height="@dimen/padding_size_25"
+                android:src="@drawable/recharge"/>
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/padding_size_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="充值"
+                android:textColor="@color/black"/>
+            <ImageView
+                android:layout_width="@dimen/padding_size_20"
+                android:layout_height="@dimen/padding_size_20"
+                android:src="@drawable/rightarrow"/>
+        </LinearLayout>
+
+        <View
+            android:layout_marginLeft="@dimen/padding_size_10"
+            android:layout_marginRight="@dimen/padding_size_10"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_gray"></View>
+
+        <LinearLayout
+            android:id="@+id/llCashout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/padding_size_10">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/cashout"/>
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/padding_size_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="提现"
+                android:textColor="@color/black"/>
+            <ImageView
+                android:layout_width="@dimen/padding_size_20"
+                android:layout_height="@dimen/padding_size_20"
+                android:src="@drawable/rightarrow"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </LinearLayout>

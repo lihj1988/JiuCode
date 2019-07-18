@@ -59,6 +59,7 @@ public class RechargeActivity extends BaseActivity {
 	private View rootView;
 	private RechargePopupWindow rechargePopupWindow;
 	private MyReceiver myReceiver;
+	private String type;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,8 @@ public class RechargeActivity extends BaseActivity {
 		setContentView(R.layout.activity_recharge);
 		rootView = View.inflate(RechargeActivity.this,R.layout.activity_recharge,null);
 		ButterKnife.bind(this);
+		Intent intent = getIntent();
+		type = intent.getStringExtra("type");
 		initView();
 		myReceiver = new MyReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -123,7 +126,7 @@ public class RechargeActivity extends BaseActivity {
 							orderBean.setBody("");
 							orderBean.setOut_trade_no(OrderInfoUtil2_0.getOutTradeNo());
 							orderBean.setSubject("充值");
-							rechargePopupWindow = new RechargePopupWindow(RechargeActivity.this,orderBean);
+							rechargePopupWindow = new RechargePopupWindow(RechargeActivity.this,orderBean,type);
 							// 显示窗口
 							rechargePopupWindow.showAtLocation(rootView, Gravity.BOTTOM
 									| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置

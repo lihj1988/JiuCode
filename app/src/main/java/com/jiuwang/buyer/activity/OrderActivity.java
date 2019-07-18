@@ -111,8 +111,8 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_order);
 		ButterKnife.bind(this);
-		initData();
 		initView();
+		initData();
 		initEven();
 		myReceiver = new MyReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -222,13 +222,13 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 						if (page == 1) {
 							orderArrayList.clear();
 						}
-						if (orderEntity.getDate() != null) {
-							for (int i = 0; i < orderEntity.getDate().size(); i++) {
+						if (orderEntity.getData() != null) {
+							for (int i = 0; i < orderEntity.getData().size(); i++) {
 								List<OrderBean.DetailListBean> detailsList = new ArrayList<OrderBean.DetailListBean>();
-								String[] goods_name = orderEntity.getDate().get(i).getGoods_name().split(",");
-								String[] quantity = orderEntity.getDate().get(i).getQuantity().split(",");
-								String[] sale_price = orderEntity.getDate().get(i).getSale_price().split(",");
-								String[] pic_url = orderEntity.getDate().get(i).getPic_url().split(",");
+								String[] goods_name = orderEntity.getData().get(i).getGoods_name().split(",");
+								String[] quantity = orderEntity.getData().get(i).getQuantity().split(",");
+								String[] sale_price = orderEntity.getData().get(i).getSale_price().split(",");
+								String[] pic_url = orderEntity.getData().get(i).getPic_url().split(",");
 								for (int j = 0; j < goods_name.length; j++) {
 
 									OrderBean.DetailListBean detailListBean = new OrderBean.DetailListBean();
@@ -243,11 +243,11 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 									}
 									detailsList.add(detailListBean);
 								}
-								orderEntity.getDate().get(i).setDetail_list(detailsList);
+								orderEntity.getData().get(i).setDetail_list(detailsList);
 							}
 
 						}
-						orderArrayList.addAll(orderEntity.getDate());
+						orderArrayList.addAll(orderEntity.getData());
 
 						if (mAdapter != null) {
 							mAdapter.notifyDataSetChanged();
@@ -293,14 +293,14 @@ public class OrderActivity extends BaseActivity implements XRecyclerView.Loading
 	public void onRefresh() {
 		page = 1;
 		xrvOrder.refreshComplete();
-//		selectOrder(position);
+		selectOrder(position);
 	}
 
 	@Override
 	public void onLoadMore() {
 		page++;
 		xrvOrder.loadMoreComplete();
-//		selectOrder(position);
+		selectOrder(position);
 	}
 
 	@Override

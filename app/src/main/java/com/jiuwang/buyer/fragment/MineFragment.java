@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.AddressActivity;
+import com.jiuwang.buyer.activity.BalanceActivity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.OrderActivity;
@@ -130,7 +131,7 @@ public class MineFragment extends Fragment {
 		myReceiver = new MyReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("minerefresh");
-		getActivity().registerReceiver(myReceiver,filter);
+		getActivity().registerReceiver(myReceiver, filter);
 		return view;
 	}
 
@@ -153,10 +154,18 @@ public class MineFragment extends Fragment {
 
 								tvUserName.setText(userBean.getMobile_number());
 								if ("".equals(userBean.getTrial_amount())) {
-									if ("".equals(userBean.getTrial_amount())){
+									if ("".equals(userBean.getAccount_balance())) {
 										tvBalance.setText("0.00");
+									} else {
+
+										tvBalance.setText("¥ " + CommonUtil.decimalFormat(Double.parseDouble(userBean.getAccount_balance()), "0") + " 元");
+										tvBalance.setOnClickListener(new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												startActivity(new Intent(getActivity(), BalanceActivity.class));
+											}
+										});
 									}
-									tvBalance.setText("¥ "+CommonUtil.decimalFormat(Double.parseDouble(userBean.getAccount_balance()),"0")+" 元");
 									tvMoneyName.setText("账户余额：");
 
 								} else {
@@ -179,7 +188,6 @@ public class MineFragment extends Fragment {
 				}
 			});
 		}
-
 
 	}
 
@@ -294,23 +302,24 @@ public class MineFragment extends Fragment {
 			case R.id.civAuther://头像
 				break;
 			case R.id.recharge://充值
-				getActivity().startActivity(new Intent(getActivity(), RechargeActivity.class));
+				Intent intentRecharge = new Intent(getActivity(), RechargeActivity.class);
+				intentRecharge.putExtra("type","mine");
+				getActivity().startActivity(intentRecharge);
 				break;
 		}
 	}
-
 
 
 	class MyReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			new  Handler(){
+			new Handler() {
 				@Override
 				public void handleMessage(Message msg) {
 					initData();
 				}
-			}.sendEmptyMessageDelayed(0,1500);
+			}.sendEmptyMessageDelayed(0, 1500);
 
 		}
 	}

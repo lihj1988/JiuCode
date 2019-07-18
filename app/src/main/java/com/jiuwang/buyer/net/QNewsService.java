@@ -4,6 +4,7 @@ package com.jiuwang.buyer.net;
 import com.jiuwang.buyer.bean.MoneyNumberBean;
 import com.jiuwang.buyer.bean.SuccessBean;
 import com.jiuwang.buyer.entity.AddressEntity;
+import com.jiuwang.buyer.entity.BalanceEntity;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.GoodsDetailsEntity;
@@ -30,6 +31,7 @@ public interface QNewsService {
 			@QueryMap HashMap<String, String> map
 
 	);
+
 	//登录
 	@POST("/login_action.jsp")
 	Observable<BaseEntity<LoginEntity>> getLogining(
@@ -42,6 +44,7 @@ public interface QNewsService {
 	Observable<HomeResultEntity> goodsInfo(
 			@QueryMap HashMap<String, String> map
 	);
+
 	//商品详情
 	@POST("admin/goods/goods_action.jsp")
 	Observable<GoodsDetailsEntity> selectGoodsDetails(
@@ -53,6 +56,7 @@ public interface QNewsService {
 	Observable<ProjectEntity> selectProjectList(
 			@QueryMap HashMap<String, String> map
 	);
+
 	//抢购-获取可选择的商品
 	@POST("admin/project/aution_user_action.jsp")
 	Observable<SelectGoodsEntity> selectChooseGoods(
@@ -70,6 +74,7 @@ public interface QNewsService {
 	Observable<BaseResultEntity> addCar(
 			@QueryMap HashMap<String, String> map
 	);
+
 	//查询购物车
 	@POST("car_action.jsp")
 	Observable<MyCarEntity> selectCar(
@@ -81,6 +86,7 @@ public interface QNewsService {
 	Observable<BaseResultEntity> cartInfo(
 			@QueryMap HashMap<String, String> map
 	);
+
 	//购物车结算
 	@POST("admin/order/order_action.jsp")
 	Observable<OrderEntity> settlement(
@@ -90,18 +96,19 @@ public interface QNewsService {
 	//收货地址-查询
 	@POST("admin/linkman/linkman_action.jsp")
 	Observable<AddressEntity> selectAddressList(
-			@QueryMap HashMap<String,String> map
+			@QueryMap HashMap<String, String> map
 	);
+
 	//收货地址-添加
 	@POST("admin/linkman/linkman_action.jsp")
 	Observable<BaseResultEntity> addressInfo(
-			@QueryMap HashMap<String,String> map
+			@QueryMap HashMap<String, String> map
 	);
 
 	//订单查询
 	@POST("admin/order/order_action.jsp")
 	Observable<OrderEntity> selectOrder(
-			@QueryMap HashMap<String,String> map
+			@QueryMap HashMap<String, String> map
 	);
 
 
@@ -113,7 +120,7 @@ public interface QNewsService {
 	);
 
 
-    //修改密码
+	//修改密码
 	@POST("/sys/group/user_pwd_action.jsp")
 	@FormUrlEncoded
 	Observable<SuccessBean> getchagepass(
@@ -127,6 +134,7 @@ public interface QNewsService {
 	Observable<BaseResultEntity> regVerify(
 			@QueryMap HashMap<String, String> map
 	);//忘记密码-获取验证码
+
 	@POST("forget_password_action.jsp")
 	Observable<BaseResultEntity> getVerify(
 			@QueryMap HashMap<String, String> map
@@ -147,6 +155,11 @@ public interface QNewsService {
 	//充值
 	@POST("admin/fund/receive_action.jsp")
 	Observable<BaseResultEntity> recharge(
+			@QueryMap HashMap<String, String> map
+	);
+	//资金查询
+	@POST("admin/fund/fund_action.jsp")
+	Observable<BalanceEntity> fund(
 			@QueryMap HashMap<String, String> map
 	);
 

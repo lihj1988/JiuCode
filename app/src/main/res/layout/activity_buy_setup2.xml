@@ -40,6 +40,7 @@
 					style="@style/RadioButton.Pay"/>
 
 				<RadioButton
+
 					android:id="@+id/wxPayTextView"
 					style="@style/RadioButton.Pay"
 					android:drawableEnd="@drawable/ic_pay_wx"

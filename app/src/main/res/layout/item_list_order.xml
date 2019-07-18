@@ -30,9 +30,10 @@
 
 		<View style="@style/View.Line"/>
 
-		<android.support.v7.widget.RecyclerView
+		<com.jcodecraeer.xrecyclerview.XRecyclerView
 			android:id="@+id/mainListView"
-			style="@style/ListView.Main"/>
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
 
 		<View style="@style/View.Line"/>
 

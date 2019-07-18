@@ -49,6 +49,7 @@ public class RechargePopupWindow extends PopupWindow {
 
 	private WindowManager.LayoutParams params;
 	private View mMenuView;
+	private String type;
 	private Activity context;
 	private OrderBean orderBean;
 	private TextView aliPay, wxPay, cancle;
@@ -77,8 +78,11 @@ public class RechargePopupWindow extends PopupWindow {
 						context.sendBroadcast(intent);
 						intent.setAction("rechargefinish");
 						context.sendBroadcast(intent);
+						intent.setAction("balancerefresh");
+						context.sendBroadcast(intent);
 						Intent intent1 = new Intent(context,OrderPayCompleteActivity.class);
 						intent1.putExtra("totalAmount",orderBean.getTotal_amount());
+						intent1.putExtra("type",type);
 						context.startActivity(intent1);
 
 					} else {
@@ -111,10 +115,11 @@ public class RechargePopupWindow extends PopupWindow {
 		};
 	};
 
-	public RechargePopupWindow(Activity context,OrderBean orderBean) {
+	public RechargePopupWindow(Activity context,OrderBean orderBean, String type) {
 		super(context);
 		this.context = context;
 		this.orderBean = orderBean;
+		this.type = type;
 		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

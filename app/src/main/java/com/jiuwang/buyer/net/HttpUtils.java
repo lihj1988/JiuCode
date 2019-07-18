@@ -4,6 +4,7 @@ package com.jiuwang.buyer.net;
 import com.jiuwang.buyer.bean.MoneyNumberBean;
 import com.jiuwang.buyer.bean.SuccessBean;
 import com.jiuwang.buyer.entity.AddressEntity;
+import com.jiuwang.buyer.entity.BalanceEntity;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.GoodsDetailsEntity;
@@ -338,6 +339,19 @@ public class HttpUtils {
 	public static void recharge(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
 		QClitent.getInstance()
 				.recharge(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}
+	/**
+	 * 资金
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void fund(HashMap<String, String> map, Consumer<BalanceEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.fund(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
