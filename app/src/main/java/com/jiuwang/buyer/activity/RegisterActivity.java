@@ -285,6 +285,8 @@ public class RegisterActivity extends BaseActivity {
 							DialogUtil.cancel();
 						}
 					});
+				}else {
+					MyToastView.showToast(baseResultEntity.getMsg(), RegisterActivity.this);
 				}
 			}
 		}, new Consumer<Throwable>() {

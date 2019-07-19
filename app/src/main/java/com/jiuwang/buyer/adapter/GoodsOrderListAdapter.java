@@ -51,15 +51,18 @@ public class GoodsOrderListAdapter extends RecyclerView.Adapter<GoodsOrderListAd
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         final OrderBean.DetailListBean detailBean =  mArrayList.get(position);
-        Double goods_price = Double.parseDouble(detailBean.getGoods_price());
-        int goods_num = Integer.parseInt(detailBean.getGoods_num());
-        //图片加载
+        if(!"".equals(detailBean.getGoods_price())){
+            Double goods_price = Double.parseDouble(detailBean.getGoods_price());
+            int goods_num = Integer.parseInt(detailBean.getGoods_num());
+            //图片加载
 //        mApplication.mFinalBitmap.display(holder.mImageView, hashMap.get("goods_image_url"));
-        holder.nameTextView.setText(detailBean.getGoods_name());
-        String info = "￥ <font color='#FF5001'>" + goods_price + "</font><br>";
-        info = info + "x <font color='#FF5001'>" + goods_num + "</font><br>";
-        info = info + "共 <font color='#FF5001'>" + (goods_price * goods_num) + "</font>";
-        holder.infoTextView.setText(Html.fromHtml(info));
+            holder.nameTextView.setText(detailBean.getGoods_name());
+            String info = "￥ <font color='#FF5001'>" + goods_price + "</font><br>";
+            info = info + "x <font color='#FF5001'>" + goods_num + "</font><br>";
+            info = info + "共 <font color='#FF5001'>" + (goods_price * goods_num) + "</font>";
+            holder.infoTextView.setText(Html.fromHtml(info));
+        }
+
         String pic_url[] = detailBean.getPic_url().split("\\|");
         CommonUtil.loadImage(mApplication.getApplicationContext(), NetURL.PIC_BASEURL+pic_url[0],holder.mImageView);
 

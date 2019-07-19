@@ -165,7 +165,7 @@ public class BuySetup1Activity extends BaseActivity {
 		myReceiver = new MyReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("finish");
-		registerReceiver(myReceiver,filter);
+		registerReceiver(myReceiver, filter);
 //        getJson();
 	}
 
@@ -265,8 +265,6 @@ public class BuySetup1Activity extends BaseActivity {
 	}
 
 
-
-
 	//解析 cartList
 	private void parseCartList() {
 
@@ -332,7 +330,7 @@ public class BuySetup1Activity extends BaseActivity {
 
 	//确认订单信息
 	private void confirmOrderInfo() {
-		if(address_id!=null&&!address_id.equals("")){
+		if (address_id != null && !address_id.equals("")) {
 			DialogUtil.progress(BuySetup1Activity.this);
 			if (CommonUtil.getNetworkRequest(BuySetup1Activity.this)) {
 				HashMap<String, String> map = new HashMap<>();
@@ -347,10 +345,12 @@ public class BuySetup1Activity extends BaseActivity {
 							Intent intent = new Intent();
 							intent.setAction("refreshCar");
 							sendBroadcast(intent);
+							intent.setAction("refresh_home");
+							sendBroadcast(intent);
 							Intent intentBuy2 = new Intent();
-							intentBuy2.setClass(BuySetup1Activity.this,BuySetup2Activity.class);
-							intentBuy2.putExtra("data",baseResultEntity.getData().get(0));
-							intentBuy2.putExtra("pay_sn","online");
+							intentBuy2.setClass(BuySetup1Activity.this, BuySetup2Activity.class);
+							intentBuy2.putExtra("data", baseResultEntity.getData().get(0));
+							intentBuy2.putExtra("pay_sn", "online");
 							startActivity(intentBuy2);
 						}
 						MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
@@ -362,9 +362,9 @@ public class BuySetup1Activity extends BaseActivity {
 						MyToastView.showToast(getString(R.string.msg_error_operation), BuySetup1Activity.this);
 					}
 				});
-			}else {
-				MyToastView.showToast("请选择收货地址", BuySetup1Activity.this);
 			}
+		} else {
+			MyToastView.showToast("请选择收货地址", BuySetup1Activity.this);
 		}
 
 
@@ -394,7 +394,7 @@ public class BuySetup1Activity extends BaseActivity {
 		unregisterReceiver(myReceiver);
 	}
 
-	class MyReceiver extends BroadcastReceiver{
+	class MyReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			finish();

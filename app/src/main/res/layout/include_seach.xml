@@ -70,7 +70,7 @@
                 android:background="@null"
                 android:clickable="true"
                 android:focusable="false"
-                android:hint="品名 /材质 / 规格"
+                android:hint="搜索你想要的"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
                 android:textColor="@color/white"

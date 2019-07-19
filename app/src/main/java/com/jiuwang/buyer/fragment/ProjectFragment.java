@@ -218,12 +218,17 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 				}
 				if (projectList != null && projectList.size() > 0) {
 					stateTextView.setVisibility(View.GONE);
-
-					if (projectListAdapter != null) {
-						projectListAdapter.notifyDataSetChanged();
-					} else {
+					if (page == 1 ) {
+						projectListAdapter = null;
 						setAdapter();
+					}else {
+						projectListAdapter.notifyDataSetChanged();
 					}
+//					if (projectListAdapter != null) {
+//						projectListAdapter.notifyDataSetChanged();
+//					} else {
+//						setAdapter();
+//					}
 					if (page == 1) {
 						projectListView.refreshComplete();
 					} else {

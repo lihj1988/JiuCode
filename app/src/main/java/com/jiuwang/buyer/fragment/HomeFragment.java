@@ -9,6 +9,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +61,8 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 	EditText et_search;
 	@Bind(R.id.xRecyclerView)
 	XRecyclerView xRecyclerView;
+	@Bind(R.id.clear_keyword_iv)
+	ImageView clear_keyword_iv;
 
 	private View view;
 	private String searchName = "";// 搜索
@@ -110,6 +114,31 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		xRecyclerView.setPullRefreshEnabled(true);
 		xRecyclerView.setLoadingListener(this);
 		listData = new ArrayList<GoodsBean>();
+		et_search.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				if (!"".equals(editable.toString())) {
+					clear_keyword_iv.setVisibility(View.VISIBLE);
+					map.put("goods_name", editable.toString());
+					intDatas(map);
+				} else {
+					map.put("goods_name","" );
+					intDatas(map);
+					clear_keyword_iv.setVisibility(View.GONE);
+				}
+
+			}
+		});
 	}
 
 	public void intDatas(HashMap<String, String> map) {
@@ -231,13 +260,16 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		intDatas(map);
 	}
 
-	@OnClick({R.id.et_search, R.id.shopping_car})
+	@OnClick({R.id.et_search, R.id.shopping_car, R.id.clear_keyword_iv})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.et_search:
 				Intent intent = new Intent(mActivity, SearchActivity.class);
 				intent.putExtra("type", "1");
 				getActivity().startActivity(intent);
+				break;
+			case R.id.clear_keyword_iv:
+				et_search.setText("");
 				break;
 			case R.id.shopping_car:
 //				if (!CommonUtil.isNull(userCode)) {
@@ -261,10 +293,10 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		public void onReceive(Context context, Intent intent) {
 
 			String serchName = intent.getStringExtra("searchName");
-			;
 			intent.putExtra("search_flag", "1");//1.代表进入搜索页面
 			if (serchName != null) {
 				map.put("goods_name", serchName);
+				et_search.setText(serchName);
 			}
 			intDatas(map);
 			shopcarCount();
@@ -308,12 +340,12 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 				public void accept(MyCarEntity myCarEntity) throws Exception {
 					int count = 0;
 					if (Constant.HTTP_SUCCESS_CODE.equals(myCarEntity.getCode())) {
-						if(myCarEntity.getData()!=null&&myCarEntity.getData().size()>0){
+						if (myCarEntity.getData() != null && myCarEntity.getData().size() > 0) {
 							for (int i = 0; i < myCarEntity.getData().size(); i++) {
 								count += Integer.parseInt(myCarEntity.getData().get(i).getCount());
 							}
 						}
-						visible_dot.setText(count+"");
+						visible_dot.setText(count + "");
 
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(myCarEntity.getCode())) {
 						MyToastView.showToast(myCarEntity.getMsg(), getActivity());
@@ -326,7 +358,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 				@Override
 				public void accept(Throwable throwable) throws Exception {
 
-
+					visible_dot.setText("0");
 				}
 			});
 		}

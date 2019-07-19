@@ -47,44 +47,43 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 	}
 
 	@Override
-	public void onBindViewHolder(ProjectListAdapter.ViewHolder holder, final int position) {
-
+	public void onBindViewHolder(final ProjectListAdapter.ViewHolder holder, final int position) {
+		String type = "";
 		try {
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStart_time()) != 1) {
-				holder.llTime.setVisibility(View.VISIBLE);
-				holder.tvTimeName.setText("距离开始：");
-				long currentTime = System.currentTimeMillis();
-				//转成Date
-				Date date = new Date(currentTime);
-				//获取当前时间戳
-				date.getTime();
-				//定义 yyyy-MM-dd HH:mm:ss的格式
+			if ("2".equals(projectList.get(position).getStatus())) {
+				holder.llTime.setVisibility(View.INVISIBLE);
+				holder.tvTimeName.setText("已结束");
+			} else if ("1".equals(projectList.get(position).getStatus())) {
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				long l = 0L;
+				if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStart_time()) != 1) {
+					holder.llTime.setVisibility(View.VISIBLE);
+					holder.tvTimeName.setText("距离开始：");
+					type = "1";
+					long currentTime = System.currentTimeMillis();
+					//转成Date
+					Date date = new Date(currentTime);
+					//获取当前时间戳
+					date.getTime();
+					//定义 yyyy-MM-dd HH:mm:ss的格式
+					//格林尼治+或-
+					df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+					Date parse = df.parse(projectList.get(position).getStart_time());
+					long time = parse.getTime();
+					l = time - currentTime;
+					holder.llItem.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
 
-				//格林尼治+或-
-				df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-				Date parse = df.parse(projectList.get(position).getStart_time());
-				long time = parse.getTime();
-
-				long l = time - currentTime;
-//				LogUtils.e(TAG, CommonUtil.longToString(l) + "");
-				holder.tvDay.setText(String.valueOf(CommonUtil.longToString(l)[0]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[0]):String.valueOf(CommonUtil.longToString(l)[0]));
-				holder.tvHour.setText(String.valueOf(CommonUtil.longToString(l)[1]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[1]):String.valueOf(CommonUtil.longToString(l)[1]));
-				holder.tvMin.setText(String.valueOf(CommonUtil.longToString(l)[2]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[2]):String.valueOf(CommonUtil.longToString(l)[2]));
-				holder.tvSec.setText(String.valueOf(CommonUtil.longToString(l)[3]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[3]):String.valueOf(CommonUtil.longToString(l)[3]));
-				exeTimer( l,  position,holder);
-				holder.llItem.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-
-						MyToastView.showToast("活动还没有开始",context);
-					}
-				});
-			} else {
-				if(!"".equals(projectList.get(position).getStop_time())){
+							MyToastView.showToast("活动还没有开始", context);
+						}
+					});
+				}
+				if (!"".equals(projectList.get(position).getStop_time())) {
 					if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStop_time()) != 1) {
 						holder.llTime.setVisibility(View.VISIBLE);
 						holder.tvTimeName.setText("距离结束：");
+						type = "2";
 						long currentTime = System.currentTimeMillis();
 						//转成Date
 						Date date = new Date(currentTime);
@@ -95,13 +94,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 						df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 						Date parse = df.parse(projectList.get(position).getStop_time());
 						long time = parse.getTime();
-						long l = time - currentTime;
-//					LogUtils.e(TAG, CommonUtil.longToString(l) + "");
-						holder.tvDay.setText(String.valueOf(CommonUtil.longToString(l)[0]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[0]):String.valueOf(CommonUtil.longToString(l)[0]));
-						holder.tvHour.setText(String.valueOf(CommonUtil.longToString(l)[1]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[1]):String.valueOf(CommonUtil.longToString(l)[1]));
-						holder.tvMin.setText(String.valueOf(CommonUtil.longToString(l)[2]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[2]):String.valueOf(CommonUtil.longToString(l)[2]));
-						holder.tvSec.setText(String.valueOf(CommonUtil.longToString(l)[3]).length()==1?"0"+String.valueOf(CommonUtil.longToString(l)[3]):String.valueOf(CommonUtil.longToString(l)[3]));
-						exeTimer( l,  position,holder);
+						l = time - currentTime;
 						holder.llItem.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -110,36 +103,70 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 							}
 						});
 					} else {
+						l = 0;
 						holder.llTime.setVisibility(View.INVISIBLE);
 						holder.tvTimeName.setText("已结束");
 						holder.llItem.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 
-								MyToastView.showToast("活动已结束",context);
+								MyToastView.showToast("活动已结束", context);
 							}
 						});
 					}
-				}else {
+				} else {
 					holder.llTime.setVisibility(View.INVISIBLE);
 					holder.tvTimeName.setText("距离结束：");
 				}
+
+				//将前一个缓存清除
+				if (holder.countDownTimer != null) {
+					holder.countDownTimer.cancel();
+				}
+				if (l > 0) {
+//
+					final String finalType = type;
+					holder.countDownTimer = new CountDownTimer(l, 1000) {
+						@Override
+						public void onTick(long l) {
+							long[] longs = CommonUtil.longToString(l);
+							holder.tvDay.setText(String.valueOf(longs[0]).length() == 1 ? "0" + String.valueOf(longs[0]) : String.valueOf(longs[0]));
+							holder.tvHour.setText(String.valueOf(longs[1]).length() == 1 ? "0" + String.valueOf(longs[1]) : String.valueOf(longs[1]));
+							holder.tvMin.setText(String.valueOf(longs[2]).length() == 1 ? "0" + String.valueOf(longs[2]) : String.valueOf(longs[2]));
+							holder.tvSec.setText(String.valueOf(longs[3]).length() == 1 ? "0" + String.valueOf(longs[3]) : String.valueOf(longs[3]));
+						}
+
+						@Override
+						public void onFinish() {
+							if (finalType.equals("1")) {
+
+							} else {
+								if (holder.countDownTimer != null) {
+									holder.countDownTimer.cancel();
+								}
+								projectList.get(position).setStatus_name("已结束");
+								projectList.get(position).setStatus("2");
+							}
+
+
+							notifyDataSetChanged();
+//						Intent intent = new Intent();
+//						intent.setAction("refreshProject");
+//						context.sendBroadcast(intent);
+						}
+					}.start();
+				} else {
+					if (holder.countDownTimer != null) {
+						holder.countDownTimer.cancel();
+					}
+				}
+				holder.tvProjectName.setText(projectList.get(position).getProject_name());
+				holder.tvSalePeice.setText("￥" + CommonUtil.decimalFormat(Double.parseDouble(projectList.get(position).getSale_price().equals("") ? "0" : projectList.get(position).getSale_price()), "0") + "");
 			}
-			holder.tvProjectName.setText(projectList.get(position).getProject_name());
-			holder.tvSalePeice.setText(projectList.get(position).getSale_price());
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		holder.llItem.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				projectItemOnClickListener.itemOnClick(position);
-			}
-		});
-//		if(projectList.get(position).getPic_url()){
-//
-//		}
 //		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+projectList.get(position).getPic_url(),holder.ivPic);
 
 	}
@@ -161,6 +188,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 		public TextView tvSalePeice;
 		public LinearLayout llItem;
 		public LinearLayout llTime;
+		public CountDownTimer countDownTimer;
 
 
 		public ViewHolder(View view) {
@@ -187,9 +215,8 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 	}
 
 
-
-	private void exeTimer(long time, final int position,ProjectListAdapter.ViewHolder holder) {
-		new MyCountDownTimer(time, 1000,position,holder) {
+	private void exeTimer(long time, final int position, ProjectListAdapter.ViewHolder holder) {
+		new MyCountDownTimer(time, 1000, position, holder) {
 
 		}.start();
 
@@ -200,7 +227,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 		private int position;
 		private ProjectListAdapter.ViewHolder holder;
 
-		public MyCountDownTimer(long millisInFuture, long countDownInterval, int position,ProjectListAdapter.ViewHolder holder) {
+		public MyCountDownTimer(long millisInFuture, long countDownInterval, int position, ProjectListAdapter.ViewHolder holder) {
 			super(millisInFuture, countDownInterval);
 			this.position = position;
 			this.holder = holder;
@@ -217,10 +244,10 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 //			notifyDataSetChanged();
 			//}
 			long[] longs = CommonUtil.longToString(millisUntilFinished);
-			holder.tvDay.setText(String.valueOf(longs[0]).length()==1?"0"+String.valueOf(longs[0]):String.valueOf(longs[0]));
-			holder.tvHour.setText(String.valueOf(longs[1]).length()==1?"0"+String.valueOf(longs[1]):String.valueOf(longs[1]));
-			holder.tvMin.setText(String.valueOf(longs[2]).length()==1?"0"+String.valueOf(longs[2]):String.valueOf(longs[2]));
-			holder.tvSec.setText(String.valueOf(longs[3]).length()==1?"0"+String.valueOf(longs[3]):String.valueOf(longs[3]));
+			holder.tvDay.setText(String.valueOf(longs[0]).length() == 1 ? "0" + String.valueOf(longs[0]) : String.valueOf(longs[0]));
+			holder.tvHour.setText(String.valueOf(longs[1]).length() == 1 ? "0" + String.valueOf(longs[1]) : String.valueOf(longs[1]));
+			holder.tvMin.setText(String.valueOf(longs[2]).length() == 1 ? "0" + String.valueOf(longs[2]) : String.valueOf(longs[2]));
+			holder.tvSec.setText(String.valueOf(longs[3]).length() == 1 ? "0" + String.valueOf(longs[3]) : String.valueOf(longs[3]));
 
 		}
 
@@ -230,8 +257,9 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 			intent.setAction("refreshProject");
 			context.sendBroadcast(intent);
 			projectList.get(position).setStatus_name("已结束");
+
 //			MyCountDownTimer.this.onFinish();
-			notifyDataSetChanged();
+//			notifyDataSetChanged();
 
 		}
 

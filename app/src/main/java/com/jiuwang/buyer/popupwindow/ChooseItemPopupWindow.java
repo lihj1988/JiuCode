@@ -104,7 +104,7 @@ public class ChooseItemPopupWindow extends PopupWindow {
 				HashMap<String, String> hashMap = new HashMap<>();
 				hashMap.put("act", Constant.ACTION_ACT_ADD);
 				hashMap.put("aution_id", project_id);
-				hashMap.put("goods_id", selectGoodsList.get(position).getId());
+				hashMap.put("goods_id", selectGoodsList.get(position).getGoods_id());
 				HttpUtils.enroll(hashMap, new Consumer<BaseResultEntity>() {
 					@Override
 					public void accept(BaseResultEntity baseResultEntity) throws Exception {

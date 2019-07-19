@@ -201,6 +201,7 @@ public class GoodsDetailsActivty extends BaseActivity {
 				} else {
 					MyToastView.showToast(baseResultEntity.getMsg(), GoodsDetailsActivty.this);
 				}
+				MyToastView.showToast(baseResultEntity.getMsg(), GoodsDetailsActivty.this);
 
 			}
 		}, new Consumer<Throwable>() {

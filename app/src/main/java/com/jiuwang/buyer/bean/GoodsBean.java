@@ -34,6 +34,7 @@ public class GoodsBean implements Serializable {
 	private String deliver_place;
 	private String order_count;
 	private String project_id;
+	private String sale_count;//销量
 
 	public String getId() {
 		return id;
@@ -129,5 +130,13 @@ public class GoodsBean implements Serializable {
 
 	public void setProject_id(String project_id) {
 		this.project_id = project_id;
+	}
+
+	public String getSale_count() {
+		return sale_count;
+	}
+
+	public void setSale_count(String sale_count) {
+		this.sale_count = sale_count;
 	}
 }
