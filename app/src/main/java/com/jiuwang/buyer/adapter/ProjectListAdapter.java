@@ -198,7 +198,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 		public LinearLayout llItem;
 		public LinearLayout llTime;
 		public CountDownTimer countDownTimer;
-		public String type;
+		public String type;//项目时候开始  用于倒计时的显示刷新  1 未开始 2 已开始
 
 
 		public ViewHolder(View view) {
