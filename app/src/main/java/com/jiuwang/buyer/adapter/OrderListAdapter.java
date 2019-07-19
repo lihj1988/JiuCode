@@ -23,7 +23,9 @@ import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.List;
 
-
+/**
+ * 订单适配器
+ */
 public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.ViewHolder> {
 
 	private Activity mActivity;

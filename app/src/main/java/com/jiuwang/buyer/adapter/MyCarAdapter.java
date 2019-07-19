@@ -32,9 +32,9 @@ import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
 /**
- * author：lihj
- * desc：
- * Created by lihj on  2019/6/20 14:43.
+ * author：
+ * desc：购物车适配器
+ * Created by  on  2019/6/20 14:43.
  */
 
 public class MyCarAdapter extends BaseAdapter {

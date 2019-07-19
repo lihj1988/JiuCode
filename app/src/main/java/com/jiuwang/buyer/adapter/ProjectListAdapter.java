@@ -26,7 +26,7 @@ import java.util.TimeZone;
 
 /**
  * Created by lihj on 2019/6/25
- * desc:
+ * desc:抢购项目适配器
  */
 
 public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.ViewHolder> {
@@ -58,6 +58,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 			} else if ("1".equals(projectList.get(position).getStatus())) {
 				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				long l = 0L;
+				// 1 结束时间小于开始时间 2 开始时间与结束时间相同 3 结束时间大于开始时间
 				if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStart_time()) != 1) {
 					holder.llTime.setVisibility(View.VISIBLE);
 					holder.tvTimeName.setText("距离开始：");
@@ -148,7 +149,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 								projectList.get(position).setStatus_name("已结束");
 								projectList.get(position).setStatus("2");
 							}
-
+							//倒计时结束后 本地刷新数据
 							new Handler() {
 								@Override
 								public void handleMessage(Message msg) {
@@ -159,9 +160,6 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 									notifyDataSetChanged();
 								}
 							}.sendEmptyMessageDelayed(0, 200);
-//						Intent intent = new Intent();
-//						intent.setAction("refreshProject");
-//						context.sendBroadcast(intent);
 						}
 					}.start();
 				} else {

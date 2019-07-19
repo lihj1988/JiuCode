@@ -19,17 +19,7 @@ import java.util.List;
 
 
 /*
-*
-* 作者：Yokey软件工作室
-*
-* 企鹅：1002285057
-*
-* 网址：www.yokey.top
-*
-* 作用：购买商品时的商品适配器
-*
-* 更新：2016-04-17
-*
+* 订单明细
 */
 
 public class GoodsOrderListAdapter extends RecyclerView.Adapter<GoodsOrderListAdapter.ViewHolder> {
