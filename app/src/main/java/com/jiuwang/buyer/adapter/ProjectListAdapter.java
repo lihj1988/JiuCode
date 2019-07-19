@@ -3,6 +3,8 @@ package com.jiuwang.buyer.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +50,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 
 	@Override
 	public void onBindViewHolder(final ProjectListAdapter.ViewHolder holder, final int position) {
-		String type = "";
+		holder.type = "";
 		try {
 			if ("2".equals(projectList.get(position).getStatus())) {
 				holder.llTime.setVisibility(View.INVISIBLE);
@@ -59,7 +61,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 				if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStart_time()) != 1) {
 					holder.llTime.setVisibility(View.VISIBLE);
 					holder.tvTimeName.setText("距离开始：");
-					type = "1";
+					holder.type = "1";
 					long currentTime = System.currentTimeMillis();
 					//转成Date
 					Date date = new Date(currentTime);
@@ -78,12 +80,11 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 							MyToastView.showToast("活动还没有开始", context);
 						}
 					});
-				}
-				if (!"".equals(projectList.get(position).getStop_time())) {
+				} else if (!"".equals(projectList.get(position).getStop_time())) {
 					if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStop_time()) != 1) {
 						holder.llTime.setVisibility(View.VISIBLE);
 						holder.tvTimeName.setText("距离结束：");
-						type = "2";
+						holder.type = "2";
 						long currentTime = System.currentTimeMillis();
 						//转成Date
 						Date date = new Date(currentTime);
@@ -125,7 +126,6 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 				}
 				if (l > 0) {
 //
-					final String finalType = type;
 					holder.countDownTimer = new CountDownTimer(l, 1000) {
 						@Override
 						public void onTick(long l) {
@@ -138,7 +138,8 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 
 						@Override
 						public void onFinish() {
-							if (finalType.equals("1")) {
+
+							if (holder.type.equals("1")) {
 
 							} else {
 								if (holder.countDownTimer != null) {
@@ -148,8 +149,16 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 								projectList.get(position).setStatus("2");
 							}
 
-
-							notifyDataSetChanged();
+							new Handler() {
+								@Override
+								public void handleMessage(Message msg) {
+									holder.tvDay.setText("00");
+									holder.tvHour.setText("00");
+									holder.tvMin.setText("00");
+									holder.tvSec.setText("00");
+									notifyDataSetChanged();
+								}
+							}.sendEmptyMessageDelayed(0, 200);
 //						Intent intent = new Intent();
 //						intent.setAction("refreshProject");
 //						context.sendBroadcast(intent);
@@ -189,6 +198,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 		public LinearLayout llItem;
 		public LinearLayout llTime;
 		public CountDownTimer countDownTimer;
+		public String type;
 
 
 		public ViewHolder(View view) {
