@@ -136,7 +136,7 @@ public class MineFragment extends Fragment {
 	}
 
 	//获取用户数据
-	private void initData() {
+	public void initData() {
 
 		if (CommonUtil.getNetworkRequest(getActivity())) {
 			HashMap<String, String> map = new HashMap<>();

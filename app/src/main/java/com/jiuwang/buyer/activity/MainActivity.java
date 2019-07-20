@@ -65,6 +65,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		}
 		tbBottom.setIndicateDisplay(this, 2, false);
 		tbBottom.setOnTabSelectedListener(this);
+
 	}
 
 	private void myClick(int backIndex) {
@@ -73,9 +74,10 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 	}
 
 	@Override
-	public void onTabSelected(int index) {
+	public void onTabSelected(final int index) {
 		FragmentTransaction transaction = mFragmentManager.beginTransaction();
 		hideFragments(transaction);
+
 		switch (index) {
 			case ConstantValues.HOME_FRAGMENT_INDEX://首页
 				if (null == homeFragment) {
@@ -83,6 +85,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 					transaction.add(R.id.center_layout, homeFragment);
 				} else {
 					transaction.show(homeFragment);
+					homeFragment.intDatas();
 				}
 				break;
 			case ConstantValues.PROJECT_FRAGMENT_INDEX://抢购
@@ -91,6 +94,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 					transaction.add(R.id.center_layout, projectFragment);
 				} else {
 					transaction.show(projectFragment);
+					projectFragment.initData();
 //					carFragment.trackRefresh(1);
 				}
 				break;
@@ -110,6 +114,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 					transaction.add(R.id.center_layout, mineFragment);
 				} else {
 					transaction.show(mineFragment);
+					mineFragment.initData();
 //					resouceFragment.trackRefresh();
 				}
 				break;
@@ -121,6 +126,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 //		hIndex = index;
 		transaction.commitAllowingStateLoss();
 	}
+
 
 	private void hideFragments(FragmentTransaction transaction) {
 		if (null != homeFragment) {
@@ -173,4 +179,6 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 			myClick(0);
 		}
 	}
+
+
 }

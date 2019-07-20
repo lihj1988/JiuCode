@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -197,7 +199,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		initData();
 	}
 
-	private void initData() {
+	public void initData() {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("currPage", String.valueOf(page));
 		map.put("pageSize", Constant.PAGESIZE);
@@ -216,28 +218,34 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 					startActivity(intent);
 					getActivity().finish();
 				}
-				if (projectList != null && projectList.size() > 0) {
-					stateTextView.setVisibility(View.GONE);
-					if (page == 1 ) {
-						projectListAdapter = null;
-						setAdapter();
-					}else {
-						projectListAdapter.notifyDataSetChanged();
-					}
-//					if (projectListAdapter != null) {
-//						projectListAdapter.notifyDataSetChanged();
-//					} else {
+				new Handler(){
+					@Override
+					public void handleMessage(Message msg) {
+
+						if (projectList != null && projectList.size() > 0) {
+							stateTextView.setVisibility(View.GONE);
+//					if (page == 1 ) {
+//						projectListAdapter = null;
 //						setAdapter();
+//					}else {
+//						projectListAdapter.notifyDataSetChanged();
 //					}
-					if (page == 1) {
-						projectListView.refreshComplete();
-					} else {
-						projectListView.loadMoreComplete();
+							if (projectListAdapter != null) {
+								projectListAdapter.notifyDataSetChanged();
+							} else {
+								setAdapter();
+							}
+							if (page == 1) {
+								projectListView.refreshComplete();
+							} else {
+								projectListView.loadMoreComplete();
+							}
+						} else {
+							stateTextView.setVisibility(View.VISIBLE);
+							stateTextView.setText(getActivity().getString(R.string.nothing));
+						}
 					}
-				} else {
-					stateTextView.setVisibility(View.VISIBLE);
-					stateTextView.setText(getActivity().getString(R.string.nothing));
-				}
+				}.sendEmptyMessageDelayed(0,500);
 			}
 		}, new Consumer<Throwable>() {
 			@Override

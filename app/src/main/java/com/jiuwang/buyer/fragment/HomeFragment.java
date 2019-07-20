@@ -1,12 +1,16 @@
 package com.jiuwang.buyer.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
@@ -16,7 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -27,6 +33,7 @@ import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.SearchActivity;
 import com.jiuwang.buyer.adapter.GoodsAdapter;
 import com.jiuwang.buyer.bean.GoodsBean;
+import com.jiuwang.buyer.camera.zxing.activity.CaptureActivity;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.HomeResultEntity;
@@ -47,6 +54,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
 
+import static android.app.Activity.RESULT_OK;
+import static android.support.design.widget.TabLayout.MODE_FIXED;
+
 /**
  * 首页
  */
@@ -63,6 +73,12 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 	XRecyclerView xRecyclerView;
 	@Bind(R.id.clear_keyword_iv)
 	ImageView clear_keyword_iv;
+	@Bind(R.id.ivScan)
+	ImageView ivSacn;
+	@Bind(R.id.mainTabLayout)
+	TabLayout mainTabLayout;
+	@Bind(R.id.relativeLayout)
+	RelativeLayout relativeLayout;
 
 	private View view;
 	private String searchName = "";// 搜索
@@ -88,7 +104,42 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		userCode = PreforenceUtils.getStringData("loginInfo", "userName");
 		initView();
 		map = new HashMap<>();
-		intDatas(map);
+
+		List<String> mTitleList = new ArrayList<>();
+		mTitleList.add("价格升序");
+		mTitleList.add("价格降序");
+		mTitleList.add("销量");
+		for (int i = 0; i < mTitleList.size(); i++) {
+			//添加tab
+			mainTabLayout.addTab(mainTabLayout.newTab().setText(mTitleList.get(i)));
+		}
+		mainTabLayout.setTabMode(MODE_FIXED);
+		mainTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+			@Override
+			public void onTabSelected(TabLayout.Tab tab) {
+//				tag = tab.getPosition() + "";
+//				Message message = new Message();
+//				Bundle bundle = new Bundle();
+//				bundle.putInt("position", tab.getPosition());
+//				message.setData(bundle);
+//				message.what = 0;
+//				handler.sendMessage(message);
+//				map.put();
+				map.put("sort_type", tab.getPosition() + "");
+				intDatas();
+			}
+
+			@Override
+			public void onTabUnselected(TabLayout.Tab tab) {
+
+			}
+
+			@Override
+			public void onTabReselected(TabLayout.Tab tab) {
+
+			}
+		});
+		intDatas();
 		shopcarCount();
 //		refreshMefragment();
 		if (receiver == null) {
@@ -130,10 +181,10 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 				if (!"".equals(editable.toString())) {
 					clear_keyword_iv.setVisibility(View.VISIBLE);
 					map.put("goods_name", editable.toString());
-					intDatas(map);
+					intDatas();
 				} else {
-					map.put("goods_name","" );
-					intDatas(map);
+					map.put("goods_name", "");
+					intDatas();
 					clear_keyword_iv.setVisibility(View.GONE);
 				}
 
@@ -141,7 +192,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		});
 	}
 
-	public void intDatas(HashMap<String, String> map) {
+	public void intDatas() {
 
 		map.put("currPage", String.valueOf(page));
 		map.put("pageSize", Constant.PAGESIZE);
@@ -209,6 +260,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 
 	private void setAdapter() {
 		mAdapter = new GoodsAdapter(getActivity(), listData);
+		mAdapter.setHasStableIds(true);
 		xRecyclerView.setAdapter(mAdapter);
 	}
 
@@ -240,6 +292,14 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 			searchName = data.getStringExtra("serchName");
 			search_Flag = data.getStringExtra("search_Flag");// 1.代表进入搜索页面
 		}
+		//扫描结果回调
+		if (requestCode == Constant.REQ_QR_CODE && resultCode == RESULT_OK) {
+			Bundle bundle = data.getExtras();
+			String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
+			//将扫描出的信息显示出来
+
+			MyToastView.showToast(scanResult, getActivity());
+		}
 	}
 
 	private RefreshReceiver receiver;
@@ -250,20 +310,37 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		refreshTime++;
 		times = 0;
 		shopcarCount();
-		intDatas(map);
+		intDatas();
 	}
 
 	@Override
 	public void onLoadMore() {
 		page++;
 		times++;
-		intDatas(map);
+		intDatas();
 	}
 
-	@OnClick({R.id.et_search, R.id.shopping_car, R.id.clear_keyword_iv})
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (requestCode == Constant.REQ_QR_CODE) {
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				// Permission Granted
+				//跳转扫描
+				Intent intentScan = new Intent(getActivity(), CaptureActivity.class);
+				startActivityForResult(intentScan, Constant.REQ_QR_CODE);
+			} else {
+				// Permission Denied
+				Toast.makeText(getActivity(), "访问被拒绝！", Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+
+	@OnClick({R.id.relativeLayout, R.id.shopping_car, R.id.clear_keyword_iv, R.id.ivScan})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
-			case R.id.et_search:
+			case R.id.relativeLayout:
 				Intent intent = new Intent(mActivity, SearchActivity.class);
 				intent.putExtra("type", "1");
 				getActivity().startActivity(intent);
@@ -284,6 +361,10 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 //					startActivity(intentLogin);
 //				}
 				break;
+			case R.id.ivScan:
+				runPermission();
+
+				break;
 		}
 	}
 
@@ -298,7 +379,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 				map.put("goods_name", serchName);
 				et_search.setText(serchName);
 			}
-			intDatas(map);
+			intDatas();
 			shopcarCount();
 
 		}
@@ -361,6 +442,21 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 					visible_dot.setText("0");
 				}
 			});
+		}
+	}
+
+	private void runPermission() {
+		if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+				!= PackageManager.PERMISSION_GRANTED) {
+			//申请WRITE_EXTERNAL_STORAGE权限
+			//ActivityCompat.requestPermissions(getActivity(),
+			//        new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+			//以下是直接使用Fragment的requestPermissions方法
+			requestPermissions(new String[]{Manifest.permission.CAMERA}, Constant.REQ_QR_CODE);
+		} else {
+			//跳转扫描
+			Intent intentScan = new Intent(getActivity(), CaptureActivity.class);
+			startActivityForResult(intentScan, Constant.REQ_QR_CODE);
 		}
 	}
 }

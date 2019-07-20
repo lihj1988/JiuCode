@@ -44,8 +44,14 @@ public class Constant {
 	public static final String PAY_MODE_ALI = "1";//支付宝
 	public static final String PAY_MODE_WX = "2";//微信
 	public static final String PAY_MODE_BALANCE = "3";//余额
+	//排序方式
+	public static final String SORT_TYPE_PRICE_UP = "0";//价格升序
+	public static final String SORT_TYPE_PRICE_DWON = "1";//价格降序
+	public static final String SORT_TYPE_SALES = "2";//销量排序
 
-
-
+	// request参数
+	public static final int REQ_QR_CODE = 11002; // // 打开扫描界面请求码
+	public static final int REQ_PERM_CAMERA = 11003; // 打开摄像头
+	public static final String INTENT_EXTRA_KEY_QR_SCAN = "qr_scan_result";
 
 }

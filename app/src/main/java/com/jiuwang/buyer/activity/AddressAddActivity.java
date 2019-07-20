@@ -263,6 +263,7 @@ public class AddressAddActivity extends BaseActivity {
 			hashMap.put("destination_area_cd", areacode);
 			hashMap.put("destination_address", proEditText.getText().toString() + address);
 			hashMap.put("destination", proEditText.getText().toString() + address);
+			hashMap.put("is_de", proEditText.getText().toString() + address);
 			HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {
 				@Override
 				public void accept(BaseResultEntity baseResultEntity) throws Exception {

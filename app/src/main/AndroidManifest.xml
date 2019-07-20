@@ -18,6 +18,7 @@
 	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
 	<uses-permission android:name="android.permission.GET_TASKS" />
 	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 	<application
 
 		android:name=".base.MyApplication"
@@ -51,6 +52,7 @@
 		<activity android:name=".activity.BalanceActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.BalanceListActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.BalanceDetailsActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".camera.zxing.activity.CaptureActivity" android:screenOrientation="portrait"/>
 
 	</application>
 

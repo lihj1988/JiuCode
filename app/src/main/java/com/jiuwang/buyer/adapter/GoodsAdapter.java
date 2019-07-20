@@ -86,7 +86,15 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 			}
 		});
 		String[] split = datas.get(position).getPic_url().split(",");
-		CommonUtil.loadImage(context, NetURL.PIC_BASEURL + split[0], viewHolder.ivGoodsImg);
+
+//		if (datas.get(position).equals(viewHolder.ivGoodsImg.getTag(R.id.ivGoodsImg))) {
+//
+//		} else {
+			// 如果不相同，就加载。现在在这里来改变闪烁的情况
+			CommonUtil.loadImage(context, NetURL.PIC_BASEURL + split[0], viewHolder.ivGoodsImg);
+//			viewHolder.ivGoodsImg.setTag(R.id.ivGoodsImg, datas.get(position));
+//		}
+
 	}
 
 	//获取数据的数量
@@ -94,7 +102,10 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 	public int getItemCount() {
 		return datas.size();
 	}
-
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
 	//自定义的ViewHolder，持有每个Item的的所有界面元素
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 

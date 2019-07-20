@@ -59,29 +59,29 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				long l = 0L;
 				// 1 结束时间小于开始时间 2 开始时间与结束时间相同 3 结束时间大于开始时间
-				if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStart_time()) != 1) {
-					holder.llTime.setVisibility(View.VISIBLE);
-					holder.tvTimeName.setText("距离开始：");
+//				if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStart_time()) != 1) {
+//					holder.llTime.setVisibility(View.VISIBLE);
+//					holder.tvTimeName.setText("距离开始：");
 					holder.type = "1";
-					long currentTime = System.currentTimeMillis();
-					//转成Date
-					Date date = new Date(currentTime);
-					//获取当前时间戳
-					date.getTime();
-					//定义 yyyy-MM-dd HH:mm:ss的格式
-					//格林尼治+或-
-					df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-					Date parse = df.parse(projectList.get(position).getStart_time());
-					long time = parse.getTime();
-					l = time - currentTime;
-					holder.llItem.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-
-							MyToastView.showToast("活动还没有开始", context);
-						}
-					});
-				} else if (!"".equals(projectList.get(position).getStop_time())) {
+//					long currentTime = System.currentTimeMillis();
+//					//转成Date
+//					Date date = new Date(currentTime);
+//					//获取当前时间戳
+//					date.getTime();
+//					//定义 yyyy-MM-dd HH:mm:ss的格式
+//					//格林尼治+或-
+//					df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+//					Date parse = df.parse(projectList.get(position).getStart_time());
+//					long time = parse.getTime();
+//					l = time - currentTime;
+//					holder.llItem.setOnClickListener(new View.OnClickListener() {
+//						@Override
+//						public void onClick(View v) {
+//
+//							MyToastView.showToast("活动还没有开始", context);
+//						}
+//					});
+//				} else if (!"".equals(projectList.get(position).getStop_time())) {
 					if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStop_time()) != 1) {
 						holder.llTime.setVisibility(View.VISIBLE);
 						holder.tvTimeName.setText("距离结束：");
@@ -94,9 +94,12 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 						//定义 yyyy-MM-dd HH:mm:ss的格式
 						//格林尼治+或-
 						df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-						Date parse = df.parse(projectList.get(position).getStop_time());
-						long time = parse.getTime();
-						l = time - currentTime;
+						Date parse_stop_time = df.parse(projectList.get(position).getStop_time());
+//						Date parse_start_time = df.parse(projectList.get(position).getStop_time());
+						long time_stop_time = parse_stop_time.getTime();
+//						long time_start_time = parse_start_time.getTime();
+						//计算时间差
+						l = time_stop_time - currentTime;
 						holder.llItem.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -116,10 +119,10 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 							}
 						});
 					}
-				} else {
-					holder.llTime.setVisibility(View.INVISIBLE);
-					holder.tvTimeName.setText("距离结束：");
-				}
+//				} else {
+//					holder.llTime.setVisibility(View.INVISIBLE);
+//					holder.tvTimeName.setText("距离结束：");
+//				}
 
 				//将前一个缓存清除
 				if (holder.countDownTimer != null) {
@@ -143,9 +146,9 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 							if (holder.type.equals("1")) {
 
 							} else {
-								if (holder.countDownTimer != null) {
-									holder.countDownTimer.cancel();
-								}
+//								if (holder.countDownTimer != null) {
+//									holder.countDownTimer.cancel();
+//								}
 								projectList.get(position).setStatus_name("已结束");
 								projectList.get(position).setStatus("2");
 							}
@@ -153,13 +156,16 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 							new Handler() {
 								@Override
 								public void handleMessage(Message msg) {
-									holder.tvDay.setText("00");
-									holder.tvHour.setText("00");
-									holder.tvMin.setText("00");
-									holder.tvSec.setText("00");
+//									holder.tvDay.setText("00");
+//									holder.tvHour.setText("00");
+//									holder.tvMin.setText("00");
+//									holder.tvSec.setText("00");
 									notifyDataSetChanged();
+									Intent intent = new Intent();
+									intent.setAction("refreshProject");
+									context.sendBroadcast(intent);
 								}
-							}.sendEmptyMessageDelayed(0, 200);
+							}.sendEmptyMessageDelayed(0, 500);
 						}
 					}.start();
 				} else {
@@ -180,7 +186,8 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 
 	@Override
 	public int getItemCount() {
-		return projectList.size();
+		return projectList == null ? 0 : projectList.size();
+
 	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {

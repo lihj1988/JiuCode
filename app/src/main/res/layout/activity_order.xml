@@ -16,11 +16,10 @@
 
     <View style="@style/View.Line"/>
 
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/xrvOrder"
-        android:descendantFocusability="blocksDescendants"
+    <android.support.v4.view.ViewPager
+        android:layout_marginTop="@dimen/padding_size_10"
+        android:id="@+id/main_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/padding_size_8"></com.jcodecraeer.xrecyclerview.XRecyclerView>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

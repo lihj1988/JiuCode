@@ -243,6 +243,7 @@ public class CarActivity extends BaseActivity {
 
 		Intent intent = new Intent(CarActivity.this, BuySetup1Activity.class);
 		intent.putExtra("data", (Serializable) selectedList);
+		intent.putExtra("totalAmount", totalAmount);
 		startActivity(intent);
 
 

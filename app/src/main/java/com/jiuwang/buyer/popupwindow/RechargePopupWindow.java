@@ -28,6 +28,7 @@ import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
 
@@ -55,6 +56,7 @@ public class RechargePopupWindow extends PopupWindow {
 	private TextView aliPay, wxPay, cancle;
 	private static final int SDK_PAY_FLAG = 1;
 	private static final int SDK_AUTH_FLAG = 2;
+	private LoadingDialog loadingDialog ;
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		@SuppressWarnings("unused")
@@ -161,7 +163,9 @@ public class RechargePopupWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				//支付宝支付
+				loadingDialog = new LoadingDialog(context);
 //				MyToastView.showToast("支付宝支付" ,context);
+				loadingDialog.show();
 				if(orderBean!=null){
 					if(CommonUtil.getNetworkRequest(context)){
 						HashMap<String, String> map = new HashMap<>();
@@ -170,6 +174,7 @@ public class RechargePopupWindow extends PopupWindow {
 						HttpUtils.recharge(map, new Consumer<BaseResultEntity>() {
 							@Override
 							public void accept(BaseResultEntity baseResultEntity) throws Exception {
+								loadingDialog.dismiss();
 								if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
 									JSONObject object = new JSONObject();
 									try {
@@ -217,7 +222,8 @@ public class RechargePopupWindow extends PopupWindow {
 						}, new Consumer<Throwable>() {
 							@Override
 							public void accept(Throwable throwable) throws Exception {
-
+								MyToastView.showToast("充值失败",context);
+								loadingDialog.dismiss();
 							}
 						});
 					}

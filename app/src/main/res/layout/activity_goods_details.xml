@@ -38,7 +38,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center">
-
                 <!-- 商品、详情、评价切换的控件 -->
                 <com.gxz.PagerSlidingTabStrip
                     android:id="@+id/psts_tabs"
@@ -69,12 +68,27 @@
                     android:visibility="gone"/>
 
             </LinearLayout>
-            <ImageView
-                android:id="@+id/shopcar"
+            <RelativeLayout
                 android:layout_marginRight="@dimen/padding_size_5"
-                android:src="@drawable/shopping_car"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/shopcar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/shopping_car"/>
+                <TextView
+                    android:id="@+id/visible_dot"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignRight="@+id/shopcar"
+                    android:layout_alignTop="@+id/shopcar"
+                    android:background="@drawable/myshopcar_dot"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size12"/>
+            </RelativeLayout>
+
         </LinearLayout>
     </LinearLayout>
 

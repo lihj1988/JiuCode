@@ -926,7 +926,8 @@ public class CommonUtil {
 				.load(url).error(R.drawable.test)
 //				.load(R.drawable.test)
 				.error(R.drawable.test)
-				.diskCacheStrategy(DiskCacheStrategy.NONE)
+				.skipMemoryCache(false)
+				.diskCacheStrategy(DiskCacheStrategy.SOURCE)
 				.into(ivPic);
 	}
 

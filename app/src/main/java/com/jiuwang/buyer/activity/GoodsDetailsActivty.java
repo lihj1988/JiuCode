@@ -1,6 +1,9 @@
 package com.jiuwang.buyer.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -17,11 +20,13 @@ import com.jiuwang.buyer.bean.GoodsDetailsBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.GoodsDetailsEntity;
+import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.goods.adaper.ItemTitlePagerAdapter;
 import com.jiuwang.buyer.goods.fragment.GoodsCommentFragment;
 import com.jiuwang.buyer.goods.fragment.GoodsDetailFragment;
 import com.jiuwang.buyer.goods.fragment.GoodsInfoFragment;
 import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
@@ -63,6 +68,8 @@ public class GoodsDetailsActivty extends BaseActivity {
 	TextView tvAddCar;
 	@Bind(R.id.tvBuyNow)
 	TextView tvBuyNow;
+	@Bind(R.id.visible_dot)
+	TextView visible_dot;
 	@Bind(R.id.shopcar)
 	ImageView shopcar;
 	private List<Fragment> fragmentList = new ArrayList<>();
@@ -73,6 +80,7 @@ public class GoodsDetailsActivty extends BaseActivity {
 	private GoodsDetailsBean goodsDetailsBean;
 	private GoodsBean goods;
 	private LoadingDialog loadingDialog;
+	private MyReceiver myReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +94,15 @@ public class GoodsDetailsActivty extends BaseActivity {
 		psts_tabs = (PagerSlidingTabStrip) findViewById(R.id.psts_tabs);
 		vp_content = (NoScrollViewPager) findViewById(R.id.vp_content);
 		tv_title = (TextView) findViewById(R.id.tv_title);
+		shopcarCount();
 //		selectDetail();
 		Bundle bundle = new Bundle();
 		bundle.putSerializable("goods", goodsDetailsBean);
 		initFragment(bundle);
+		myReceiver = new MyReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("finish");
+		registerReceiver(myReceiver, filter);
 
 	}
 
@@ -187,12 +200,13 @@ public class GoodsDetailsActivty extends BaseActivity {
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
 				loadingDialog.dismiss();
 				if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+					visible_dot.setText(baseResultEntity.getCount());
 					Intent intent = new Intent();
 					intent.setAction("refreshCar");
 					sendBroadcast(intent);
 					intent.setAction("refresh_home");
 					sendBroadcast(intent);
-
+					shopcarCount();
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
 					MyToastView.showToast(baseResultEntity.getMsg(), GoodsDetailsActivty.this);
 					startActivity(new Intent(GoodsDetailsActivty.this, LoginActivity.class));
@@ -212,5 +226,53 @@ public class GoodsDetailsActivty extends BaseActivity {
 			}
 		});
 
+	}
+
+	/**
+	 * 查询购物车数量
+	 */
+	public void shopcarCount() {
+		if (CommonUtil.getNetworkRequest(GoodsDetailsActivty.this)) {
+			HashMap<String, String> map = new HashMap<>();
+			map.put("act", "");
+			HttpUtils.selectCar(map, new Consumer<MyCarEntity>() {
+				@Override
+				public void accept(MyCarEntity myCarEntity) throws Exception {
+					int count = 0;
+					if (Constant.HTTP_SUCCESS_CODE.equals(myCarEntity.getCode())) {
+						if (myCarEntity.getData() != null && myCarEntity.getData().size() > 0) {
+							for (int i = 0; i < myCarEntity.getData().size(); i++) {
+								count += Integer.parseInt(myCarEntity.getData().get(i).getCount());
+							}
+						}
+						visible_dot.setText(count + "");
+
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(myCarEntity.getCode())) {
+						MyToastView.showToast(myCarEntity.getMsg(), GoodsDetailsActivty.this);
+						Intent intent = new Intent(GoodsDetailsActivty.this, LoginActivity.class);
+						startActivity(intent);
+						finish();
+					}
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+					visible_dot.setText("0");
+				}
+			});
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(myReceiver);
+	}
+
+	class MyReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			finish();
+		}
 	}
 }

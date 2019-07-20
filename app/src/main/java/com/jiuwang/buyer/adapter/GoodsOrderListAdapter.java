@@ -1,5 +1,6 @@
 package com.jiuwang.buyer.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.util.CommonUtil;
@@ -24,10 +24,10 @@ import java.util.List;
 
 public class GoodsOrderListAdapter extends RecyclerView.Adapter<GoodsOrderListAdapter.ViewHolder> {
 
-    private MyApplication mApplication;
+    private Context mApplication;
     private List<OrderBean.DetailListBean> mArrayList;
 
-    public GoodsOrderListAdapter(MyApplication application, List<OrderBean.DetailListBean> arrayList) {
+    public GoodsOrderListAdapter(Context application, List<OrderBean.DetailListBean> arrayList) {
         this.mArrayList = arrayList;
         this.mApplication = application;
     }

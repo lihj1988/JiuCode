@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_all"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:descendantFocusability="blocksDescendants"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/ll_all"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:descendantFocusability="blocksDescendants"
+              android:orientation="vertical">
     <!-- android:descendantFocusability="blocksDescendants"
       去掉listview默认获取的焦点-->
     <include
         android:id="@+id/include_home"
         layout="@layout/include_home" />
+    <android.support.design.widget.TabLayout
+        android:id="@+id/mainTabLayout"
+        style="@style/Layout.Tab"
+        app:tabSelectedTextColor="@color/app_main_color"
+        app:tabIndicatorColor="@null"/>
       <com.jiuwang.buyer.view.TestXRecyclerView
           android:id="@+id/xRecyclerView"
           android:layout_width="match_parent"

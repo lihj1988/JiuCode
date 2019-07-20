@@ -21,9 +21,18 @@
 			<TextView
 				android:id="@+id/storeTextView"
 				style="@style/TextView.ItemStoreName"
+				android:layout_width="wrap_content"
 				android:drawableEnd="@null"
 				android:drawableRight="@null"/>
 			<TextView
+				android:id="@+id/tvOrderId"
+				android:textSize="@dimen/text_size12"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:drawableEnd="@null"
+				android:drawableRight="@null"/>
+			<TextView
+				android:visibility="gone"
 				android:id="@+id/stateTextView"
 				style="@style/TextView.ItemOrderState"/>
 		</LinearLayout>

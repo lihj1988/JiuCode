@@ -22,6 +22,7 @@ import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AddressBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
+import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.OrderEntity;
 import com.jiuwang.buyer.net.HttpUtils;
@@ -191,6 +192,7 @@ public class BuySetup1Activity extends BaseActivity {
 
 	private String goodsIds;
 	private double amount;
+	private String goods_name;
 
 	//初始化数据
 	private void initData() {
@@ -198,14 +200,20 @@ public class BuySetup1Activity extends BaseActivity {
 		mActivity = this;
 		mApplication = (MyApplication) getApplication();
 		Intent intent = getIntent();
+		StringBuffer stringBuffer = new StringBuffer();
 		carGoodsList = (List<CarGoodsBean>) intent.getSerializableExtra("data");
 		for (int i = 0; i < carGoodsList.size(); i++) {
+			stringBuffer.append(carGoodsList.get(i).getGoods_name());
+			if (i != carGoodsList.size() - 1) {
+				stringBuffer.append(",");
+			}
 			carBuilder.append(carGoodsList.get(i).getId());
 			amount += Double.parseDouble(carGoodsList.get(i).getSale_price()) * Double.parseDouble(carGoodsList.get(i).getQuantity());
 			if (i < carGoodsList.size() - 1) {
 				carBuilder.append(",");
 			}
 		}
+		goods_name = stringBuffer.toString();
 		tvAmount.setText("￥" + AppUtils.decimalFormat(amount, "0") + "元");
 		goodsIds = carBuilder.toString();
 
@@ -349,11 +357,24 @@ public class BuySetup1Activity extends BaseActivity {
 							sendBroadcast(intent);
 							Intent intentBuy2 = new Intent();
 							intentBuy2.setClass(BuySetup1Activity.this, BuySetup2Activity.class);
-							intentBuy2.putExtra("data", baseResultEntity.getData().get(0));
+							OrderBean orderBean = new OrderBean();
+							orderBean.setTotal_amount(amount + "");
+							orderBean.setGoods_name(goods_name + "");
+							orderBean.setId(baseResultEntity.getMsg());
+							orderBean.setOut_trade_no(baseResultEntity.getMsg());
 							intentBuy2.putExtra("pay_sn", "online");
+							intentBuy2.putExtra("data", orderBean);
+
 							startActivity(intentBuy2);
+						} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+							MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
+							Intent intent = new Intent(BuySetup1Activity.this, LoginActivity.class);
+							startActivity(intent);
+							finish();
+						} else {
+							MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
 						}
-						MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
+
 					}
 				}, new Consumer<Throwable>() {
 					@Override

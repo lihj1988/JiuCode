@@ -11,10 +11,11 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/ivScan"
+            android:layout_width="@dimen/padding_size_30"
+            android:layout_height="@dimen/padding_size_30"
             android:layout_marginLeft="@dimen/padding_size_10"
-            android:background="@drawable/home_logo"/>
+            android:src="@drawable/scan"/>
 
         <RelativeLayout
             android:id="@+id/relativeLayout"

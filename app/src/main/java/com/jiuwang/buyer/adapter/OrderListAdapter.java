@@ -1,8 +1,7 @@
 package com.jiuwang.buyer.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -28,21 +27,20 @@ import java.util.List;
  */
 public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.ViewHolder> {
 
-	private Activity mActivity;
-	private MyApplication mApplication;
+	private Context context;
 	private onItemChange mOnItemChange;
 	private List<OrderBean> mArrayList;
 
-	public OrderListAdapter(MyApplication application, Activity activity, List<OrderBean> arrayList) {
-		this.mActivity = activity;
+	public OrderListAdapter( Context context, List<OrderBean> arrayList) {
+
 		this.mArrayList = arrayList;
-		this.mApplication = application;
+		this.context = context;
 		this.mOnItemChange = null;
 	}
 
 	@Override
 	public int getItemCount() {
-		return mArrayList.size();
+		return mArrayList == null ? 0 : mArrayList.size();
 	}
 
 	@Override
@@ -52,9 +50,10 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 
 //		holder.mListView.setLayoutManager(new LinearLayoutManager(mActivity));
 		AppUtils.initListView(MyApplication.getInstance(),holder.mListView,false,false);
-		holder.mListView.setAdapter(new GoodsOrderListAdapter(mApplication, orderBean.getDetail_list()));
+		holder.mListView.setAdapter(new GoodsOrderListAdapter(context, orderBean.getDetail_list()));
 		holder.storeTextView.setText(orderBean.getGrouping_name_seller());
 		holder.stateTextView.setText(orderBean.getNotes());
+		holder.tvOrderId.setText(orderBean.getId());
 
 		String total = "共 <font color='#FF5001'>" + orderBean.getTotal_quantity() + "</font> 件商品";
 		total += "，共 <font color='#FF5001'>￥ " + orderBean.getTotal_amount() + "</font> 元";
@@ -78,7 +77,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 					@Override
 					public void onClick(View view) {
 						//取消订单
-						MyToastView.showToast("开发中",mActivity);
+						MyToastView.showToast("开发中",context);
 					}
 				});
 				holder.operaTextView.setOnClickListener(new View.OnClickListener() {
@@ -86,10 +85,10 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 					public void onClick(View view) {
 						//去付款
 						Intent intentBuy2 = new Intent();
-						intentBuy2.setClass(mActivity,BuySetup2Activity.class);
+						intentBuy2.setClass(context,BuySetup2Activity.class);
 						intentBuy2.putExtra("data",orderBean);
 						intentBuy2.putExtra("pay_sn","online");
-						mActivity.startActivity(intentBuy2);
+						context.startActivity(intentBuy2);
 					}
 				});
 				break;
@@ -111,7 +110,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 					@Override
 					public void onClick(View view) {
 						//退货/款
-						MyToastView.showToast("开发中",mActivity);
+						MyToastView.showToast("开发中",context);
 					}
 				});
 				break;
@@ -139,6 +138,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 		public TextView infoTextView;
 		public TextView optionTextView;
 		public TextView operaTextView;
+		public TextView tvOrderId;
 
 		public ViewHolder(View view) {
 			super(view);
@@ -151,6 +151,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 			infoTextView = (TextView) view.findViewById(R.id.infoTextView);
 			optionTextView = (TextView) view.findViewById(R.id.optionTextView);
 			operaTextView = (TextView) view.findViewById(R.id.operaTextView);
+			tvOrderId = (TextView) view.findViewById(R.id.tvOrderId);
 			rlDeal = (RelativeLayout) view.findViewById(R.id.rlDeal);
 
 		}
