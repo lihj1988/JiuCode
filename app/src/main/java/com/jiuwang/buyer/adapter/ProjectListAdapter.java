@@ -234,6 +234,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 			tvMin = view.findViewById(R.id.tvMin);
 			tvSec = view.findViewById(R.id.tvSec);
 			llItem = view.findViewById(R.id.llItem);
+			llTime = view.findViewById(R.id.llTime);
 			tvReport = view.findViewById(R.id.tvReport);
 
 		}
