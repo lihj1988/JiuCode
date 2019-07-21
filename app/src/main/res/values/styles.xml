@@ -1099,7 +1099,17 @@
         <item name="android:background">@color/white</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+    <style name="RadioButton.PayBalance" parent="Base">
+        <item name="android:hint">余额</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">12dip</item>
+        <item name="android:paddingLeft">4dip</item>
+        <item name="android:paddingBottom">12dip</item>
+        <item name="android:gravity">center_vertical</item>
 
+        <item name="android:layout_height">wrap_content</item>
+
+    </style>
     <style name="RadioButton.Pay" parent="Base">
         <item name="android:hint">支付宝</item>
         <item name="android:textSize">14sp</item>
@@ -1107,7 +1117,7 @@
         <item name="android:paddingLeft">4dip</item>
         <item name="android:paddingBottom">12dip</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/greyAdd</item>
+
         <item name="android:layout_height">wrap_content</item>
         <item name="android:drawableRight">@drawable/ic_pay_alipay</item>
     </style>

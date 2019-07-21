@@ -172,16 +172,17 @@ public class GoodsDetailsActivty extends BaseActivity {
 				break;
 			case R.id.tvBuyNow:
 				//立即购买
-				List<CarGoodsBean> selectedList = new ArrayList<CarGoodsBean>();
-				CarGoodsBean carGoodsBean = new CarGoodsBean();
-				carGoodsBean.setQuantity(goods.getId());
-				carGoodsBean.setPic_url(goods.getPic_url());
-				carGoodsBean.setSale_price("".equals(goods.getSale_price()) ? goods.getPrice() : goods.getSale_price());
-				carGoodsBean.setGoods_name(goods.getGoods_name());
-				selectedList.add(carGoodsBean);
-				Intent intent = new Intent(GoodsDetailsActivty.this, BuySetup1Activity.class);
-				intent.putExtra("data", (Serializable) selectedList);
-				startActivity(intent);
+				MyToastView.showToast("开发中", GoodsDetailsActivty.this);
+//				List<CarGoodsBean> selectedList = new ArrayList<CarGoodsBean>();
+//				CarGoodsBean carGoodsBean = new CarGoodsBean();
+//				carGoodsBean.setQuantity(goods.getId());
+//				carGoodsBean.setPic_url(goods.getPic_url());
+//				carGoodsBean.setSale_price("".equals(goods.getSale_price()) ? goods.getPrice() : goods.getSale_price());
+//				carGoodsBean.setGoods_name(goods.getGoods_name());
+//				selectedList.add(carGoodsBean);
+//				Intent intent = new Intent(GoodsDetailsActivty.this, BuySetup1Activity.class);
+//				intent.putExtra("data", (Serializable) selectedList);
+//				startActivity(intent);
 				break;
 		}
 	}

@@ -38,6 +38,7 @@ public class AddressBean implements Serializable {
 	private String create_user;
 	private String create_username;
 	private String create_time;
+	private String is_default;
 
 	public String getId() {
 		return id;
@@ -133,5 +134,13 @@ public class AddressBean implements Serializable {
 
 	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
+	}
+
+	public String getIs_default() {
+		return is_default;
+	}
+
+	public void setIs_default(String is_default) {
+		this.is_default = is_default;
 	}
 }

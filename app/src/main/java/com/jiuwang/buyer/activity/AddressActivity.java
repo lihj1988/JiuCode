@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -116,7 +118,8 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 		moreImageView.setImageResource(R.drawable.ic_action_add);
 		mArrayList = new ArrayList<>();
 		AppUtils.initListView(AddressActivity.this, addressListView, true, false);
-
+		Drawable dividerDrawable = ContextCompat.getDrawable(AddressActivity.this, R.drawable.divider_sample);
+		addressListView.addItemDecoration(addressListView.new DividerItemDecoration(dividerDrawable));
 		addressListView.setLoadingListener(this);
 		addressListView.refresh();
 	}
@@ -175,6 +178,10 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 					setResult(RESULT_OK,intent);
 //					onActivityResult(MyApplication.CODE_CHOOSE_ADDRESS,RESULT_OK,intent);
 					finish();
+				}else {
+					Intent intent = new Intent();
+					intent.putExtra("address",mArrayList.get(position-1));
+					setResult(RESULT_OK,intent);
 				}
 			}
 		});

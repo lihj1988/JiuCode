@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.bean.ProjectBean;
+import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
 
@@ -52,17 +53,24 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 	public void onBindViewHolder(final ProjectListAdapter.ViewHolder holder, final int position) {
 		holder.type = "";
 		try {
+			if (Constant.PROJECTIS_NOT_PART.equals(projectList.get(position).getIs_part())) {
+				holder.tvReport.setText("未报名");
+//				projectItemOnClickListener.itemOnClick(position);
+			} else {
+				holder.tvReport.setText("已报名");
+			}
 			if ("2".equals(projectList.get(position).getStatus())) {
 				holder.llTime.setVisibility(View.INVISIBLE);
 				holder.tvTimeName.setText("已结束");
 			} else if ("1".equals(projectList.get(position).getStatus())) {
+
 				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				long l = 0L;
 				// 1 结束时间小于开始时间 2 开始时间与结束时间相同 3 结束时间大于开始时间
 //				if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStart_time()) != 1) {
 //					holder.llTime.setVisibility(View.VISIBLE);
 //					holder.tvTimeName.setText("距离开始：");
-					holder.type = "1";
+				holder.type = "1";
 //					long currentTime = System.currentTimeMillis();
 //					//转成Date
 //					Date date = new Date(currentTime);
@@ -82,43 +90,55 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 //						}
 //					});
 //				} else if (!"".equals(projectList.get(position).getStop_time())) {
-					if (CommonUtil.getTimeCompareSize(CommonUtil.getNowTime(), projectList.get(position).getStop_time()) != 1) {
-						holder.llTime.setVisibility(View.VISIBLE);
-						holder.tvTimeName.setText("距离结束：");
-						holder.type = "2";
-						long currentTime = System.currentTimeMillis();
-						//转成Date
-						Date date = new Date(currentTime);
-						//获取当前时间戳
-						date.getTime();
-						//定义 yyyy-MM-dd HH:mm:ss的格式
-						//格林尼治+或-
-						df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-						Date parse_stop_time = df.parse(projectList.get(position).getStop_time());
+				if (CommonUtil.getTimeCompareSize(projectList.get(position).getServr_time(), projectList.get(position).getStop_time()) != 1) {
+					holder.llTime.setVisibility(View.VISIBLE);
+					holder.tvTimeName.setText("距离结束：");
+					holder.type = "2";
+					long currentTime = System.currentTimeMillis();
+					//转成Date
+					Date date = new Date(currentTime);
+					//获取当前时间戳
+					date.getTime();
+					//定义 yyyy-MM-dd HH:mm:ss的格式
+					//格林尼治+或-
+					df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+					Date parse_stop_time = df.parse(projectList.get(position).getStop_time());
 //						Date parse_start_time = df.parse(projectList.get(position).getStop_time());
-						long time_stop_time = parse_stop_time.getTime();
+					long time_stop_time = parse_stop_time.getTime();
 //						long time_start_time = parse_start_time.getTime();
-						//计算时间差
-						l = time_stop_time - currentTime;
-						holder.llItem.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
+					//计算时间差
+					l = time_stop_time - currentTime;
+					holder.llItem.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							holder.llItem.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									if (Constant.PROJECTIS_NOT_PART.equals(projectList.get(position).getIs_part())) {
+//
+										projectItemOnClickListener.itemOnClick(position);
+									} else {
+//										//
+										MyToastView.showToast("该活动您已经报过名了！", context);
+									}
 
-								projectItemOnClickListener.itemOnClick(position);
-							}
-						});
-					} else {
-						l = 0;
-						holder.llTime.setVisibility(View.INVISIBLE);
-						holder.tvTimeName.setText("已结束");
-						holder.llItem.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
+								}
+							});
 
-								MyToastView.showToast("活动已结束", context);
-							}
-						});
-					}
+						}
+					});
+				} else {
+					l = 0;
+					holder.llTime.setVisibility(View.INVISIBLE);
+					holder.tvTimeName.setText("已结束");
+					holder.llItem.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+
+							MyToastView.showToast("活动已结束", context);
+						}
+					});
+				}
 //				} else {
 //					holder.llTime.setVisibility(View.INVISIBLE);
 //					holder.tvTimeName.setText("距离结束：");
@@ -156,11 +176,6 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 							new Handler() {
 								@Override
 								public void handleMessage(Message msg) {
-//									holder.tvDay.setText("00");
-//									holder.tvHour.setText("00");
-//									holder.tvMin.setText("00");
-//									holder.tvSec.setText("00");
-									notifyDataSetChanged();
 									Intent intent = new Intent();
 									intent.setAction("refreshProject");
 									context.sendBroadcast(intent);
@@ -200,15 +215,16 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 		public TextView tvSec;
 		public TextView tvTimeName;
 		public TextView tvSalePeice;
+		public TextView tvReport;
 		public LinearLayout llItem;
 		public LinearLayout llTime;
 		public CountDownTimer countDownTimer;
+		public Handler handler;
 		public String type;//项目时候开始  用于倒计时的显示刷新  1 未开始 2 已开始
 
 
 		public ViewHolder(View view) {
 			super(view);
-
 			ivPic = view.findViewById(R.id.ivPic);
 			tvProjectName = view.findViewById(R.id.tvProjectName);
 			tvDay = view.findViewById(R.id.tvDay);
@@ -218,7 +234,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 			tvMin = view.findViewById(R.id.tvMin);
 			tvSec = view.findViewById(R.id.tvSec);
 			llItem = view.findViewById(R.id.llItem);
-			llTime = view.findViewById(R.id.llTime);
+			tvReport = view.findViewById(R.id.tvReport);
 
 		}
 

@@ -42,15 +42,7 @@ import static com.jiuwang.buyer.R.id.tv_gainmessage;
 
 /*
 *
-* 作者：Yokey软件工作室
-*
-* 企鹅：1002285057
-*
-* 网址：www.yokey.top
-*
 * 作用：注册
-*
-* 更新：2016-04-17
 *
 */
 
@@ -141,10 +133,10 @@ public class RegisterActivity extends BaseActivity {
 		//邀请码
 		invite_code = et_invite_code.getText().toString().trim();
 
-		if (TextUtils.isEmpty(userName)) {
-			MyToastView.showToast("请输入登录账号", this);
-			return;
-		}
+//		if (TextUtils.isEmpty(userName)) {
+//			MyToastView.showToast("请输入登录账号", this);
+//			return;
+//		}
 
 		if (TextUtils.isEmpty(password)) {
 			MyToastView.showToast("请输入密码", this);
@@ -254,8 +246,8 @@ public class RegisterActivity extends BaseActivity {
 //		DialogUtil.progress(RegisterActivity.this);
 		HashMap<String, String> hashMap = new HashMap<>();
 		hashMap.put("act", Constant.ACTION_ACT_ADD);
-		hashMap.put("user_cd", userName);
-		hashMap.put("user_name", userName);
+		hashMap.put("user_cd", phone);
+		hashMap.put("user_name", phone);
 		hashMap.put("mobile_number", phone);
 		hashMap.put("mobile_code", messagecode);
 		hashMap.put("new_passwd", password);
@@ -267,7 +259,7 @@ public class RegisterActivity extends BaseActivity {
 				if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
 					MyToastView.showToast(baseResultEntity.getMsg(), RegisterActivity.this);
 					//注册成功后登录
-					CommonUtil.login(userName, password, new CommonUtil.LoginCallBack() {
+					CommonUtil.login(phone, password, new CommonUtil.LoginCallBack() {
 						@Override
 						public void callBack(BaseEntity<LoginEntity> loginEntity) {
 							if ("0".equals(loginEntity.getCode())) {

@@ -19,6 +19,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:visibility="gone"
                 style="@style/Detailpadding"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,6 +31,7 @@
                     android:src="@drawable/mustfill"/>
 
                 <TextView
+                    android:id="@+id/textView"
                     style="@style/DetailText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -47,11 +49,42 @@
                     android:hint="请输入登录账号"/>
             </LinearLayout>
 
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/detail_divider_line"
                 android:background="@color/gray_line"/>
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Detailpadding"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/mustfill"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="手机号码"
+                    android:paddingLeft="5dp"
+                    style="@style/DetailText"/>
+                <EditText
+                    android:id="@+id/et_phone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:background="@null"
+                    android:inputType="number"
+                    android:hint="请输入手机号码"
+                    android:maxLength="11"
+                    style="@style/DetailText"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/detail_divider_line"
+                android:background="@color/gray_line"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,37 +147,7 @@
                 android:layout_height="@dimen/detail_divider_line"
                 android:background="@color/gray_line"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Detailpadding"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/mustfill"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="手机号码"
-                    android:paddingLeft="5dp"
-                    style="@style/DetailText"/>
-                <EditText
-                    android:id="@+id/et_phone"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:background="@null"
-                    android:inputType="number"
-                    android:hint="请输入手机号码"
-                    android:maxLength="11"
-                    style="@style/DetailText"/>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/detail_divider_line"
-                android:background="@color/gray_line"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

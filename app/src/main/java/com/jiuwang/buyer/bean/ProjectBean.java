@@ -48,6 +48,8 @@ public class ProjectBean implements Serializable {
 	private String create_time;
 	private String sale_price;//价格
 	private String status_name;//状态名称
+	private String servr_time;//系统时间
+	private String is_part;//是否报名 0 未报名  其他已报名
 
 	public String getId() {
 		return id;
@@ -193,5 +195,21 @@ public class ProjectBean implements Serializable {
 
 	public void setProject_id(String project_id) {
 		this.project_id = project_id;
+	}
+
+	public String getServr_time() {
+		return servr_time;
+	}
+
+	public void setServr_time(String servr_time) {
+		this.servr_time = servr_time;
+	}
+
+	public String getIs_part() {
+		return is_part;
+	}
+
+	public void setIs_part(String is_part) {
+		this.is_part = is_part;
 	}
 }

@@ -4,13 +4,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AddressBean;
+import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.MyToastView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -34,7 +44,7 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 	}
 
 	@Override
-	public void onBindViewHolder(final ViewHolder holder, int position) {
+	public void onBindViewHolder(final ViewHolder holder, final int position) {
 
 		final AddressBean addressBean = mArrayList.get(position);
 
@@ -48,13 +58,12 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 
 //		if (hashMap.get("is_default").equals("1")) {
 //			holder.addressTextView.setText("[默认] ");
-			holder.addressTextView.append(addressBean.getDestination_address());
+			holder.addressTextView.setText(addressBean.getDestination_address());
 //		} else {
 //			holder.addressTextView.setText(hashMap.get("area_info"));
 //		}
 
 //		holder.addressTextView.append(" ");
-//		holder.addressTextView.append(hashMap.get("address"));
 
 		holder.mRelativeLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -74,6 +83,33 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 				return false;
 			}
 		});
+		if("0".equals(mArrayList.get(position).getIs_default())){
+			holder.is_default.setChecked(false);
+		}else if("1".equals(mArrayList.get(position).getIs_default())){
+			holder.is_default.setChecked(true);
+		}
+		holder.llIsDefault.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//
+				if (!holder.is_default.isChecked()) {
+					holder.is_default.setChecked(true);
+
+					for (int i = 0; i < mArrayList.size(); i++) {
+						if(i==position){
+							mArrayList.get(i).setIs_default("1");
+						}else {
+							mArrayList.get(i).setIs_default("0");
+						}
+					}
+					HashMap<String, String> hashMap = new HashMap<>();
+					hashMap.put("id",mArrayList.get(position).getId());
+					hashMap.put("act","4");
+					setAddress(hashMap);
+					notifyDataSetChanged();
+				}
+			}
+		});
 
 	}
 
@@ -89,6 +125,8 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 		public TextView nameTextView;
 		public TextView phoneTextView;
 		public TextView addressTextView;
+		public LinearLayout llIsDefault;
+		public CheckBox is_default;
 
 		public ViewHolder(View view) {
 			super(view);
@@ -97,6 +135,8 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 			nameTextView = (TextView) view.findViewById(R.id.nameTextView);
 			phoneTextView = (TextView) view.findViewById(R.id.phoneTextView);
 			addressTextView = (TextView) view.findViewById(R.id.addressTextView);
+			llIsDefault = (LinearLayout) view.findViewById(R.id.llIsDefault);
+			is_default = view.findViewById(R.id.is_default);
 
 		}
 
@@ -116,6 +156,20 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 
 	public interface onItemLongClickListener {
 		void onItemLongClick(int position);
+	}
+
+	public void setAddress(HashMap<String,String> map){
+		HttpUtils.addressInfo(map, new Consumer<BaseResultEntity>() {
+			@Override
+			public void accept(BaseResultEntity baseResultEntity) throws Exception {
+				MyToastView.showToast(baseResultEntity.getMsg(), MyApplication.getInstance());
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+				MyToastView.showToast(MyApplication.getInstance().getResources().getString(R.string.msg_error_operation), MyApplication.getInstance());
+			}
+		});
 	}
 
 }

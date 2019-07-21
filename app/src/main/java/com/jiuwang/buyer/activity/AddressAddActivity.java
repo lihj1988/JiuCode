@@ -258,12 +258,12 @@ public class AddressAddActivity extends BaseActivity {
 			}
 			hashMap.put("consignee_name", name);
 			hashMap.put("consignee_telephone", phone);
-			hashMap.put("destination_prov_cd", provcode);
-			hashMap.put("destination_city_cd", citycode);
-			hashMap.put("destination_area_cd", areacode);
-			hashMap.put("destination_address", proEditText.getText().toString() + address);
+			hashMap.put("prov_cd", provcode);
+			hashMap.put("city_cd", citycode);
+			hashMap.put("area_cd", areacode);
+			hashMap.put("consignee_address", proEditText.getText().toString() + address);
 			hashMap.put("destination", proEditText.getText().toString() + address);
-			hashMap.put("is_de", proEditText.getText().toString() + address);
+			hashMap.put("is_default",is_default);
 			HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {
 				@Override
 				public void accept(BaseResultEntity baseResultEntity) throws Exception {
