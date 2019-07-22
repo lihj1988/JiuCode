@@ -59,4 +59,7 @@ public class Constant {
 
 	public static final String IS_DEFAULT = "1";//是否是默认地址
 
+	public static final int CODE_ACCOUNT_ALI = 30;//账户类型code 支付宝
+	public static final int CODE_ACCOUNT_WX = 31;//账户类型code 微信
+
 }

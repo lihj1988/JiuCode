@@ -300,47 +300,7 @@ public class BuySetup2Activity extends BaseActivity {
 				break;
 			case R.id.payTextView://支付
 				if (aliPayRadioButton.isChecked()) {
-					if (orderBean != null) {
-//						orderBean.setTimeout_express(baseResultEntity.getDate().get(0).getTimeout_express());
-						orderBean.setProduct_code(Constant.ALIPAY_PRODUCT_CODE);
-						orderBean.setTotal_amount(orderBean.getTotal_amount());
-						orderBean.setOut_trade_no(orderBean.getId());
-						orderBean.setSubject(orderBean.getGoods_name());
-						JSONObject object = new JSONObject();
-						try {
-							object.put("product_code", orderBean.getProduct_code());
-							object.put("total_amount", orderBean.getTotal_amount());
-							object.put("subject", orderBean.getGoods_name());
-							object.put("out_trade_no", orderBean.getOut_trade_no());
-							object.put("passback_params", Constant.BUSINESSTYPE_PAYMWENT);
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-
-						Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID, object.toString(), Constant.RSA2);
-						String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
-						String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
-						final String orderInfo = orderParam + "&" + sign;
-
-						final Runnable payRunnable = new Runnable() {
-
-							@Override
-							public void run() {
-								PayTask alipay = new PayTask(BuySetup2Activity.this);
-								Map<String, String> result = alipay.payV2(orderInfo, true);
-								Log.i("msp", result.toString());
-
-								Message msg = new Message();
-								msg.what = SDK_PAY_FLAG;
-								msg.obj = result;
-								mHandler.sendMessage(msg);
-							}
-						};
-
-						// 必须异步调用
-						Thread payThread = new Thread(payRunnable);
-						payThread.start();
-					}
+					payAli();
 
 				}
 				if (wxPayRadioButton.isChecked()) {
@@ -355,6 +315,50 @@ public class BuySetup2Activity extends BaseActivity {
 					payBalance();
 				}
 				break;
+		}
+	}
+
+	private void payAli() {
+		if (orderBean != null) {
+//						orderBean.setTimeout_express(baseResultEntity.getDate().get(0).getTimeout_express());
+			orderBean.setProduct_code(Constant.ALIPAY_PRODUCT_CODE);
+			orderBean.setTotal_amount(orderBean.getTotal_amount());
+			orderBean.setOut_trade_no(orderBean.getId());
+			orderBean.setSubject(orderBean.getGoods_name());
+			JSONObject object = new JSONObject();
+			try {
+				object.put("product_code", orderBean.getProduct_code());
+				object.put("total_amount", orderBean.getTotal_amount());
+				object.put("subject", orderBean.getGoods_name());
+				object.put("out_trade_no", orderBean.getOut_trade_no());
+				object.put("passback_params", Constant.BUSINESSTYPE_PAYMWENT);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID, object.toString(), Constant.RSA2);
+			String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
+			String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
+			final String orderInfo = orderParam + "&" + sign;
+
+			final Runnable payRunnable = new Runnable() {
+
+				@Override
+				public void run() {
+					PayTask alipay = new PayTask(BuySetup2Activity.this);
+					Map<String, String> result = alipay.payV2(orderInfo, true);
+					Log.i("msp", result.toString());
+
+					Message msg = new Message();
+					msg.what = SDK_PAY_FLAG;
+					msg.obj = result;
+					mHandler.sendMessage(msg);
+				}
+			};
+
+			// 必须异步调用
+			Thread payThread = new Thread(payRunnable);
+			payThread.start();
 		}
 	}
 

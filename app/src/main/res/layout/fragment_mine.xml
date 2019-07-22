@@ -225,6 +225,23 @@
                 android:text="收货地址" />
 
             <View style="@style/View.Line" />
+            <TextView
+                android:id="@+id/tvMyInviteCode"
+                style="@style/TextView.TitleLeft"
+                android:text="我的邀请码" />
+
+            <View style="@style/View.Line" />
+            <TextView
+                android:id="@+id/tvMyAccount"
+                style="@style/TextView.TitleLeft"
+                android:text="我的账户" />
+            <View style="@style/View.Line" />
+
+            <TextView
+                android:id="@+id/tvInviteManager"
+                style="@style/TextView.TitleLeft"
+                android:text="邀请人管理"/>
+            <View style="@style/View.Line"/>
 
             <TextView
                 android:id="@+id/settingTextView"

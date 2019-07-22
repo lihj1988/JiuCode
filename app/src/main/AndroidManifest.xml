@@ -52,6 +52,10 @@
 		<activity android:name=".activity.BalanceActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.BalanceListActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.BalanceDetailsActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.InviteCodeActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.BindAccountActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.EditAccountActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.InviteManagerActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".camera.zxing.activity.CaptureActivity" android:screenOrientation="portrait"/>
 
 	</application>

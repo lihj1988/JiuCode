@@ -9,6 +9,7 @@ import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.GoodsDetailsEntity;
 import com.jiuwang.buyer.entity.HomeResultEntity;
+import com.jiuwang.buyer.entity.InviteEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
@@ -355,15 +356,28 @@ public class HttpUtils {
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
-	}/**
-	 * 资金
+	}
+	/**
+	 * 余额付款
 	 * @param map
 	 * @param consumer
 	 * @param throwableConsumer
 	 */
 	public static void fundPay(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
 		QClitent.getInstance()
-				.fund(map)
+				.fundPay(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}/**
+	 * 被邀请人查询
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void invite(HashMap<String, String> map, Consumer<InviteEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.invite(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);

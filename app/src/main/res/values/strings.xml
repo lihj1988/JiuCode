@@ -53,4 +53,5 @@
 	<string name="error_missing_global_partner_seller_rsa_private" >错误：需要配置 OrderUtils1_0_Global 中的 PARTNER、SELLER 和 RSA_PRIVATE</string>
 	<string name="payment_inst_hk">付款方: HK</string>
 	<string name="payment_inst_cn">付款方: CN</string>
+	<string name="invite_code_desc">扫一扫上方的二维码图案，绑定邀请码</string>
 </resources>

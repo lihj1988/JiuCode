@@ -24,6 +24,9 @@ import android.widget.Toast;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.AddressActivity;
 import com.jiuwang.buyer.activity.BalanceActivity;
+import com.jiuwang.buyer.activity.BindAccountActivity;
+import com.jiuwang.buyer.activity.InviteCodeActivity;
+import com.jiuwang.buyer.activity.InviteManagerActivity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.OrderActivity;
@@ -36,6 +39,7 @@ import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.service.UpdateVersionService;
 import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -105,8 +109,12 @@ public class MineFragment extends Fragment {
 	@Bind(R.id.tvMoneyName)
 	TextView tvMoneyName;
 	@Bind(R.id.tvBalance)
-	TextView tvBalance;@Bind(R.id.tvTrialAmount)
+	TextView tvBalance;
+	@Bind(R.id.tvTrialAmount)
 	TextView tvTrialAmount;
+	@Bind(R.id.tvMyInviteCode)
+	TextView tvMyInviteCode;@Bind(R.id.tvInviteManager)
+	TextView tvInviteManager;
 	private View view;
 	private MainActivity mActivity;
 	private String userCode;
@@ -119,6 +127,7 @@ public class MineFragment extends Fragment {
 
 	private UserBean userBean;
 	private MyReceiver myReceiver;
+	private String invite_code;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -150,14 +159,15 @@ public class MineFragment extends Fragment {
 							@Override
 							public void handleMessage(Message msg) {
 								tvUserName.setText(userBean.getMobile_number());
-								if("".equals(userBean.getTrial_amount())){
+								invite_code = userBean.getInvite_code();
+								if ("".equals(userBean.getTrial_amount())) {
 									tvTrialAmount.setText("¥ 0.00 元");
-								}else {
+								} else {
 									tvTrialAmount.setText("¥ " + CommonUtil.decimalFormat(Double.parseDouble(userBean.getTrial_amount()), "0") + " 元");
 								}
-								if("".equals(userBean.getAccount_balance())){
+								if ("".equals(userBean.getAccount_balance())) {
 									tvBalance.setText("¥ 0.00 元");
-								}else {
+								} else {
 									tvBalance.setText("¥ " + CommonUtil.decimalFormat(Double.parseDouble(userBean.getAccount_balance()), "0") + " 元");
 								}
 								tvMoneyName.setText("账户余额：");
@@ -191,7 +201,7 @@ public class MineFragment extends Fragment {
 			}, new Consumer<Throwable>() {
 				@Override
 				public void accept(Throwable throwable) throws Exception {
-
+					MyToastView.showToast(getActivity().getResources().getString(R.string.msg_error), getActivity());
 				}
 			});
 		}
@@ -258,7 +268,7 @@ public class MineFragment extends Fragment {
 
 	@OnClick({R.id.orderTextView, R.id.waitPaymentRelativeLayout, R.id.waitDeliverRelativeLayout, R.id.waitReceiptRelativeLayout,
 			R.id.waitEvaluateRelativeLayout, R.id.waitRefundRelativeLayout, R.id.addressTextView, R.id.settingTextView,
-			R.id.tv_exit, R.id.civAuther, R.id.recharge})
+			R.id.tv_exit, R.id.civAuther, R.id.recharge, R.id.tvMyInviteCode, R.id.tvMyAccount,R.id.tvInviteManager})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.orderTextView:
@@ -310,8 +320,31 @@ public class MineFragment extends Fragment {
 				break;
 			case R.id.recharge://充值
 				Intent intentRecharge = new Intent(getActivity(), RechargeActivity.class);
-				intentRecharge.putExtra("type","mine");
+				intentRecharge.putExtra("type", "mine");
 				getActivity().startActivity(intentRecharge);
+				break;
+			case R.id.tvMyInviteCode://我的二维码
+				if (null == invite_code || "".equals(invite_code)) {
+					MyToastView.showToast("没有邀请码", getActivity());
+				} else {
+					Intent intentInviteCode = new Intent(getActivity(), InviteCodeActivity.class);
+					intentInviteCode.putExtra("invite_code", invite_code);
+					getActivity().startActivity(intentInviteCode);
+				}
+
+				break;
+			case R.id.tvMyAccount://我的二维码
+
+				Intent intentAccount = new Intent(getActivity(), BindAccountActivity.class);
+				intentAccount.putExtra("data", userBean);
+				getActivity().startActivity(intentAccount);
+
+
+				break;case R.id.tvInviteManager://我的二维码
+
+				Intent intentInviteManager = new Intent(getActivity(), InviteManagerActivity.class);
+				getActivity().startActivity(intentInviteManager);
+
 				break;
 		}
 	}

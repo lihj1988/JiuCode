@@ -9,6 +9,7 @@ import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.GoodsDetailsEntity;
 import com.jiuwang.buyer.entity.HomeResultEntity;
+import com.jiuwang.buyer.entity.InviteEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
@@ -50,6 +51,7 @@ public interface QNewsService {
 	Observable<GoodsDetailsEntity> selectGoodsDetails(
 			@QueryMap HashMap<String, String> map
 	);
+
 	//抢购数据
 	@POST("admin/project/aution_action.jsp")
 	Observable<ProjectEntity> selectProjectList(
@@ -156,13 +158,22 @@ public interface QNewsService {
 	Observable<BaseResultEntity> recharge(
 			@QueryMap HashMap<String, String> map
 	);
+
 	//资金查询
 	@POST("admin/fund/fund_action.jsp")
 	Observable<BalanceEntity> fund(
 			@QueryMap HashMap<String, String> map
-	);//资金查询
+	);
+
+	//余额付款
 	@POST("admin/fund/fund_action.jsp")
 	Observable<BaseResultEntity> fundPay(
+			@QueryMap HashMap<String, String> map
+	);
+
+	//被邀请人查询
+	@POST("admin/invite/invite_action.jsp")
+	Observable<InviteEntity> invite(
 			@QueryMap HashMap<String, String> map
 	);
 
