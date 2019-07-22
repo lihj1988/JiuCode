@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.BalanceBean;
+import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.util.CommonUtil;
 
 import java.util.ArrayList;
@@ -65,10 +66,22 @@ public class BalanceDetailsActivity extends BaseActivity {
 	private void initData() {
 		Intent intent = getIntent();
 		data = (BalanceBean) intent.getSerializableExtra("data");
-		tvNo.setText(data.getOrder_id());
-		tvFundType.setText(data.getOrder_id());
+		tvNo.setText(data.getId());
+		tvFundType.setText(data.getFund_type_name());
 		tvAmount.setText(CommonUtil.decimalFormat(Double.parseDouble(data.getAmount()),"0"));
 		tvPayMode.setText(data.getOrder_id());
+		switch (data.getPay_mode()) {
+			case Constant.PAY_MODE_ALI:
+				tvPayMode.setText("支付宝");
+				break;
+			case Constant.PAY_MODE_WX:
+				tvPayMode.setText("微信");
+				break;
+			case Constant.PAY_MODE_BALANCE:
+				tvPayMode.setText("余额");
+				break;
+
+		}
 		tvTime.setText(data.getCreate_time());
 	}
 

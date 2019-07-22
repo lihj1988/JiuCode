@@ -18,8 +18,8 @@ public class Constant {
 	public static final String ACTION_ACT_UPDATA = "2";
 	public static final String ACTION_ACT_DELETE = "3";
 	//支付宝AppID
-	public static final String ALIPAY_APPID = "2016101000655785";
-//	public static final String ALIPAY_APPID = "2019032063599620";//生产环境
+//	public static final String ALIPAY_APPID = "2016101000655785";
+	public static final String ALIPAY_APPID = "2019072165954132";//生产环境
 	public static final String ALIPAY_METHOD ="alipay.trade.app.pay";
 	public static final String ALIPAY_RESULTSTATUS = "9000";
 	public static final String CHARSET = "UTF-8";
@@ -57,6 +57,6 @@ public class Constant {
 	public static final String PROJECT_IS_PART = "1";
 	public static final String PROJECTIS_NOT_PART = "0";//未报名
 
-
+	public static final String IS_DEFAULT = "1";//是否是默认地址
 
 }

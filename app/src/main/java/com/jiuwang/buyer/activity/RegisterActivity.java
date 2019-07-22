@@ -251,7 +251,7 @@ public class RegisterActivity extends BaseActivity {
 		hashMap.put("mobile_number", phone);
 		hashMap.put("mobile_code", messagecode);
 		hashMap.put("new_passwd", password);
-		hashMap.put("invite_code", invite_code);
+		hashMap.put("from", invite_code);
 		HttpUtils.register(hashMap, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {

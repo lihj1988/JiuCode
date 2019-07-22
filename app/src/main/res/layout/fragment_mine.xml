@@ -60,6 +60,26 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp">
                             <TextView
+
+                                android:textColor="@color/white"
+                                android:text="体  验  金："
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:id="@+id/tvTrialAmount"
+                                android:layout_weight="1"
+                                android:textColor="@color/white"
+                                android:text="200.23元"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp">
+                            <TextView
                                 android:id="@+id/tvMoneyName"
                                 android:textColor="@color/white"
                                 android:text="账户余额："
@@ -72,6 +92,7 @@
                                 android:text="200.23元"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
+
                             <TextView
                                 android:id="@+id/recharge"
                                 android:textColor="@color/blue"

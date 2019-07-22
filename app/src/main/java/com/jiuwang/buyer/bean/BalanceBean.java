@@ -19,6 +19,7 @@ public class BalanceBean implements Serializable {
 	 * create_username : sys
 	 * create_time : 2019-07-18 22:02:06
 	 * grouping_cd_seller :
+	 * fund_type_name:
 	 * fund_type : 3
 	 * r : 3
 	 */
@@ -33,6 +34,7 @@ public class BalanceBean implements Serializable {
 	private String create_time;
 	private String grouping_cd_seller;
 	private String fund_type;
+	private String fund_type_name;
 	private int r;
 
 	public String getId() {
@@ -113,6 +115,14 @@ public class BalanceBean implements Serializable {
 
 	public void setFund_type(String fund_type) {
 		this.fund_type = fund_type;
+	}
+
+	public String getFund_type_name() {
+		return fund_type_name;
+	}
+
+	public void setFund_type_name(String fund_type_name) {
+		this.fund_type_name = fund_type_name;
 	}
 
 	public int getR() {

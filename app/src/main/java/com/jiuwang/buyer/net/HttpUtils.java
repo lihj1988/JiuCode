@@ -355,6 +355,18 @@ public class HttpUtils {
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
+	}/**
+	 * 资金
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void fundPay(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.fund(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
 	}
 
 }

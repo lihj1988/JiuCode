@@ -21,7 +21,6 @@
         style="@style/TextView.ItemAddressArea"
         android:layout_below="@+id/nameTextView" />
     <LinearLayout
-        android:clickable="true"
         android:id="@+id/llIsDefault"
         android:gravity="right"
         android:layout_alignTop="@+id/view"
@@ -29,8 +28,7 @@
         android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <CheckBox
-            android:enabled="false"
+        <RadioButton
             android:button="@drawable/check_box_bg"
             android:id="@+id/is_default"
             style="@style/TextView.ItemAddressArea"/>

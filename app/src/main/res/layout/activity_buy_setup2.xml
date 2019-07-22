@@ -37,6 +37,8 @@
 
 
                 <RadioButton
+                    android:drawableRight="@drawable/ic_pay_alipay"
+                    android:text="支付宝支付"
                     android:id="@+id/aliPayTextView"
                     style="@style/RadioButton.Pay"
                     android:textColor="@color/black"/>
@@ -44,13 +46,13 @@
                 <RadioButton
                     android:id="@+id/wxPayTextView"
                     style="@style/RadioButton.Pay"
-                    android:drawableEnd="@drawable/ic_pay_wx"
                     android:drawableRight="@drawable/ic_pay_wx"
                     android:text="微信支付"/>
-
-                <!--<RadioButton-->
-                    <!--android:id="@+id/balancePay"-->
-                    <!--style="@style/RadioButton.PayBalance"/>-->
+                <RadioButton
+                    android:text="余额支付(200.00元)"
+                    android:id="@+id/balancePay"
+                    style="@style/RadioButton.Pay"
+                    android:textColor="@color/black"/>
             </RadioGroup>
 
         </LinearLayout>

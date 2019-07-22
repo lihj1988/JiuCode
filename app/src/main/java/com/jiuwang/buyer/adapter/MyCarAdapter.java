@@ -1,7 +1,6 @@
 package com.jiuwang.buyer.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Paint;
 import android.view.View;
 import android.view.ViewGroup;
@@ -238,12 +237,15 @@ public class MyCarAdapter extends BaseAdapter {
 					list.get(position).getGoods_detail().get(childPosition).setQuantity(quantity);
 				}
 				if(list.get(position).getGoods_detail().size()==0){
-					Intent intent = new Intent();
-					intent.setAction("refreshCar");
-					context.sendBroadcast(intent);
+					list.remove(position);
+					notifyDataSetChanged();
+					itemCheckStatusChangeListener.checkStatusChange();
+//					Intent intent = new Intent();
+//					intent.setAction("refreshCar");
+//					context.sendBroadcast(intent);
 				}else {
 					notifyDataSetChanged();
-
+					itemCheckStatusChangeListener.checkStatusChange();
 				}
 
 			}

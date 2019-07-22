@@ -50,14 +50,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.functions.Consumer;
 import okhttp3.Call;
 
-import static com.jiuwang.buyer.R.id.actionbar_text;
-import static com.jiuwang.buyer.R.id.onclick_layout_left;
-
 
 public class MineFragment extends Fragment {
-	@Bind(actionbar_text)
+	@Bind(R.id.actionbar_text)
 	TextView actionbarText;
-	@Bind(onclick_layout_left)
+	@Bind(R.id.onclick_layout_left)
 	RelativeLayout onclickLayoutLeft;
 	@Bind(R.id.iv_find)
 	ImageView ivFind;
@@ -108,7 +105,8 @@ public class MineFragment extends Fragment {
 	@Bind(R.id.tvMoneyName)
 	TextView tvMoneyName;
 	@Bind(R.id.tvBalance)
-	TextView tvBalance;
+	TextView tvBalance;@Bind(R.id.tvTrialAmount)
+	TextView tvTrialAmount;
 	private View view;
 	private MainActivity mActivity;
 	private String userCode;
@@ -151,27 +149,36 @@ public class MineFragment extends Fragment {
 
 							@Override
 							public void handleMessage(Message msg) {
-
 								tvUserName.setText(userBean.getMobile_number());
-								if ("".equals(userBean.getTrial_amount())) {
-									if ("".equals(userBean.getAccount_balance())) {
-										tvBalance.setText("0.00");
-									} else {
-
-										tvBalance.setText("¥ " + CommonUtil.decimalFormat(Double.parseDouble(userBean.getAccount_balance()), "0") + " 元");
-										tvBalance.setOnClickListener(new View.OnClickListener() {
-											@Override
-											public void onClick(View v) {
-												startActivity(new Intent(getActivity(), BalanceActivity.class));
-											}
-										});
-									}
-									tvMoneyName.setText("账户余额：");
-
-								} else {
-									tvMoneyName.setText("体验金：");
-									tvBalance.setText(userBean.getTrial_amount());
+								if("".equals(userBean.getTrial_amount())){
+									tvTrialAmount.setText("¥ 0.00 元");
+								}else {
+									tvTrialAmount.setText("¥ " + CommonUtil.decimalFormat(Double.parseDouble(userBean.getTrial_amount()), "0") + " 元");
 								}
+								if("".equals(userBean.getAccount_balance())){
+									tvBalance.setText("¥ 0.00 元");
+								}else {
+									tvBalance.setText("¥ " + CommonUtil.decimalFormat(Double.parseDouble(userBean.getAccount_balance()), "0") + " 元");
+								}
+								tvMoneyName.setText("账户余额：");
+
+								tvBalance.setOnClickListener(new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										startActivity(new Intent(getActivity(), BalanceActivity.class));
+									}
+								});
+//								if ((!"".equals(userBean.getTrial_amount())&&!"".equals(userBean.getAccount_balance()))||
+//										(!"0".equals(userBean.getTrial_amount())&&!"0".equals(userBean.getAccount_balance()))||
+//										("".equals(userBean.getTrial_amount())&&!"".equals(userBean.getAccount_balance()))||
+//										("".equals(userBean.getTrial_amount())&&!"0".equals(userBean.getAccount_balance()))) {
+//
+//								}else if ((!"".equals(userBean.getTrial_amount())&&"".equals(userBean.getAccount_balance()))||
+//										(!"0".equals(userBean.getTrial_amount())&&"0".equals(userBean.getAccount_balance()))) {
+//									tvMoneyName.setText("体验金：");
+//									tvBalance.setText(userBean.getTrial_amount());
+//								}
+//
 							}
 						}.sendEmptyMessage(0);
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(userEntity.getCode())) {

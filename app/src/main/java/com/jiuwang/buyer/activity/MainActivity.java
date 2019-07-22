@@ -153,6 +153,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							MyApplication.getInstance().exit();
+							System.exit(0);
 //                            stopService(new Intent(MyApplication.getInstance(), UpdateVersionService.class));
 						}
 					})

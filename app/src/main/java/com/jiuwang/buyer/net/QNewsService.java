@@ -160,6 +160,10 @@ public interface QNewsService {
 	@POST("admin/fund/fund_action.jsp")
 	Observable<BalanceEntity> fund(
 			@QueryMap HashMap<String, String> map
+	);//资金查询
+	@POST("admin/fund/fund_action.jsp")
+	Observable<BaseResultEntity> fundPay(
+			@QueryMap HashMap<String, String> map
 	);
 
 }

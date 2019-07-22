@@ -40,25 +40,12 @@ public class BalanceListAdapter extends RecyclerView.Adapter<BalanceListAdapter.
 	@Override
 	public void onBindViewHolder(ViewHolder holder, final int position) {
 
-		switch (balanceList.get(position).getFund_type()) {
-			case Constant.BUSINESSTYPE_RECHARGE:
-				holder.tvFundType.setText("充值");
-				break;
-			case Constant.BUSINESSTYPE_PAYMWENT:
-				holder.tvFundType.setText("直接付款");
-				break;
-			case Constant.BUSINESSTYPE_CASHOUT:
-				holder.tvFundType.setText("充值");
-				break;
-			case Constant.BUSINESSTYPE_RETURN:
-				holder.tvFundType.setText("返利");
-				break;
-			case Constant.BUSINESSTYPE_BUCKLE:
-				holder.tvFundType.setText("扣款");
-				break;
-		}
+
+		holder.tvFundType.setText(balanceList.get(position).getFund_type_name());
+
+
 		holder.tvTime.setText(balanceList.get(position).getCreate_time());
-		holder.tvAmount.setText("金额："+balanceList.get(position).getAmount());
+		holder.tvAmount.setText("金额：" + balanceList.get(position).getAmount());
 		holder.llItem.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

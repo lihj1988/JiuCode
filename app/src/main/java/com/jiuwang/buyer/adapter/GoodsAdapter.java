@@ -55,7 +55,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 		viewHolder.tvGoodsName.setText(datas.get(position).getGoods_name());
 //		viewHolder.tvProductArea.setText(datas.get(position).getProducer());
 		viewHolder.tvPrice.setText("¥" + datas.get(position).getPrice() + "元");
-		if (datas.get(position).getSale_count() == null) {
+		if (datas.get(position).getSale_count() == null||"".equals(datas.get(position).getSale_count())) {
 			viewHolder.tvOrderCount.setText("销量" + 0 + "笔");
 		} else {
 			viewHolder.tvOrderCount.setText("销量" + datas.get(position).getSale_count() + "笔");

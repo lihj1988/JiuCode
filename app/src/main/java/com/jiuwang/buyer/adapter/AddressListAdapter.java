@@ -4,8 +4,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,7 +19,6 @@ import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.functions.Consumer;
 
@@ -88,13 +88,11 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 		}else if("1".equals(mArrayList.get(position).getIs_default())){
 			holder.is_default.setChecked(true);
 		}
-		holder.llIsDefault.setOnClickListener(new View.OnClickListener() {
+		holder.is_default.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
-			public void onClick(View v) {
-				//
-				if (!holder.is_default.isChecked()) {
-					holder.is_default.setChecked(true);
+			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
+				if(b){
 					for (int i = 0; i < mArrayList.size(); i++) {
 						if(i==position){
 							mArrayList.get(i).setIs_default("1");
@@ -110,6 +108,17 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 				}
 			}
 		});
+//		holder.llIsDefault.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				//
+//				if (!holder.is_default.isChecked()) {
+//					holder.is_default.setChecked(true);
+//
+//
+//				}
+//			}
+//		});
 
 	}
 
@@ -126,7 +135,7 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 		public TextView phoneTextView;
 		public TextView addressTextView;
 		public LinearLayout llIsDefault;
-		public CheckBox is_default;
+		public RadioButton is_default;
 
 		public ViewHolder(View view) {
 			super(view);

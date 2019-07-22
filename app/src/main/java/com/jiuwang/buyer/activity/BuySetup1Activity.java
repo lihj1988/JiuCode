@@ -24,6 +24,7 @@ import com.jiuwang.buyer.bean.AddressBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.AddressEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
@@ -37,7 +38,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
@@ -72,7 +72,8 @@ public class BuySetup1Activity extends BaseActivity {
 
 	private XRecyclerView mListView;
 	private BuyListAdapter mAdapter;
-	private ArrayList<HashMap<String, String>> mArrayList;
+	private List<AddressBean> mArrayList;
+	private AddressBean addressBean;
 
 	private TextView nameTextView;
 	private TextView phoneTextView;
@@ -224,7 +225,7 @@ public class BuySetup1Activity extends BaseActivity {
 		AppUtils.initListView(BuySetup1Activity.this, mListView, false, false);
 		GoodsBuyListAdapter mAdapter = new GoodsBuyListAdapter(mActivity, carGoodsList);
 		mListView.setAdapter(mAdapter);
-
+		selectAddress();
 	}
 
 	//初始化事件
@@ -273,27 +274,7 @@ public class BuySetup1Activity extends BaseActivity {
 	}
 
 
-	//解析 cartList
-	private void parseCartList() {
 
-		try {
-
-			mArrayList.clear();
-			JSONObject jsonObject = new JSONObject(mHashMap.get("store_cart_list"));
-
-			Iterator iterator = jsonObject.keys();
-			while (iterator.hasNext()) {
-				String key = iterator.next().toString();
-				mArrayList.add(new HashMap<>(TextUtil.jsonObjectToHashMap(jsonObject.getString(key))));
-			}
-
-			mAdapter.notifyDataSetChanged();
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-	}
 
 	//解析地址
 	private void parseAddress() {
@@ -420,6 +401,40 @@ public class BuySetup1Activity extends BaseActivity {
 		public void onReceive(Context context, Intent intent) {
 			finish();
 		}
+	}
+
+
+	//初始化数据
+	private void selectAddress() {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("act", "");
+		HttpUtils.selectAddressList(map, new Consumer<AddressEntity>() {
+			@Override
+			public void accept(AddressEntity addressEntity) throws Exception {
+
+				if (Constant.HTTP_SUCCESS_CODE.equals(addressEntity.getCode())) {
+
+					mArrayList.addAll(addressEntity.getData());
+					for (int i = 0; i < mArrayList.size(); i++) {
+						if(Constant.IS_DEFAULT.equals(mArrayList.get(i).getIs_default())){
+							addressBean = mArrayList.get(i);
+							setAddress(addressBean);
+						}
+
+					}
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(addressEntity.getCode())) {
+					MyToastView.showToast(addressEntity.getMsg(), BuySetup1Activity.this);
+					Intent intent = new Intent(BuySetup1Activity.this, LoginActivity.class);
+					startActivity(intent);
+					finish();
+				}
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+
+			}
+		});
 	}
 
 }

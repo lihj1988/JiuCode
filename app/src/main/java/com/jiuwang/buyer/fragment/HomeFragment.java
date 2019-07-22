@@ -104,7 +104,8 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		userCode = PreforenceUtils.getStringData("loginInfo", "userName");
 		initView();
 		map = new HashMap<>();
-
+		map.put("field","sale_price");
+		map.put("order","asc");
 		List<String> mTitleList = new ArrayList<>();
 		mTitleList.add("价格升序");
 		mTitleList.add("价格降序");
@@ -125,7 +126,22 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 //				message.what = 0;
 //				handler.sendMessage(message);
 //				map.put();
-				map.put("sort_type", tab.getPosition() + "");
+				switch (tab.getPosition()){
+					case 0:
+						map.put("field","sale_price");
+						map.put("order","asc");
+						break;
+					case 1:
+						map.put("field","sale_price");
+						map.put("order","desc");
+						break;
+					case 2:
+						map.put("field","sale_count");
+						map.put("order","desc");
+						break;
+				}
+//				map.put("sort_type", tab.getPosition() + "");
+
 				intDatas();
 			}
 
@@ -139,6 +155,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 
 			}
 		});
+
 		intDatas();
 		shopcarCount();
 //		refreshMefragment();

@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,7 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
@@ -34,7 +34,12 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AuthResult;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.bean.PayResult;
+import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.UserEntity;
+import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
@@ -42,11 +47,13 @@ import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 /*
 *
@@ -75,13 +82,15 @@ public class BuySetup2Activity extends BaseActivity {
 	RadioButton aliPayRadioButton;
 	@Bind(R.id.wxPayTextView)
 	RadioButton wxPayRadioButton;
+	@Bind(R.id.balancePay)
+	RadioButton balancePay;
 	@Bind(R.id.listRadioGroup)
 	RadioGroup listRadioGroup;
 	@Bind(R.id.payTextView)
 	TextView payTextView;
 	private Activity mActivity;
 	private MyApplication mApplication;
-
+	private UserBean userBean;
 	private String pay_sn;
 	private static final int SDK_PAY_FLAG = 1;
 	private static final int SDK_AUTH_FLAG = 2;
@@ -102,19 +111,11 @@ public class BuySetup2Activity extends BaseActivity {
 					if (TextUtils.equals(resultStatus, Constant.ALIPAY_RESULTSTATUS)) {
 						// 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
 //						showAlert(BuySetup2Activity.this, getString(R.string.pay_success) + payResult);
-						Intent intent1 = new Intent();
-						intent1.setAction("finish");
-						sendBroadcast(intent1);
-						intent1.setAction("first");
-						sendBroadcast(intent1);
-						Intent intent = new Intent(BuySetup2Activity.this,OrderPayCompleteActivity.class);
-						intent.putExtra("totalAmount",orderBean.getTotal_amount());
-						startActivity(intent);
-						finish();
+						payComplete();
 					} else {
 						// 该笔订单真实的支付结果，需要依赖服务端的异步通知。
 //						showAlert(BuySetup2Activity.this, getString(R.string.pay_failed) + payResult);
-						MyToastView.showToast(getString(R.string.pay_failed),BuySetup2Activity.this);
+						MyToastView.showToast(getString(R.string.pay_failed), BuySetup2Activity.this);
 					}
 					break;
 				}
@@ -125,7 +126,7 @@ public class BuySetup2Activity extends BaseActivity {
 
 					// 判断resultStatus 为“9000”且result_code
 					// 为“200”则代表授权成功，具体状态码代表含义可参考授权接口文档
-					if (TextUtils.equals(resultStatus,  Constant.ALIPAY_RESULTSTATUS) && TextUtils.equals(authResult.getResultCode(), "200")) {
+					if (TextUtils.equals(resultStatus, Constant.ALIPAY_RESULTSTATUS) && TextUtils.equals(authResult.getResultCode(), "200")) {
 						// 获取alipay_open_id，调支付时作为参数extern_token 的value
 						// 传入，则支付账户为该授权账户
 						showAlert(BuySetup2Activity.this, getString(R.string.auth_success) + authResult);
@@ -138,9 +139,25 @@ public class BuySetup2Activity extends BaseActivity {
 				default:
 					break;
 			}
-		};
+		}
+
+		;
 	};
+
+	private void payComplete() {
+		Intent intent1 = new Intent();
+		intent1.setAction("finish");
+		sendBroadcast(intent1);
+		intent1.setAction("first");
+		sendBroadcast(intent1);
+		Intent intent = new Intent(BuySetup2Activity.this, OrderPayCompleteActivity.class);
+		intent.putExtra("totalAmount", orderBean.getTotal_amount());
+		startActivity(intent);
+		finish();
+	}
+
 	private OrderBean orderBean;
+	private String balance;
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
@@ -155,7 +172,7 @@ public class BuySetup2Activity extends BaseActivity {
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_buy_setup2);
-		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+//		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
 		ButterKnife.bind(this);
 		requestPermission();
 		initView();
@@ -169,8 +186,9 @@ public class BuySetup2Activity extends BaseActivity {
 		setTopView(topView);
 
 	}
-/**
- * 获取权限使用的 RequestCode
+
+	/**
+	 * 获取权限使用的 RequestCode
 	 */
 	private static final int PERMISSIONS_REQUEST_CODE = 1002;
 
@@ -224,6 +242,7 @@ public class BuySetup2Activity extends BaseActivity {
 			}
 		}
 	}
+
 	//初始化数据
 	private void initData() {
 
@@ -243,16 +262,16 @@ public class BuySetup2Activity extends BaseActivity {
 		wxPayRadioButton.setVisibility(View.VISIBLE);
 		aliPayRadioButton.setChecked(true);
 		Intent intent = getIntent();
-		if(intent!=null){
+		if (intent != null) {
 			orderBean = (OrderBean) intent.getSerializableExtra("data");
 			snTextView.append("：");
 //		snTextView.append(pay_sn);
 			snTextView.append(orderBean.getId());
 		}
 
+		selectUser();
+
 	}
-
-
 
 
 	//返回&销毁Activity
@@ -281,7 +300,7 @@ public class BuySetup2Activity extends BaseActivity {
 				break;
 			case R.id.payTextView://支付
 				if (aliPayRadioButton.isChecked()) {
-					if(orderBean!=null){
+					if (orderBean != null) {
 //						orderBean.setTimeout_express(baseResultEntity.getDate().get(0).getTimeout_express());
 						orderBean.setProduct_code(Constant.ALIPAY_PRODUCT_CODE);
 						orderBean.setTotal_amount(orderBean.getTotal_amount());
@@ -289,16 +308,16 @@ public class BuySetup2Activity extends BaseActivity {
 						orderBean.setSubject(orderBean.getGoods_name());
 						JSONObject object = new JSONObject();
 						try {
-							object.put("product_code",orderBean.getProduct_code());
-							object.put("total_amount",orderBean.getTotal_amount());
-							object.put("subject",orderBean.getGoods_name());
-							object.put("out_trade_no",orderBean.getOut_trade_no());
-							object.put("passback_params",Constant.BUSINESSTYPE_PAYMWENT);
+							object.put("product_code", orderBean.getProduct_code());
+							object.put("total_amount", orderBean.getTotal_amount());
+							object.put("subject", orderBean.getGoods_name());
+							object.put("out_trade_no", orderBean.getOut_trade_no());
+							object.put("passback_params", Constant.BUSINESSTYPE_PAYMWENT);
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
 
-						Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID,object.toString(), Constant.RSA2);
+						Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID, object.toString(), Constant.RSA2);
 						String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
 						String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
 						final String orderInfo = orderParam + "&" + sign;
@@ -328,10 +347,85 @@ public class BuySetup2Activity extends BaseActivity {
 					MyToastView.showToast("不支付的支付方式", mActivity);
 
 				}
+				if (balancePay.isChecked()) {
+					//余额支付
+//					if(Double.parseDouble(balance)<Double.parseDouble(orderBean.getTotal_amount())){
+//
+//					}
+					payBalance();
+				}
 				break;
 		}
 	}
 
+	private void payBalance() {
+		if(CommonUtil.getNetworkRequest(BuySetup2Activity.this)){
+			HashMap<String, String> map = new HashMap<>();
+			map.put("act", "pay");
+			map.put("order_id", orderBean.getId());
+			HttpUtils.fundPay(map, new Consumer<BaseResultEntity>() {
+				@Override
+				public void accept(BaseResultEntity baseResultEntity) throws Exception {
+					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+
+						payComplete();
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+						MyToastView.showToast(baseResultEntity.getMsg(), BuySetup2Activity.this);
+						Intent intent = new Intent(BuySetup2Activity.this, LoginActivity.class);
+						startActivity(intent);
+						finish();
+					} else {
+						MyToastView.showToast(baseResultEntity.getMsg(), BuySetup2Activity.this);
+					}
+
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+					MyToastView.showToast(getResources().getString(R.string.msg_error_operation), BuySetup2Activity.this);
+				}
+			});
+		}
+	}
+	//获取用户数据
+	public void selectUser() {
+
+		if (CommonUtil.getNetworkRequest(BuySetup2Activity.this)) {
+			HashMap<String, String> map = new HashMap<>();
+			map.put("", "");
+			HttpUtils.selectUserInfo(map, new Consumer<UserEntity>() {
+
+				@Override
+				public void accept(UserEntity userEntity) throws Exception {
+
+					if (Constant.HTTP_SUCCESS_CODE.equals(userEntity.getCode())) {
+						userBean = userEntity.getData().get(0);
+
+						if ("".equals(userBean.getAccount_balance())) {
+							balance = "0.00";
+						} else {
+							balance = userBean.getAccount_balance();
+						}
+
+						String total = "余额支付（ <font color='#FF5001'>" + CommonUtil.decimalFormat(Double.parseDouble(balance), "0") + "元）" + "</font>";
+						balancePay.setText(Html.fromHtml(total));
+
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(userEntity.getCode())) {
+						startActivity(new Intent(BuySetup2Activity.this, LoginActivity.class));
+						BuySetup2Activity.this.finish();
+					} else {
+
+					}
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+
+				}
+			});
+		}
+
+	}
 
 	private static void showAlert(Context ctx, String info) {
 		showAlert(ctx, info, null);
@@ -344,6 +438,7 @@ public class BuySetup2Activity extends BaseActivity {
 				.setOnDismissListener(onDismiss)
 				.show();
 	}
+
 	private static void showToast(Context ctx, String msg) {
 		Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show();
 	}

@@ -1117,9 +1117,7 @@
         <item name="android:paddingLeft">4dip</item>
         <item name="android:paddingBottom">12dip</item>
         <item name="android:gravity">center_vertical</item>
-
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawableRight">@drawable/ic_pay_alipay</item>
     </style>
 
     <style name="CheckBox.Main" parent="Base">
