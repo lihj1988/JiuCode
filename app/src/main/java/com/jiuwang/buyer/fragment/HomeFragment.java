@@ -36,10 +36,14 @@ import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.camera.zxing.activity.CaptureActivity;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
+import com.jiuwang.buyer.net.CommonHttpUtils;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.LoadingDialog;
+import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.view.ADInfo;
@@ -63,6 +67,7 @@ import static android.support.design.widget.TabLayout.MODE_FIXED;
 public class HomeFragment extends Fragment implements XRecyclerView.LoadingListener {
 
 
+	private static final String TAG = HomeFragment.class.getName();
 	@Bind(R.id.shopping_car)
 	ImageView imageShopping_car;
 	@Bind(R.id.visible_dot)
@@ -104,8 +109,8 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		userCode = PreforenceUtils.getStringData("loginInfo", "userName");
 		initView();
 		map = new HashMap<>();
-		map.put("field","sale_price");
-		map.put("order","asc");
+		map.put("field", "sale_price");
+		map.put("order", "asc");
 		List<String> mTitleList = new ArrayList<>();
 		mTitleList.add("价格升序");
 		mTitleList.add("价格降序");
@@ -126,18 +131,18 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 //				message.what = 0;
 //				handler.sendMessage(message);
 //				map.put();
-				switch (tab.getPosition()){
+				switch (tab.getPosition()) {
 					case 0:
-						map.put("field","sale_price");
-						map.put("order","asc");
+						map.put("field", "sale_price");
+						map.put("order", "asc");
 						break;
 					case 1:
-						map.put("field","sale_price");
-						map.put("order","desc");
+						map.put("field", "sale_price");
+						map.put("order", "desc");
 						break;
 					case 2:
-						map.put("field","sale_count");
-						map.put("order","desc");
+						map.put("field", "sale_count");
+						map.put("order", "desc");
 						break;
 				}
 //				map.put("sort_type", tab.getPosition() + "");
@@ -253,6 +258,11 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		}, new Consumer<Throwable>() {
 			@Override
 			public void accept(Throwable throwable) throws Exception {
+				if (page == 1) {
+					xRecyclerView.refreshComplete();
+				} else {
+					xRecyclerView.loadMoreComplete();
+				}
 				MyToastView.showToast("请求失败", getActivity());
 			}
 		});
@@ -314,8 +324,39 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 			Bundle bundle = data.getExtras();
 			String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
 			//将扫描出的信息显示出来
+			LogUtils.e(TAG, scanResult);
+			//检验账号是否绑定过邀请码 如果绑定了 提示已经绑定过了  否则去绑定
+//			MyToastView.showToast(scanResult, getActivity());
+			if (Constant.IS_LOGIN) {
+				final LoadingDialog loadingDialog = new LoadingDialog(getActivity());
+				loadingDialog.show();
+				HashMap<String, String> map = new HashMap<>();
+				map.put("act", "invite");
+				map.put("from", scanResult);
+				CommonHttpUtils.ref_action(map, new CommonHttpUtils.CallingBack() {
+					@Override
+					public void successBack(BaseResultEntity baseResultEntity) {
+						loadingDialog.dismiss();
+						MyToastView.showToast(baseResultEntity.getMsg(), getActivity());
+						if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
+							startActivity(new Intent(getActivity(),LoginActivity.class));
+							getActivity().finish();
+						}
+					}
 
-			MyToastView.showToast(scanResult, getActivity());
+					@Override
+					public void failBack() {
+						loadingDialog.dismiss();
+						MyToastView.showToast(getActivity().getResources().getString(R.string.msg_error_operation), getActivity());
+					}
+				});
+			}else {
+				Intent intent = new Intent(getActivity(), LoginActivity.class);
+				intent.putExtra("from",scanResult);
+				startActivity(intent);
+				getActivity().finish();
+			}
+
 		}
 	}
 

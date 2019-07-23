@@ -285,11 +285,13 @@ public class BuySetup2Activity extends BaseActivity {
 					@Override
 					public void onClick(View v) {
 						DialogUtil.cancel();
+						startActivity(new Intent(BuySetup2Activity.this,OrderActivity.class));
 						mApplication.finishActivity(mActivity);
 					}
 				}
 		);
-
+//		startActivity(new Intent(BuySetup2Activity.this,OrderActivity.class));
+//		mApplication.finishActivity(mActivity);
 	}
 
 	@OnClick({R.id.onclick_layout_left, R.id.payTextView})

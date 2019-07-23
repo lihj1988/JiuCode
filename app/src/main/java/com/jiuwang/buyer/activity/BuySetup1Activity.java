@@ -345,8 +345,8 @@ public class BuySetup1Activity extends BaseActivity {
 							orderBean.setOut_trade_no(baseResultEntity.getMsg());
 							intentBuy2.putExtra("pay_sn", "online");
 							intentBuy2.putExtra("data", orderBean);
-
 							startActivity(intentBuy2);
+							finish();
 						} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
 							MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
 							Intent intent = new Intent(BuySetup1Activity.this, LoginActivity.class);
@@ -374,19 +374,19 @@ public class BuySetup1Activity extends BaseActivity {
 
 	//返回&销毁Activity
 	private void returnActivity() {
-
-		DialogUtil.query(
-				mActivity,
-				"确认您的选择",
-				"取消订单？",
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						DialogUtil.cancel();
-						mApplication.finishActivity(mActivity);
-					}
-				}
-		);
+		mApplication.finishActivity(mActivity);
+//		DialogUtil.query(
+//				mActivity,
+//				"确认您的选择",
+//				"取消订单？",
+//				new View.OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						DialogUtil.cancel();
+//						mApplication.finishActivity(mActivity);
+//					}
+//				}
+//		);
 
 	}
 

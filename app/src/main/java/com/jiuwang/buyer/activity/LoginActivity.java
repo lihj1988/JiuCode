@@ -10,10 +10,10 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
@@ -47,6 +47,7 @@ public class LoginActivity extends BaseActivity {
 	LinearLayout screen;
 	private String index = "0";
 	private LoadingDialog loadingDialog;
+	private String invite;
 
 
 	@Override
@@ -55,6 +56,8 @@ public class LoginActivity extends BaseActivity {
 		setContentView(R.layout.activity_login);
 		ButterKnife.bind(this);
 		MyApplication.currentActivity = this;
+		Intent intent = getIntent();
+		invite = intent.getStringExtra("from");
 		initView();
 		index = this.getIntent().getStringExtra("index");
 
@@ -85,8 +88,14 @@ public class LoginActivity extends BaseActivity {
 			public void callBack(BaseEntity<LoginEntity> loginEntity) {
 				loadingDialog.dismiss();
 				if ("0".equals(loginEntity.getCode())) {
+					Constant.IS_LOGIN = true;//记录登录状态
+
+
 					Intent intent = new Intent();
 					intent.setClass(LoginActivity.this, MainActivity.class);
+					if (invite != null) {
+						intent.putExtra("from", invite);
+					}
 					startActivity(intent);
 				} else {
 					MyToastView.showToast(loginEntity.getMsg(), LoginActivity.this);

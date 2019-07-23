@@ -10,11 +10,8 @@ import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
-import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
-
-import java.io.Serializable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -98,7 +95,7 @@ public class BindAccountActivity extends BaseActivity {
 				break;
 			case R.id.tvEditWx:
 				intent.putExtra("accountType", "1");//账户类型 1 微信
-				if ("去修改".equals(tvEditWx.getText().toString().trim())) {
+				if ("去绑定".equals(tvEditWx.getText().toString().trim())) {
 					intent.putExtra("editType", "0");
 				}else {
 					intent.putExtra("editType", "1");

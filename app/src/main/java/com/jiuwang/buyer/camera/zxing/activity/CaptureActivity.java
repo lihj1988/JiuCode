@@ -1,6 +1,5 @@
 package com.jiuwang.buyer.camera.zxing.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -31,12 +30,14 @@ import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.camera.zxing.camera.CameraManager;
 import com.jiuwang.buyer.camera.zxing.decoding.CaptureActivityHandler;
 import com.jiuwang.buyer.camera.zxing.decoding.InactivityTimer;
 import com.jiuwang.buyer.camera.zxing.decoding.RGBLuminanceSource;
 import com.jiuwang.buyer.camera.zxing.view.ViewfinderView;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.util.LogUtils;
 
 import java.io.IOException;
 import java.util.Hashtable;
@@ -48,7 +49,7 @@ import java.util.Vector;
  *
  * @author Ryan.Tang
  */
-public class CaptureActivity extends Activity implements Callback {
+public class CaptureActivity extends BaseActivity implements Callback {
 
     private static final int REQUEST_CODE_SCAN_GALLERY = 100;
 
@@ -241,33 +242,16 @@ public class CaptureActivity extends Activity implements Callback {
             Toast.makeText(CaptureActivity.this, "Scan failed!", Toast.LENGTH_SHORT).show();
             CaptureActivity.this.finish();
         } else {
-//            Intent resultIntent = new Intent();
-//            Bundle bundle = new Bundle();
-//            bundle.putString(Constant.INTENT_EXTRA_KEY_QR_SCAN, resultString);
-//            System.out.println("sssssssssssssssss scan 0 = " + resultString);
-            // 不能使用Intent传递大于40kb的bitmap，可以使用一个单例对象存储这个bitmap
+            Intent resultIntent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putString(Constant.INTENT_EXTRA_KEY_QR_SCAN, resultString);
+            System.out.println("sssssssssssssssss scan 0 = " + resultString);
+//          不能使用Intent传递大于40kb的bitmap，可以使用一个单例对象存储这个bitmap
 //            bundle.putParcelable("bitmap", barcode);
-//            Logger.d("saomiao",resultString);
-//            resultIntent.putExtras(bundle);
-
-//            if (flag == 0) {//实收入库
-//                Intent intent = new Intent();
-//                intent.setClass(CaptureActivity.this, StorageListActivity.class);
-//                intent.putExtra("shNo", resultString);
-//                startActivity(intent);
-//            } else if (flag == 1) {//实提录入
-//                Intent intent = new Intent();
-//                intent.setClass(CaptureActivity.this, RealEntityListActivity.class);
-//                intent.putExtra("fhNo", resultString);
-//                startActivity(intent);
-//            }else if (flag==2){//出门验单码扫描
-//
-//                Intent intent = new Intent();
-//                intent.setClass(CaptureActivity.this, CheckCodeActivity.class);
-//                intent.putExtra("checkcode", resultString);
-//                startActivity(intent);
-//            }
-//            CaptureActivity.this.finish();
+            LogUtils.e("saomiao",resultString);
+            resultIntent.putExtras(bundle);
+            setResult(RESULT_OK,resultIntent);
+            CaptureActivity.this.finish();
         }
 
     }

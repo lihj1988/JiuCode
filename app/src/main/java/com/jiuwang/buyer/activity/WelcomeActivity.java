@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.util.CommonUtil;
@@ -51,6 +52,7 @@ public class WelcomeActivity extends BaseActivity implements Animation.Animation
 										@Override
 										public void callBack(BaseEntity<LoginEntity> loginEntity) {
 											if("0".equals(loginEntity.getCode())){
+												Constant.IS_LOGIN = true;//记录登录状态
 												Intent intent = new Intent();
 												intent.setClass(WelcomeActivity.this,MainActivity.class);
 												startActivity(intent);

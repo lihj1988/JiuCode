@@ -89,6 +89,8 @@ public class BalanceActivity extends BaseActivity {
 				startActivityForResult(intent, 0);
 				break;
 			case R.id.llCashout:
+				Intent intentCashout = new Intent(BalanceActivity.this, CashOutActivity.class);
+				startActivity(intentCashout);
 				break;
 		}
 	}

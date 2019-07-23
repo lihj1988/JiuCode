@@ -15,11 +15,19 @@ import android.widget.LinearLayout;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.fragment.HomeFragment;
 import com.jiuwang.buyer.fragment.MineFragment;
 import com.jiuwang.buyer.fragment.ProjectFragment;
+import com.jiuwang.buyer.net.CommonHttpUtils;
 import com.jiuwang.buyer.spinerwidget.MyTabWidget;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.ConstantValues;
+import com.jiuwang.buyer.util.LoadingDialog;
+import com.jiuwang.buyer.util.MyToastView;
+
+import java.util.HashMap;
 
 
 public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelectedListener {
@@ -29,15 +37,18 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 	private MyTabWidget tbBottom;
 	private HomeFragment homeFragment;
 	private ProjectFragment projectFragment;
-//	private CarFragment carFragment;
+	//	private CarFragment carFragment;
 	private MineFragment mineFragment;
 	private int backIndex;
 	private MyReceiver myReceiver;
+	private String invite;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Intent intent = getIntent();
+		invite = intent.getStringExtra("from");
 		backIndex = this.getIntent().getIntExtra("index", 0);
 		MyApplication.currentActivity = this;
 		init();
@@ -45,6 +56,37 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("first");
 		registerReceiver(myReceiver, filter);
+		bindInvite();
+	}
+
+	private void bindInvite() {
+		if (invite != null) {
+			if(CommonUtil.getNetworkRequest(MainActivity.this)){
+				final LoadingDialog loadingDialog = new LoadingDialog(MainActivity.this);
+				loadingDialog.show();
+				HashMap<String, String> map = new HashMap<>();
+				map.put("act", "invite");
+				map.put("from", invite);
+				CommonHttpUtils.ref_action(map, new CommonHttpUtils.CallingBack() {
+					@Override
+					public void successBack(BaseResultEntity baseResultEntity) {
+						loadingDialog.dismiss();
+						MyToastView.showToast(baseResultEntity.getMsg(), MainActivity.this);
+						if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
+							startActivity(new Intent( MainActivity.this,LoginActivity.class));
+							finish();
+						}
+					}
+
+					@Override
+					public void failBack() {
+						loadingDialog.dismiss();
+						MyToastView.showToast(getResources().getString(R.string.msg_error_operation), MainActivity.this);
+					}
+				});
+			}
+		}
+
 	}
 
 	private void init() {
