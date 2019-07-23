@@ -22,6 +22,7 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AddressBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.AddressEntity;
+import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.DialogUtil;
@@ -181,15 +182,38 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 				}else {
 					Intent intent = new Intent();
 					intent.putExtra("address",mArrayList.get(position-1));
-					setResult(RESULT_OK,intent);
+//					setResult(RESULT_OK,intent);
 				}
 			}
 		});
 		addressListAdapter.setOnItemLongClickListener(new AddressListAdapter.onItemLongClickListener() {
 			@Override
-			public void onItemLongClick(int position) {
+			public void onItemLongClick(final int position) {
 				LogUtils.e(TAG,"onItemLongClick---"+position+"");
+				DialogUtil.query(
+						mActivity,
+						"确认您的选择",
+						"删除收货地址",
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								HashMap<String, String> hashMap = new HashMap<>();
+								hashMap.put("act",Constant.ACTION_ACT_DELETE);
+								hashMap.put("id",mArrayList.get(position-1).getId());
+								HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {
+									@Override
+									public void accept(BaseResultEntity baseResultEntity) throws Exception {
 
+									}
+								}, new Consumer<Throwable>() {
+									@Override
+									public void accept(Throwable throwable) throws Exception {
+
+									}
+								});
+							}
+						}
+				);
 			}
 		});
 	}
