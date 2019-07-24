@@ -5,10 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
 
         <com.jiuwang.buyer.widget.SlideDetailsLayout
             android:id="@+id/sv_switch"
@@ -29,7 +25,7 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="250dp"
                         android:background="@color/white">
 
                         <!-- 自动轮播的第三方控件 -->
@@ -318,5 +314,5 @@
             app:borderWidth="0dp"
             app:fabSize="mini"
             app:rippleColor="#ffffff" />
-    </android.support.design.widget.CoordinatorLayout>
+
 </LinearLayout>

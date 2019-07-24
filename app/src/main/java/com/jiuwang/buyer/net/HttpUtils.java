@@ -332,6 +332,19 @@ public class HttpUtils {
 				.subscribe(consumer, throwableConsumer);
 	}
 	/**
+	 * 用户信息操作
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void userInfo(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.userInfo(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}
+	/**
 	 * 获取用户信息
 	 * @param map
 	 * @param consumer

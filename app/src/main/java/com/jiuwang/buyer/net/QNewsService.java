@@ -152,6 +152,11 @@ public interface QNewsService {
 	Observable<UserEntity> selectUserInfo(
 			@QueryMap HashMap<String, String> map
 	);
+	//用户信息操作
+	@POST("/reg_action.jsp")
+	Observable<BaseResultEntity> userInfo(
+			@QueryMap HashMap<String, String> map
+	);
 
 	//充值
 	@POST("admin/fund/receive_action.jsp")

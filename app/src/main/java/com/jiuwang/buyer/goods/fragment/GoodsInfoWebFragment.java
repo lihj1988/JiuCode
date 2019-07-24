@@ -9,11 +9,17 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.goods.adaper.GoodsInfoPicAdapter;
+import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.view.NestedScrollWebView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +34,9 @@ public class GoodsInfoWebFragment extends Fragment {
     private LayoutInflater inflater;
     private View rootView;
     private LinearLayout ll;
-    private List<WebView> webViews;
+    private List<NestedScrollWebView> webViews;
     private GoodsBean good;
+    private XRecyclerView lvDetail;
 
     @Nullable
     @Override
@@ -46,13 +53,16 @@ public class GoodsInfoWebFragment extends Fragment {
     public void initWebView(View rootView) {
         ll = rootView.findViewById(R.id.ll);
 //		lvDetail = rootView.findViewById(R.id.lvDetail);
+//        AppUtils.initListView(getActivity(),lvDetail,false,false);
         String pic_url = good.getPic_url();
         String[] split = pic_url.split(",");
         List<String> picList = new ArrayList<>();
         for (int i = 0; i < split.length; i++) {
-            WebView webView = new WebView(getActivity());
+            picList.add(split[i]);
+
+            NestedScrollWebView webView = new NestedScrollWebView(getActivity());
 //支持javascript
-            webView.getSettings().setJavaScriptEnabled(false);
+            webView.getSettings().setJavaScriptEnabled(true);
 // 设置可以支持缩放
             webView.getSettings().setSupportZoom(false);
 // 设置出现缩放工具
@@ -74,10 +84,15 @@ public class GoodsInfoWebFragment extends Fragment {
 
 // 设置间距
             LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lineParams.setMargins(0, 10,0,0);
-            webView.setLayoutParams(lineParams);
+            lineParams.setMargins(0, 0,0,0);
+            webView.setLayoutParams(lineParams);   ImageView imageView = new ImageView(getActivity());
+////         imageView.setScaleType(ImageView.ScaleType.CENTER);
+//            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//            CommonUtil.loadImage(getActivity(), NetURL.PIC_BASEURL + split[i],imageView);
             ll.addView(webView);
         }
+//        GoodsInfoPicAdapter goodsInfoPicAdapter = new GoodsInfoPicAdapter(getActivity(),picList);
+//        lvDetail.setAdapter(goodsInfoPicAdapter);
     }
 
     private class GoodsDetailWebViewClient extends WebViewClient {

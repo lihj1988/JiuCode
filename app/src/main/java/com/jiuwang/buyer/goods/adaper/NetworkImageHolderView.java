@@ -2,7 +2,9 @@ package com.jiuwang.buyer.goods.adaper;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.bumptech.glide.Glide;
@@ -22,8 +24,10 @@ public class NetworkImageHolderView implements Holder<String> {
 //        imageView = (ImageView) rootview.findViewById(R.id.iv);
         //你可以通过layout文件来创建，也可以像我一样用代码创建，不一定是Image，任何控件都可以进行翻页
          imageView = new ImageView(context);
-         imageView.setScaleType(ImageView.ScaleType.CENTER);
+//         imageView.setScaleType(ImageView.ScaleType.CENTER);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 //        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 //        layoutParams.height = layoutParams.WRAP_CONTENT;
 //        layoutParams.width = layoutParams.WRAP_CONTENT;
 //        imageView.setLayoutParams(layoutParams);

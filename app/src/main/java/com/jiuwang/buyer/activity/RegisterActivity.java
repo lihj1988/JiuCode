@@ -264,6 +264,7 @@ public class RegisterActivity extends BaseActivity {
 						public void callBack(BaseEntity<LoginEntity> loginEntity) {
 							if ("0".equals(loginEntity.getCode())) {
 								runnable = null;
+								Constant.IS_LOGIN = true;//记录登录状态
 								Intent intent = new Intent();
 								intent.setClass(RegisterActivity.this, MainActivity.class);
 								startActivity(intent);

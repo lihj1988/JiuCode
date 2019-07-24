@@ -76,6 +76,8 @@ public class UserBean implements Serializable {
 	private String trial_amount;
 	private String account_balance;
 	private String avail_amount;
+	private String account_no;
+	private String account_name;
 	private int r;
 
 	public String getId() {
@@ -332,6 +334,22 @@ public class UserBean implements Serializable {
 
 	public void setAvail_amount(String avail_amount) {
 		this.avail_amount = avail_amount;
+	}
+
+	public String getAccount_no() {
+		return account_no;
+	}
+
+	public void setAccount_no(String account_no) {
+		this.account_no = account_no;
+	}
+
+	public String getAccount_name() {
+		return account_name;
+	}
+
+	public void setAccount_name(String account_name) {
+		this.account_name = account_name;
 	}
 
 	public int getR() {

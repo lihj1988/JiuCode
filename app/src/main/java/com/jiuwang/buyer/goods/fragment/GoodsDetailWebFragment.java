@@ -60,7 +60,7 @@ public class GoodsDetailWebFragment extends Fragment {
 		for (int i = 0; i < split.length; i++) {
 			WebView webView = new WebView(getActivity());
 //支持javascript
-			webView.getSettings().setJavaScriptEnabled(false);
+			webView.getSettings().setJavaScriptEnabled(true);
 // 设置可以支持缩放
 			webView.getSettings().setSupportZoom(false);
 // 设置出现缩放工具
@@ -82,7 +82,7 @@ public class GoodsDetailWebFragment extends Fragment {
 
 // 设置间距
 			LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-			lineParams.setMargins(0, 10,0,0);
+			lineParams.setMargins(0, 0,0,0);
 			webView.setLayoutParams(lineParams);
 			ll.addView(webView);
 		}

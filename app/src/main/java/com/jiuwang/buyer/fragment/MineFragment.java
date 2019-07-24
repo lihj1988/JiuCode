@@ -333,7 +333,7 @@ public class MineFragment extends Fragment {
 				intentRecharge.putExtra("type", "mine");
 				getActivity().startActivity(intentRecharge);
 				break;
-			case R.id.tvMyInviteCode://我的二维码
+			case R.id.tvMyInviteCode://我的邀请码
 				if (null == invite_code || "".equals(invite_code)) {
 					MyToastView.showToast("没有邀请码", getActivity());
 				} else {
@@ -343,7 +343,7 @@ public class MineFragment extends Fragment {
 				}
 
 				break;
-			case R.id.tvMyAccount://我的二维码
+			case R.id.tvMyAccount://我的账户
 
 				Intent intentAccount = new Intent(getActivity(), BindAccountActivity.class);
 				intentAccount.putExtra("data", userBean);

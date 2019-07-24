@@ -89,8 +89,6 @@ public class LoginActivity extends BaseActivity {
 				loadingDialog.dismiss();
 				if ("0".equals(loginEntity.getCode())) {
 					Constant.IS_LOGIN = true;//记录登录状态
-
-
 					Intent intent = new Intent();
 					intent.setClass(LoginActivity.this, MainActivity.class);
 					if (invite != null) {

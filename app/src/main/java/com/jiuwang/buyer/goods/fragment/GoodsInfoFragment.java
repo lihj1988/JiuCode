@@ -242,10 +242,10 @@ public class GoodsInfoFragment extends Fragment implements View.OnClickListener,
         String[] split = good.getPic_url().split(",");
         if(split!=null){
             for (int i = 0; i < split.length; i++) {
-                imgUrls.add(NetURL.PIC_BASEURL+split[0]);
+                imgUrls.add(NetURL.PIC_BASEURL+split[i]);
             }
         }
-
+       View view = View .inflate(getActivity(),R.layout.goods_item_head_img, null);
         //初始化商品图片轮播
         vp_item_goods_img.setPages(new CBViewHolderCreator() {
             @Override

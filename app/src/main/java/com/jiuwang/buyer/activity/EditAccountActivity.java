@@ -11,10 +11,18 @@ import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.MyToastView;
+
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by lihj on 2019/7/22
@@ -30,6 +38,8 @@ public class EditAccountActivity extends BaseActivity {
 	RelativeLayout onclickLayoutLeft;
 	@Bind(R.id.onclick_layout_right)
 	Button onclickLayoutRight;
+	@Bind(R.id.etAccountName)
+	EditText etAccountName;
 	@Bind(R.id.etAccount)
 	EditText etAccount;
 	@Bind(R.id.btnBind)
@@ -73,16 +83,53 @@ public class EditAccountActivity extends BaseActivity {
 				finish();
 				break;
 			case R.id.btnBind:
-				//绑定、修改账号
-				Intent intent = new Intent();
-				intent.putExtra("account",etAccount.getText().toString().trim());
-				if ("0".equals(accountType)) {
-					setResult(RESULT_OK,intent);
-				} else {
-					setResult(RESULT_OK,intent);
+				//绑定账号
+				String account = etAccount.getText().toString().trim();
+				String accountName = etAccountName.getText().toString().trim();
+				if ("".equals(accountName)) {
+					MyToastView.showToast("请填写姓名", EditAccountActivity.this);
+					return;
 				}
-				finish();
+				if ("".equals(account)) {
+					MyToastView.showToast("请填写账号", EditAccountActivity.this);
+					return;
+				}
+				if (CommonUtil.getNetworkRequest(EditAccountActivity.this)) {
+					bind(account, accountName);
+				}
 				break;
 		}
+	}
+
+	private void bind(final String account, final String accountName) {
+		HashMap<String, String> hashMap = new HashMap<>();
+		hashMap.put("act", Constant.ACTION_ACT_UPDATA);
+		hashMap.put("account_no", account);
+		hashMap.put("account_name", accountName);
+		HttpUtils.userInfo(hashMap, new Consumer<BaseResultEntity>() {
+			@Override
+			public void accept(BaseResultEntity baseResultEntity) throws Exception {
+				if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
+					Intent intent = new Intent();
+					intent.putExtra("account", account);
+					intent.putExtra("account_name", accountName);
+					if ("0".equals(accountType)) {
+						setResult(RESULT_OK, intent);
+					} else {
+						setResult(RESULT_OK, intent);
+					}
+					finish();
+				}else if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
+					startActivity(new Intent(EditAccountActivity.this,LoginActivity.class));
+				}
+				MyToastView.showToast(baseResultEntity.getMsg(), EditAccountActivity.this);
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+				MyToastView.showToast(getResources().getString(R.string.msg_error_operation), EditAccountActivity.this);
+			}
+		});
+
 	}
 }

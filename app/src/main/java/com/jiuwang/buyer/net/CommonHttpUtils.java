@@ -16,7 +16,11 @@ import io.reactivex.functions.Consumer;
 
 public class CommonHttpUtils {
 
-
+	/**
+	 * 绑定邀请码
+	 * @param map
+	 * @param callingBack
+	 */
 	public static void ref_action(HashMap<String, String> map, final CallingBack callingBack){
 		HttpUtils.regVerify(map, new Consumer<BaseResultEntity>() {
 			@Override
@@ -35,7 +39,7 @@ public class CommonHttpUtils {
 		void failBack();
 
 	}
-
+	//查询用户信息
 	public static void selectUserInfo(HashMap<String, String> map, final UserCallBack callingBack){
 		HttpUtils.selectUserInfo(map, new Consumer<UserEntity>() {
 			@Override

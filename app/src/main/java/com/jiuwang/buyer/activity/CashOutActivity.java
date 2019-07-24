@@ -76,6 +76,8 @@ public class CashOutActivity extends BaseActivity {
 			public void successBack(UserBean userBean) {
 				avail_amount = userBean.getAvail_amount();
 				etMoney.setHint("可提现金额" + avail_amount + "元");
+				etName.setText(userBean.getAccount_name());
+				etAccount.setText(userBean.getAccount_no());
 				loadingDialog.dismiss();
 			}
 
@@ -116,6 +118,10 @@ public class CashOutActivity extends BaseActivity {
 					return;
 				}
 				String money = etMoney.getText().toString().trim();
+				if (Double.parseDouble(money) > Double.parseDouble(avail_amount)) {
+					MyToastView.showToast("提现金额不能大于可提现金额", CashOutActivity.this);
+					return;
+				}
 				if (!CommonUtil.checkMoney(money, CashOutActivity.this)) return;
 				AppUtils.showDialog(CashOutActivity.this, "提示", getResources().getString(R.string.cash_out_content), new DialogClickInterface() {
 					@Override
@@ -138,8 +144,6 @@ public class CashOutActivity extends BaseActivity {
 			final LoadingDialog loadingDialog = AppUtils.setDialog_wait(this, "1");
 			HashMap<String, String> map = new HashMap<>();
 			map.put("act", Constant.ACTION_ACT_ADD);
-			map.put("account_name", etName.getText().toString().trim());
-			map.put("account_no", etAccount.getText().toString().trim());
 			map.put("amount", etMoney.getText().toString().trim());
 			map.put("pay_mode", Constant.PAY_MODE_ALI);
 			HttpUtils.cash(map, new Consumer<BaseResultEntity>() {

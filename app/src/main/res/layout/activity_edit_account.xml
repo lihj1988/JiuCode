@@ -3,15 +3,13 @@
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent"
 			  android:orientation="vertical">
-
 	<include layout="@layout/include_topview"></include>
 
 	<include layout="@layout/include_title"></include>
-
 	<LinearLayout
-		android:padding="@dimen/padding_size_20"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:padding="@dimen/padding_size_20">
 
 		<LinearLayout
 
@@ -25,36 +23,82 @@
 			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="请填写真实有效的账号"
+				android:text="请填写真实有效支付宝账号"
 				android:textColor="@color/black"
 				android:textSize="@dimen/textsize_14"/>
 
 			<LinearLayout
-				android:padding="@dimen/padding_size_5"
+				android:layout_marginTop="@dimen/padding_size_20"
+				style="@style/Detailpadding"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_size_20">
+				android:orientation="horizontal">
 
+				<ImageView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:src="@drawable/mustfill"/>
+
+				<TextView
+					style="@style/DetailText"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="0.5"
+					android:paddingLeft="5dp"
+					android:text="姓名"/>
 
 				<EditText
-					android:id="@+id/etAccount"
-					android:layout_marginLeft="@dimen/padding_size_10"
-					android:layout_width="match_parent"
+					android:id="@+id/etAccountName"
+					style="@style/DetailText"
+					android:layout_width="0dp"
 					android:layout_height="wrap_content"
+					android:layout_weight="1.5"
 					android:background="@null"
-					android:textColor="@color/black"
-					android:textSize="25sp"
-					android:textStyle="bold"/>
+					android:hint="请输入姓名"
+					android:maxLength="11"/>
 			</LinearLayout>
 
 			<View
 				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:background="@color/line_gray"/>
+				android:layout_height="@dimen/detail_divider_line"
+				android:background="@color/gray_line"/>
+
+			<LinearLayout
+				style="@style/Detailpadding"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:src="@drawable/mustfill"/>
+
+				<TextView
+					android:id="@+id/textView3"
+					style="@style/DetailText"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="0.5"
+					android:paddingLeft="5dp"
+					android:text="账号"/>
+
+				<EditText
+					android:id="@+id/etAccount"
+					style="@style/DetailText"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1.5"
+					android:background="@null"
+					android:hint="请输入有效的账号"/>
+			</LinearLayout>
+
+			<View
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/detail_divider_line"
+				android:background="@color/gray_line"/>
 
 			<TextView
-				android:padding="@dimen/padding_size_10"
-				android:gravity="center"
 				android:id="@+id/btnBind"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -62,10 +106,17 @@
 				android:layout_marginRight="@dimen/padding_size_28"
 				android:layout_marginTop="@dimen/padding_size_20"
 				android:background="@drawable/btn_selecter"
+				android:gravity="center"
+				android:padding="@dimen/padding_size_10"
 				android:text="绑定"
 				android:textColor="@color/white"
 				android:textSize="@dimen/textsize_16"/>
 		</LinearLayout>
 
 	</LinearLayout>
+
+	<include layout="@layout/include_topview"></include>
+
+	<include layout="@layout/include_title"></include>
+
 </LinearLayout>
