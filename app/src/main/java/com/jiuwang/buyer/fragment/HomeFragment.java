@@ -162,7 +162,10 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		});
 
 		intDatas();
-		shopcarCount();
+		if (Constant.IS_LOGIN) {
+
+			shopcarCount();
+		}
 //		refreshMefragment();
 		if (receiver == null) {
 			receiver = new RefreshReceiver();
@@ -338,8 +341,8 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 					public void successBack(BaseResultEntity baseResultEntity) {
 						loadingDialog.dismiss();
 						MyToastView.showToast(baseResultEntity.getMsg(), getActivity());
-						if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
-							startActivity(new Intent(getActivity(),LoginActivity.class));
+						if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+							startActivity(new Intent(getActivity(), LoginActivity.class));
 							getActivity().finish();
 						}
 					}
@@ -350,9 +353,9 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 						MyToastView.showToast(getActivity().getResources().getString(R.string.msg_error_operation), getActivity());
 					}
 				});
-			}else {
+			} else {
 				Intent intent = new Intent(getActivity(), LoginActivity.class);
-				intent.putExtra("from",scanResult);
+				intent.putExtra("from", scanResult);
 				startActivity(intent);
 				getActivity().finish();
 			}
@@ -367,7 +370,9 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		page = 1;
 		refreshTime++;
 		times = 0;
-		shopcarCount();
+		if (Constant.IS_LOGIN) {
+			shopcarCount();
+		}
 		intDatas();
 	}
 
@@ -399,18 +404,30 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.relativeLayout:
-				Intent intent = new Intent(mActivity, SearchActivity.class);
-				intent.putExtra("type", "1");
-				getActivity().startActivity(intent);
+				if (Constant.IS_LOGIN) {
+					Intent intent = new Intent(mActivity, SearchActivity.class);
+					intent.putExtra("type", "1");
+					getActivity().startActivity(intent);
+				} else {
+					Intent intentExit = new Intent(getActivity(), LoginActivity.class);
+					getActivity().startActivity(intentExit);
+				}
+
 				break;
 			case R.id.clear_keyword_iv:
 				et_search.setText("");
 				break;
 			case R.id.shopping_car:
 //				if (!CommonUtil.isNull(userCode)) {
-				Intent intentCar = new Intent(mActivity, CarActivity.class);
-				intentCar.putExtra("shoppingCount", shoppingCount);
-				mActivity.startActivity(intentCar);
+				if (Constant.IS_LOGIN) {
+					Intent intentCar = new Intent(mActivity, CarActivity.class);
+					intentCar.putExtra("shoppingCount", shoppingCount);
+					mActivity.startActivity(intentCar);
+				} else {
+					Intent intentExit = new Intent(getActivity(), LoginActivity.class);
+					getActivity().startActivity(intentExit);
+				}
+
 //				} else {
 //					MyToastView.showToast("请您先登录", mActivity);
 //					Intent intentLogin = new Intent(mActivity, LoginActivity.class);
@@ -420,8 +437,12 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 //				}
 				break;
 			case R.id.ivScan:
-				runPermission();
-
+				if (Constant.IS_LOGIN) {
+					runPermission();
+				}else {
+					Intent intentExit = new Intent(getActivity(), LoginActivity.class);
+					getActivity().startActivity(intentExit);
+				}
 				break;
 		}
 	}

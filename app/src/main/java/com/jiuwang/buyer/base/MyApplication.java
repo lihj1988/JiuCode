@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.webkit.WebView;
 
 import com.jiuwang.buyer.activity.LoginActivity;
+import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.util.ToastUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
@@ -71,8 +72,9 @@ public class MyApplication extends Application {
 		for (int i = 0; i < orderArrayList.length; i++) {
 			orderArrayList[i] = new ArrayList<>();
 		}
+		getLocalVersion();
 		OkHttpClient okHttpClient = new OkHttpClient.Builder()
-				.addInterceptor(new LoggerInterceptor("jianbangsellerLog"))
+				.addInterceptor(new LoggerInterceptor("jiuwangLog"))
 				.cookieJar(new CookieJar() {
 					private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 
@@ -90,8 +92,8 @@ public class MyApplication extends Application {
 				.connectTimeout(10000L, TimeUnit.MILLISECONDS)
 				.readTimeout(10000L, TimeUnit.MILLISECONDS).build();
 		OkHttpUtils.initClient(okHttpClient);
-		regToQq();
-		regToWx();
+//		regToQq();
+//		regToWx();
 //		JPushInterface.setDebugMode(true);
 //		JPushInterface.init(this);
 	}
@@ -115,7 +117,15 @@ public class MyApplication extends Application {
 			}
 		}
 	}
-
+	private void getLocalVersion() {
+		try {
+			PackageInfo packageInfo = getApplicationContext()
+					.getPackageManager().getPackageInfo(getPackageName(), 0);
+			Constant.localVersion = packageInfo.versionName;
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 返回当前程序版本号

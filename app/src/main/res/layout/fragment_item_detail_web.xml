@@ -4,19 +4,19 @@
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent"
 			 >
-	<!--<LinearLayout-->
-		<!--android:orientation="vertical"-->
-		<!--android:id="@+id/ll"-->
-		<!--android:layout_width="match_parent"-->
-		<!--android:layout_height="match_parent"></LinearLayout>-->
+	<LinearLayout
+		android:orientation="vertical"
+		android:id="@+id/ll"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"></LinearLayout>
 	<!--<WebView-->
 		<!--android:id="@+id/wv_detail"-->
 		<!--android:layout_width="match_parent"-->
 		<!--android:layout_height="wrap_content"/>-->
-	<com.jiuwang.buyer.util.MyList
-	android:id="@+id/lvDetail"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"></com.jiuwang.buyer.util.MyList>
+	<!--<com.jiuwang.buyer.util.MyList-->
+	<!--android:id="@+id/lvDetail"-->
+	<!--android:layout_width="match_parent"-->
+	<!--android:layout_height="match_parent"></com.jiuwang.buyer.util.MyList>-->
 	<!--<ImageView-->
 	<!--android:id="@+id/ivPic"-->
 	<!--android:layout_width="match_parent"-->

@@ -369,7 +369,8 @@ public class HttpUtils {
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
-	}/**
+	}
+	/**
 	 * 被邀请人查询
 	 * @param map
 	 * @param consumer
@@ -378,6 +379,31 @@ public class HttpUtils {
 	public static void invite(HashMap<String, String> map, Consumer<InviteEntity> consumer, Consumer<Throwable> throwableConsumer) {
 		QClitent.getInstance()
 				.invite(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}
+	/**
+	 * 提现
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void cash(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.cash(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}/**
+	 * 获取版本信息
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void version(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.version(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);

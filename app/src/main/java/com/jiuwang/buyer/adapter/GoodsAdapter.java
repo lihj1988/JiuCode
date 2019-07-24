@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.GoodsDetailsActivty;
+import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
@@ -66,16 +67,23 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 		} else {
 			viewHolder.tvCheapPrice.setVisibility(View.VISIBLE);
 			viewHolder.tvPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-			viewHolder.tvCheapPrice.setText("¥" + datas.get(position).getSale_price());
+			viewHolder.tvCheapPrice.setText(context.getResources().getString(R.string.money_mark) + datas.get(position).getSale_price());
 		}
 		viewHolder.llItem.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 //				MyToastView.showToast("点击第"+(position+1)+"条",context);
-				Intent intent = new Intent();
-				intent.setClass(context, GoodsDetailsActivty.class);
-				intent.putExtra("goods", datas.get(position));
-				context.startActivity(intent);
+				if(Constant.IS_LOGIN){
+					Intent intent = new Intent();
+					intent.setClass(context, GoodsDetailsActivty.class);
+					intent.putExtra("goods", datas.get(position));
+					context.startActivity(intent);
+				}else {
+					Intent intentExit = new Intent(context, LoginActivity.class);
+					context.startActivity(intentExit);
+					context.finish();
+				}
+
 
 			}
 		});

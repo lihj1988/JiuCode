@@ -79,7 +79,7 @@ public class WelcomeActivity extends BaseActivity implements Animation.Animation
 						finish();
 					}
 				} else {
-					CommonUtil.launchActivity(WelcomeActivity.this, LoginActivity.class);
+					CommonUtil.launchActivity(WelcomeActivity.this, MainActivity.class);
 					finish();
 				}
 			}

@@ -75,6 +75,7 @@ public class UserBean implements Serializable {
 	private String invite_code;
 	private String trial_amount;
 	private String account_balance;
+	private String avail_amount;
 	private int r;
 
 	public String getId() {
@@ -323,6 +324,14 @@ public class UserBean implements Serializable {
 
 	public void setAccount_balance(String account_balance) {
 		this.account_balance = account_balance;
+	}
+
+	public String getAvail_amount() {
+		return avail_amount;
+	}
+
+	public void setAvail_amount(String avail_amount) {
+		this.avail_amount = avail_amount;
 	}
 
 	public int getR() {

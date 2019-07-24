@@ -53,6 +53,7 @@ public class BalanceActivity extends BaseActivity {
 	@Bind(R.id.tvBalance)
 	TextView tvBalance;
 	private MyReceiver myReceiver;
+	private MyFinishReceiver myFinishReceiver;
 	private UserBean userBean;
 
 	@Override
@@ -65,6 +66,10 @@ public class BalanceActivity extends BaseActivity {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("balancerefresh");
 		registerReceiver(myReceiver, filter);
+		myFinishReceiver = new MyFinishReceiver();
+		IntentFilter filterFinish = new IntentFilter();
+		filterFinish.addAction("balancefinish");
+		registerReceiver(myFinishReceiver, filterFinish);
 		initData();
 	}
 
@@ -137,6 +142,7 @@ public class BalanceActivity extends BaseActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(myReceiver);
+		unregisterReceiver(myFinishReceiver);
 	}
 
 	class MyReceiver extends BroadcastReceiver {
@@ -148,6 +154,15 @@ public class BalanceActivity extends BaseActivity {
 					initData();
 				}
 			}.sendEmptyMessageDelayed(0, 1500);
+		}
+	}
+	class MyFinishReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			intent = new Intent();
+			intent.setAction("minerefresh");
+			sendBroadcast(intent);
+			finish();
 		}
 	}
 

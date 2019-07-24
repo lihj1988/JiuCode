@@ -1,5 +1,7 @@
 package com.jiuwang.buyer.util;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -8,19 +10,29 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.ParseException;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.Gravity;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.constant.Constant;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -33,8 +45,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+
+
 public class AppUtils {
 	private static Boolean isDebug = null;
+	private static LoadingDialog mLoadingDialog;
 
 
 	public static boolean isDebug() {
@@ -68,6 +83,7 @@ public class AppUtils {
 			return null;
 		}
 	}
+
 	/**
 	 * 没有网络不能进行下一步请求
 	 */
@@ -102,7 +118,6 @@ public class AppUtils {
 		}
 		return false;
 	}
-
 
 
 	private static Toast mToast;
@@ -155,8 +170,6 @@ public class AppUtils {
 		editView.setFocusableInTouchMode(true);
 		editView.requestFocus();
 	}
-
-
 
 
 	public static String getStatusContract(String status) {
@@ -440,28 +453,29 @@ public class AppUtils {
 
 		Long day = ms / dd;
 		Long hour = (ms - day * dd) / hh;
-		Long	minute = ((ms / (60 * 1000)) - day * 24 * 60 - hour * 60);
+		Long minute = ((ms / (60 * 1000)) - day * 24 * 60 - hour * 60);
 		Long second = (ms - day * dd - hour * hh - minute * mi) / ss;
 //		Long milliSecond = ms - day * dd - hour * hh - minute * mi - second * ss;
 
 		StringBuffer sb = new StringBuffer();
-		if(day > 0) {
-			sb.append(day+"天");
+		if (day > 0) {
+			sb.append(day + "天");
 		}
-		if(hour > 0) {
-			sb.append(hour+"小时");
+		if (hour > 0) {
+			sb.append(hour + "小时");
 		}
-		if(minute > 0) {
-			sb.append(minute+"分");
+		if (minute > 0) {
+			sb.append(minute + "分");
 		}
-		if(second > 0) {
-			sb.append(second+"秒");
+		if (second > 0) {
+			sb.append(second + "秒");
 		}
 //		if(milliSecond > 0) {
 //			sb.append(milliSecond+"毫秒");
 //		}
 		return sb.toString();
 	}
+
 	/**
 	 * 验证身份证
 	 *
@@ -539,7 +553,6 @@ public class AppUtils {
 //		// =====================(end)=====================
 //		return errorInfo;
 //	}
-
 	private static Hashtable GetAreaCode() {
 		Hashtable hashtable = new Hashtable();
 		hashtable.put("11", "北京");
@@ -579,6 +592,7 @@ public class AppUtils {
 		hashtable.put("91", "国外");
 		return hashtable;
 	}
+
 	public static boolean isDataFormat(String str) {
 		boolean flag = false;
 		// String
@@ -591,6 +605,7 @@ public class AppUtils {
 		}
 		return flag;
 	}
+
 	/**
 	 * 车牌号校验
 	 *
@@ -598,7 +613,7 @@ public class AppUtils {
 	 * @return
 	 */
 	public static boolean isCarnumberNO(String carnumber) {
-     /*
+	 /*
      车牌号格式：汉字 + A-Z + 位A-Z或-
      （只包括了普通车牌号，教练车和部分部队车等车牌号不包括在内）
      */
@@ -608,7 +623,7 @@ public class AppUtils {
 	}
 
 	//设置xlistview  的分割线处理
-	public static void listLinePadding(int listSize, LinearLayout llAll,int position){
+	public static void listLinePadding(int listSize, LinearLayout llAll, int position) {
 		if (listSize == 1) {
 			llAll.setPadding(24, 24, 24, 24);
 		} else if (listSize == 2) {
@@ -618,17 +633,17 @@ public class AppUtils {
 				llAll.setPadding(24, 12, 24, 24);
 			}
 		} else {
-			if (position == listSize - 1 ) {
+			if (position == listSize - 1) {
 				llAll.setPadding(24, 12, 24, 24);
-			} else if (position == 0){
+			} else if (position == 0) {
 				llAll.setPadding(24, 24, 24, 12);
-			}else {
+			} else {
 				llAll.setPadding(24, 12, 24, 12);
 			}
 		}
 	}
 
-	public static void initGridViewNothing(int column, XRecyclerView xRecyclerView){
+	public static void initGridViewNothing(int column, XRecyclerView xRecyclerView) {
 		StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(column,
 				StaggeredGridLayoutManager.VERTICAL);
 		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -636,7 +651,8 @@ public class AppUtils {
 		xRecyclerView.setLoadingMoreEnabled(false);
 		xRecyclerView.setPullRefreshEnabled(false);
 	}
-	public static void initListView(Context context, XRecyclerView xRecyclerView,boolean refresh,boolean load){
+
+	public static void initListView(Context context, XRecyclerView xRecyclerView, boolean refresh, boolean load) {
 		LinearLayoutManager layoutManager = new LinearLayoutManager(context);
 		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 		xRecyclerView.setLayoutManager(layoutManager);
@@ -646,6 +662,150 @@ public class AppUtils {
 		xRecyclerView.setPullRefreshEnabled(refresh);
 		xRecyclerView.setLoadingMoreEnabled(load);
 	}
+
+	public static void getReadUriPermission() {
+		//Intent intent = new Intent(Intent.ACTION_VIEW);
+		Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			File file = FileUtil.updateFile;
+			Uri contentUri = FileProvider.getUriForFile(MyApplication.getInstance(), "com.jiuwang.buyer.provider", file);
+			//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+		} else {
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.setDataAndType(Uri.fromFile(FileUtil.updateFile), "application/vnd.android.package-archive");
+		}
+		MyApplication.getInstance().startActivity(intent);
+	}
+
+	public static LoadingDialog setDialog_wait(Context context, String number) {
+		LoadingDialog mLoadingDialog = new LoadingDialog(context);
+		if ("1".equals(number)) {
+			mLoadingDialog.setText("正在加载");
+		}
+		if ("2".equals(number)) {
+			mLoadingDialog.setText("正在登陆");
+		}
+		if ("3".equals(number)) {
+			mLoadingDialog.setText("正在加载");
+		}
+		if ("4".equals(number)) {
+			mLoadingDialog.setText("正在加载");
+		}
+		mLoadingDialog.setCancelEnable(true);
+		mLoadingDialog.show();
+		return mLoadingDialog;
+	}
+
+	// 获得当前 版本
+	public static void getSystemVersion(final Activity activity, final PermissionsUtils.IPermissionsResult permissionsResult, final String come_from) {
+//		if (AppUtils.getNetworkRequest(activity)) {
+//			mLoadingDialog = AppUtils.setDialog_wait(activity, "1");
+//			HashMap<String, String> map = new HashMap<>();
+//			HttpUtils.version(map, new Consumer<BaseResultEntity>() {
+//				@Override
+//				public void accept(BaseResultEntity baseResultEntity) throws Exception {
+//					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+////								HomeEntity homeEntity = baseEntity.getResult();
+////								application.url_langde = homeEntity.getDownload_url();
+////								Constant.serverVersion = homeEntity.getVersion_android();
+//								checkVersion(activity, permissionsResult, come_from);
+//							} else {
+////								AppUtils.showToast(baseEntity.getMsg(), activity);
+//							}
+//							mLoadingDialog.dismiss();
+//				}
+//			}, new Consumer<Throwable>() {
+//				@Override
+//				public void accept(Throwable throwable) throws Exception {
+//					mLoadingDialog.dismiss();
+//				}
+//			});
+//
+//		}
+	}
+
+	public static void checkVersion(final Activity activity, final PermissionsUtils.IPermissionsResult permissionsResult, String come_from) {
+		if (!AppUtils.isNull(Constant.localVersion)
+				&& !AppUtils
+				.isNull(Constant.serverVersion)) {
+			if (Constant.localVersion
+					.compareTo(Constant.serverVersion) < 0) {
+				// 发现新版本，提示用户更新
+				final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
+				dialog.show();
+				Window window = dialog.getWindow();
+				window.setContentView(R.layout.dialog_normal_one_button);
+				RelativeLayout relative_button2 = (RelativeLayout) window.findViewById(R.id.relative_button2);
+				Button bt1 = (Button) window.findViewById(R.id.bt1_quxiao);
+				Button bt2 = (Button) window.findViewById(R.id.bt2_queding);
+				TextView title = (TextView) window.findViewById(R.id.title);
+				title.setText("软件升级");
+				TextView tv_context = (TextView) window
+						.findViewById(R.id.tv_content);
+				tv_context.setText("发现新版本,建议立即更新使用.");
+				relative_button2.setVisibility(View.VISIBLE);
+				bt1.setText("取消");
+				bt2.setText("确定");
+				bt1.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.cancel();
+					}
+				});
+				bt2.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						String[] permissions = new String[]{"android.permission.READ_EXTERNAL_STORAGE",
+								"android.permission.WRITE_EXTERNAL_STORAGE"};
+						PermissionsUtils.getInstance().chekPermissions(activity, permissions, permissionsResult);
+						dialog.cancel();
+					}
+				});
+			} else {
+				if ("2".equals(come_from)) {
+					AppUtils.showToast("您当前版本已是最新", activity);
+				}
+			}
+		}
+	}
+
+
+	public static void showDialog(final Activity activity, String titleText, String content, final DialogClickInterface dialogClickInterface) {
+
+		final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
+		dialog.show();
+		Window window = dialog.getWindow();
+		window.setContentView(R.layout.dialog_normal_one_button);
+		RelativeLayout relative_button2 = (RelativeLayout) window.findViewById(R.id.relative_button2);
+		Button bt1 = (Button) window.findViewById(R.id.bt1_quxiao);
+		Button bt2 = (Button) window.findViewById(R.id.bt2_queding);
+		TextView title = (TextView) window.findViewById(R.id.title);
+		title.setText(titleText);
+		TextView tv_context = (TextView) window
+				.findViewById(R.id.tv_content);
+		tv_context.setText(content);
+		relative_button2.setVisibility(View.VISIBLE);
+		bt1.setText("取消");
+		bt2.setText("确定");
+		bt1.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.cancel();
+			}
+		});
+		bt2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.cancel();
+				dialogClickInterface.onClick();
+
+			}
+		});
+	}
+
+
 
 
 }

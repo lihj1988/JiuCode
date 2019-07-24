@@ -1396,6 +1396,8 @@
         <item name="android:windowExitAnimation">@anim/actionsheet_dialog_out</item>
 
     </style>
-
+    <style name="styletest" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item><!--背景透明-->
+    </style>
 
 </resources>

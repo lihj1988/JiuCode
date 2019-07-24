@@ -177,4 +177,15 @@ public interface QNewsService {
 			@QueryMap HashMap<String, String> map
 	);
 
+	//获取版本信息
+	@POST("admin/invite/invite_action.jsp")
+	Observable<BaseResultEntity> version(
+			@QueryMap HashMap<String, String> map
+	);
+	//提现
+	@POST("admin/fund/cash_action.jsp")
+	Observable<BaseResultEntity> cash(
+			@QueryMap HashMap<String, String> map
+	);
+
 }

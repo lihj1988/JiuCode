@@ -2,6 +2,7 @@ package com.jiuwang.buyer.spinerwidget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
@@ -13,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.LoginActivity;
+import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.exception.CustomException;
 import com.jiuwang.buyer.util.LogUtils;
 
@@ -21,13 +24,13 @@ import java.util.List;
 
 /**
  * 底部导航
- * 
+ *
  * @author dewyze
- * R.drawable.new_select,
+ *         R.drawable.new_select,
  */
 public class MyTabWidget extends LinearLayout {
 	private static final String TAG = "MyTabWidget";
-	private int[] mDrawableIds = new int[] { R.drawable.home_selector,R.drawable.project_selector,
+	private int[] mDrawableIds = new int[]{R.drawable.home_selector, R.drawable.project_selector,
 			R.drawable.mine_selector,};
 	// 存放底部菜单的各个文字CheckedTextView
 	private List<CheckedTextView> mCheckedList = new ArrayList<CheckedTextView>();
@@ -109,13 +112,29 @@ public class MyTabWidget extends LinearLayout {
 
 				@Override
 				public void onClick(View v) {
+					if (!Constant.IS_LOGIN) {
+						if (index != 0) {
+							if (!Constant.IS_LOGIN) {
+								Intent intentExit = new Intent(context, LoginActivity.class);
+								context.startActivity(intentExit);
+							}
+						} else {
+							// 设置底部图片和文字的显示
+							setTabsDisplay(context, index);
 
-					// 设置底部图片和文字的显示
-					setTabsDisplay(context, index);
+							if (null != mTabListener) {
+								// tab项被选中的回调事件
+								mTabListener.onTabSelected(index);
+							}
+						}
+					} else {
+						// 设置底部图片和文字的显示
+						setTabsDisplay(context, index);
 
-					if (null != mTabListener) {
-						// tab项被选中的回调事件
-						mTabListener.onTabSelected(index);
+						if (null != mTabListener) {
+							// tab项被选中的回调事件
+							mTabListener.onTabSelected(index);
+						}
 					}
 				}
 			});
@@ -123,7 +142,7 @@ public class MyTabWidget extends LinearLayout {
 			// 初始化 底部菜单选中状态,默认第一个选中
 			if (i == 0) {
 				itemName.setChecked(true);
-				itemName.setTextColor(Color.rgb(231,2,2));
+				itemName.setTextColor(Color.rgb(231, 2, 2));
 				view.setBackgroundColor(Color.rgb(240, 241, 242));
 			} else {
 				itemName.setChecked(false);
@@ -138,13 +157,11 @@ public class MyTabWidget extends LinearLayout {
 	 * 设置指示点的显示
 	 *
 	 * @param context
-	 * @param position
-	 *            显示位置
-	 * @param visible
-	 *            是否显示，如果false，则都不显示
+	 * @param position 显示位置
+	 * @param visible 是否显示，如果false，则都不显示
 	 */
 	public void setIndicateDisplay(Context context, int position,
-			boolean visible) {
+	                               boolean visible) {
 		int size = mIndicateImgs.size();
 		if (size <= position) {
 			return;
@@ -162,7 +179,7 @@ public class MyTabWidget extends LinearLayout {
 			CheckedTextView checkedTextView = mCheckedList.get(i);
 			if ((Integer) (checkedTextView.getTag()) == index) {
 				checkedTextView.setChecked(true);
-				checkedTextView.setTextColor(Color.rgb(231,2,2));
+				checkedTextView.setTextColor(Color.rgb(231, 2, 2));
 				mViewList.get(i).setBackgroundColor(Color.rgb(240, 241, 242));
 			} else {
 				checkedTextView.setChecked(false);

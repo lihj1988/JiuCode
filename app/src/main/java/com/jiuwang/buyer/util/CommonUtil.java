@@ -1017,4 +1017,34 @@ public class CommonUtil {
 
 	}
 
+	public static boolean checkMoney(String money,Context context) {
+		Pattern pattern = Pattern.compile("^\\d+(\\.\\d{1,2})?$");
+		Matcher isNum = pattern.matcher(money.charAt(0) + "");
+
+		if (isNum.matches()) {
+//						if (CommonUtil.numberCheck(money)) {
+			String[] split = money.split("\\.");
+
+			if (split.length == 2) {
+				if (split[0].length() > 1) {
+					char[] chars = split[0].toCharArray();
+					if (String.valueOf(chars[0]).equals("0")) {
+						MyToastView.showToast("请填写正确的金额",context);
+						return false;
+					}
+				}
+				if (split[1].length() > 2) {
+					MyToastView.showToast("充值金额最小单位为分", context);
+					return false;
+				}
+			} else if (split.length == 1) {
+				char[] chars = split[0].toCharArray();
+				if (String.valueOf(chars[0]).equals("0")) {
+					MyToastView.showToast("请填写正确的金额", context);
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }

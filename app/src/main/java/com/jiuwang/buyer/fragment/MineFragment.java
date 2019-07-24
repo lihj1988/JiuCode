@@ -37,7 +37,7 @@ import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
-import com.jiuwang.buyer.service.UpdateVersionService;
+import com.jiuwang.buyer.service.UpdateService;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
@@ -113,8 +113,10 @@ public class MineFragment extends Fragment {
 	@Bind(R.id.tvTrialAmount)
 	TextView tvTrialAmount;
 	@Bind(R.id.tvMyInviteCode)
-	TextView tvMyInviteCode;@Bind(R.id.tvInviteManager)
-	TextView tvInviteManager;
+	TextView tvMyInviteCode;
+	@Bind(R.id.tvInviteManager)
+	TextView tvInviteManager;@Bind(R.id.tvAvailAmount)
+	TextView tvAvailAmount;
 	private View view;
 	private MainActivity mActivity;
 	private String userCode;
@@ -165,13 +167,19 @@ public class MineFragment extends Fragment {
 								} else {
 									tvTrialAmount.setText("¥ " + CommonUtil.decimalFormat(Double.parseDouble(userBean.getTrial_amount()), "0") + " 元");
 								}
+								String avail_amount = "";
+								if ("".equals(userBean.getAvail_amount())) {
+									avail_amount = "";
+								} else {
+									avail_amount = CommonUtil.decimalFormat(Double.parseDouble(userBean.getAvail_amount()), "0");
+								}
 								if ("".equals(userBean.getAccount_balance())) {
 									tvBalance.setText("¥ 0.00 元");
 								} else {
 									tvBalance.setText("¥ " + CommonUtil.decimalFormat(Double.parseDouble(userBean.getAccount_balance()), "0") + " 元");
 								}
 								tvMoneyName.setText("账户余额：");
-
+								tvAvailAmount.setText("¥ "+avail_amount+" 元");
 								tvBalance.setOnClickListener(new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
@@ -268,7 +276,7 @@ public class MineFragment extends Fragment {
 
 	@OnClick({R.id.orderTextView, R.id.waitPaymentRelativeLayout, R.id.waitDeliverRelativeLayout, R.id.waitReceiptRelativeLayout,
 			R.id.waitEvaluateRelativeLayout, R.id.waitRefundRelativeLayout, R.id.addressTextView, R.id.settingTextView,
-			R.id.tv_exit, R.id.civAuther, R.id.recharge, R.id.tvMyInviteCode, R.id.tvMyAccount,R.id.tvInviteManager})
+			R.id.tv_exit, R.id.civAuther, R.id.recharge, R.id.tvMyInviteCode, R.id.tvMyAccount, R.id.tvInviteManager})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.orderTextView:
@@ -310,9 +318,11 @@ public class MineFragment extends Fragment {
 				PreforenceUtils.getSharedPreferences("loginInfo");
 				PreforenceUtils.setData("userID", "");
 				PreforenceUtils.setData("password", "");
+				Constant.IS_LOGIN = false;
+				PreforenceUtils.setData("isLogin", false);
 				PreforenceUtils.setchecklogin(false);
 				MyApplication.getInstance().exit();
-				MyApplication.getInstance().stopService(new Intent(MyApplication.getInstance(), UpdateVersionService.class));
+				MyApplication.getInstance().stopService(new Intent(MyApplication.getInstance(), UpdateService.class));
 				Intent intentExit = new Intent(getActivity(), LoginActivity.class);
 				startActivity(intentExit);
 				break;
@@ -340,7 +350,8 @@ public class MineFragment extends Fragment {
 				getActivity().startActivity(intentAccount);
 
 
-				break;case R.id.tvInviteManager://我的二维码
+				break;
+			case R.id.tvInviteManager://我的二维码
 
 				Intent intentInviteManager = new Intent(getActivity(), InviteManagerActivity.class);
 				getActivity().startActivity(intentInviteManager);

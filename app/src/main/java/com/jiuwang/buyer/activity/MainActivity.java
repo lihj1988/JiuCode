@@ -9,8 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
@@ -21,11 +23,14 @@ import com.jiuwang.buyer.fragment.HomeFragment;
 import com.jiuwang.buyer.fragment.MineFragment;
 import com.jiuwang.buyer.fragment.ProjectFragment;
 import com.jiuwang.buyer.net.CommonHttpUtils;
+import com.jiuwang.buyer.service.UpdateService;
 import com.jiuwang.buyer.spinerwidget.MyTabWidget;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.ConstantValues;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PermissionsUtils;
 
 import java.util.HashMap;
 
@@ -56,12 +61,32 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("first");
 		registerReceiver(myReceiver, filter);
-		bindInvite();
+		if (Constant.IS_LOGIN) {
+			if (invite != null && !invite.equals("")) {
+				bindInvite();
+			}
+		}
+
+		AppUtils.getSystemVersion(this, permissionsResult, "1");
 	}
+
+	PermissionsUtils.IPermissionsResult permissionsResult = new PermissionsUtils.IPermissionsResult() {
+		@Override
+		public void passPermissons() {
+			Intent updateIntent = new Intent(MainActivity.
+					this, UpdateService.class);
+			startService(updateIntent);
+		}
+
+		@Override
+		public void forbitPermissons() {
+			Toast.makeText(MainActivity.this, "权限不通过!", Toast.LENGTH_SHORT).show();
+		}
+	};
 
 	private void bindInvite() {
 		if (invite != null) {
-			if(CommonUtil.getNetworkRequest(MainActivity.this)){
+			if (CommonUtil.getNetworkRequest(MainActivity.this)) {
 				final LoadingDialog loadingDialog = new LoadingDialog(MainActivity.this);
 				loadingDialog.show();
 				HashMap<String, String> map = new HashMap<>();
@@ -72,8 +97,8 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 					public void successBack(BaseResultEntity baseResultEntity) {
 						loadingDialog.dismiss();
 						MyToastView.showToast(baseResultEntity.getMsg(), MainActivity.this);
-						if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
-							startActivity(new Intent( MainActivity.this,LoginActivity.class));
+						if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+							startActivity(new Intent(MainActivity.this, LoginActivity.class));
 							finish();
 						}
 					}
@@ -131,6 +156,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 				}
 				break;
 			case ConstantValues.PROJECT_FRAGMENT_INDEX://抢购
+
 				if (null == projectFragment) {
 					projectFragment = new ProjectFragment();
 					transaction.add(R.id.center_layout, projectFragment);
@@ -139,6 +165,8 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 					projectFragment.initData();
 //					carFragment.trackRefresh(1);
 				}
+
+
 				break;
 //			case ConstantValues.CAR_FRAGMENT_INDEX://购物车
 //				if (null == carFragment) {
@@ -150,6 +178,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 //				}
 //				break;
 			case ConstantValues.MINE_FRAGMENT_INDEX://我的
+
 				if (null == mineFragment) {
 					mineFragment = new MineFragment();
 
@@ -159,6 +188,8 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 					mineFragment.initData();
 //					resouceFragment.trackRefresh();
 				}
+
+
 				break;
 
 
@@ -223,5 +254,10 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		}
 	}
 
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		PermissionsUtils.getInstance().onRequestPermissionsResult(MainActivity.this, requestCode, permissions, grantResults);
+	}
 
 }

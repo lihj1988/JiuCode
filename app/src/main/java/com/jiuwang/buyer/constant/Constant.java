@@ -62,5 +62,9 @@ public class Constant {
 
 	public static final int CODE_ACCOUNT_ALI = 30;//账户类型code 支付宝
 	public static final int CODE_ACCOUNT_WX = 31;//账户类型code 微信
+	public static final int REQUEST_CALL_PERMISSION = 10111; //拨号请求码
+	public static final int REQUEST_WRITE_READ_PERMISSION = 10112; //读写权限
 
+	public static String localVersion;// 本地安装版本
+	public static String serverVersion;// 服务器版本
 }

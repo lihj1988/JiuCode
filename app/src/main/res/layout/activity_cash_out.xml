@@ -24,19 +24,18 @@
 				android:layout_height="wrap_content"
 				android:text="            姓名："
 				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_16"/>
+				android:textSize="@dimen/textsize_14"/>
 
 			<EditText
-				android:text="张三"
+
 				android:id="@+id/etName"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginLeft="@dimen/padding_size_10"
 				android:background="@null"
 				android:hint="请输入真实姓名"
-				android:inputType="numberDecimal"
 				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_16"/>
+				android:textSize="@dimen/textsize_14"/>
 		</LinearLayout>
 
 		<View style="@style/View.Line"/>
@@ -51,19 +50,17 @@
 				android:layout_height="wrap_content"
 				android:text="支付宝账号："
 				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_16"/>
+				android:textSize="@dimen/textsize_14"/>
 
 			<EditText
-				android:text="13589892525"
 				android:id="@+id/etAccount"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginLeft="@dimen/padding_size_10"
 				android:background="@null"
 				android:hint="请输入真实的支付宝账号"
-				android:inputType="numberDecimal"
 				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_16"/>
+				android:textSize="@dimen/textsize_14"/>
 		</LinearLayout>
 
 		<View style="@style/View.Line"/>
@@ -73,7 +70,7 @@
 			android:layout_height="wrap_content"
 			android:gravity="center_horizontal"
 			android:orientation="vertical"
-			android:padding="@dimen/padding_size_15">
+			android:padding="@dimen/textsize_14">
 
 			<TextView
 				android:layout_width="match_parent"
@@ -92,7 +89,7 @@
 				<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="￥"
+					android:text="@string/money_mark"
 					android:textColor="@color/black"
 					android:textSize="25sp"
 					android:textStyle="bold"/>
@@ -112,7 +109,7 @@
 					android:textStyle="bold"/>
 
 				<TextView
-
+					android:id="@+id/tvAll"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="全部"
