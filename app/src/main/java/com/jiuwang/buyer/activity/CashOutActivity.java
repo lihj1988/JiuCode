@@ -129,6 +129,11 @@ public class CashOutActivity extends BaseActivity {
 						cashOut();
 
 					}
+
+					@Override
+					public void nagtiveOnClick() {
+
+					}
 				});
 
 				break;

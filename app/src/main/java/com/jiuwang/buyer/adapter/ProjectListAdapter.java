@@ -111,19 +111,13 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 					holder.llItem.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							holder.llItem.setOnClickListener(new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									if (Constant.PROJECTIS_NOT_PART.equals(projectList.get(position).getIs_part())) {
+							if (Constant.PROJECTIS_NOT_PART.equals(projectList.get(position).getIs_part())) {
 //
-										projectItemOnClickListener.itemOnClick(position);
-									} else {
+								projectItemOnClickListener.itemOnClick(position);
+							} else {
 //										//
-										MyToastView.showToast("该活动您已经报过名了！", context);
-									}
-
-								}
-							});
+								MyToastView.showToast("该活动您已经报过名了！", context);
+							}
 
 						}
 					});

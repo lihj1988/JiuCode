@@ -53,6 +53,7 @@ public class CommonHttpUtils {
 			}
 		});
 	}
+
 	public interface UserCallBack{
 		void successBack(UserBean userBean);
 		void failBack();

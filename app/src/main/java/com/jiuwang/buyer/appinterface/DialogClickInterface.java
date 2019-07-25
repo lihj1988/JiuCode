@@ -7,5 +7,6 @@ package com.jiuwang.buyer.appinterface;
  */
 
 public interface DialogClickInterface {
+	void nagtiveOnClick();
 	void onClick();
 }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.AddressListAdapter;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AddressBean;
@@ -105,7 +106,7 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 		addressBroadCast = new AddressBroadCast();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("refreshAddress");
-		registerReceiver(addressBroadCast,filter);
+		registerReceiver(addressBroadCast, filter);
 	}
 
 	private void initView() {
@@ -171,17 +172,17 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 		addressListAdapter.setOnItemClickListener(new AddressListAdapter.onItemClickListener() {
 			@Override
 			public void onItemClick(int position) {
-				LogUtils.e(TAG,"onItemClick--"+position+"");
-				if("choose".equals(modelString)){
-					LogUtils.e(TAG,"选择地址");
+				LogUtils.e(TAG, "onItemClick--" + position + "");
+				if ("choose".equals(modelString)) {
+					LogUtils.e(TAG, "选择地址");
 					Intent intent = new Intent();
-					intent.putExtra("address",mArrayList.get(position-1));
-					setResult(RESULT_OK,intent);
+					intent.putExtra("address", mArrayList.get(position - 1));
+					setResult(RESULT_OK, intent);
 //					onActivityResult(MyApplication.CODE_CHOOSE_ADDRESS,RESULT_OK,intent);
 					finish();
-				}else {
+				} else {
 					Intent intent = new Intent();
-					intent.putExtra("address",mArrayList.get(position-1));
+					intent.putExtra("address", mArrayList.get(position - 1));
 //					setResult(RESULT_OK,intent);
 				}
 			}
@@ -189,31 +190,34 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 		addressListAdapter.setOnItemLongClickListener(new AddressListAdapter.onItemLongClickListener() {
 			@Override
 			public void onItemLongClick(final int position) {
-				LogUtils.e(TAG,"onItemLongClick---"+position+"");
-				DialogUtil.query(
-						mActivity,
-						"确认您的选择",
-						"删除收货地址",
-						new View.OnClickListener() {
+				LogUtils.e(TAG, "onItemLongClick--" + position + "");
+
+				AppUtils.showNormalDialog(AddressActivity.this, "确认您的选择", "删除收货地址", "取消", "确定", new DialogClickInterface() {
+					@Override
+					public void nagtiveOnClick() {
+
+
+					}
+
+					@Override
+					public void onClick() {
+						HashMap<String, String> hashMap = new HashMap<>();
+						hashMap.put("act", Constant.ACTION_ACT_DELETE);
+						hashMap.put("id", mArrayList.get(position - 1).getId());
+						HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {
 							@Override
-							public void onClick(View v) {
-								HashMap<String, String> hashMap = new HashMap<>();
-								hashMap.put("act",Constant.ACTION_ACT_DELETE);
-								hashMap.put("id",mArrayList.get(position-1).getId());
-								HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {
-									@Override
-									public void accept(BaseResultEntity baseResultEntity) throws Exception {
+							public void accept(BaseResultEntity baseResultEntity) throws Exception {
 
-									}
-								}, new Consumer<Throwable>() {
-									@Override
-									public void accept(Throwable throwable) throws Exception {
-
-									}
-								});
 							}
-						}
-				);
+						}, new Consumer<Throwable>() {
+							@Override
+							public void accept(Throwable throwable) throws Exception {
+
+							}
+						});
+					}
+				});
+
 			}
 		});
 	}

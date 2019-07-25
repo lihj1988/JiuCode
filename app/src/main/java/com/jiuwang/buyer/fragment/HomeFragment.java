@@ -30,8 +30,10 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.CarActivity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
+import com.jiuwang.buyer.activity.RegisterActivity;
 import com.jiuwang.buyer.activity.SearchActivity;
 import com.jiuwang.buyer.adapter.GoodsAdapter;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.camera.zxing.activity.CaptureActivity;
 import com.jiuwang.buyer.constant.Constant;
@@ -41,6 +43,7 @@ import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.net.CommonHttpUtils;
 import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.LogUtils;
@@ -325,7 +328,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 		//扫描结果回调
 		if (requestCode == Constant.REQ_QR_CODE && resultCode == RESULT_OK) {
 			Bundle bundle = data.getExtras();
-			String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
+			final String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
 			//将扫描出的信息显示出来
 			LogUtils.e(TAG, scanResult);
 			//检验账号是否绑定过邀请码 如果绑定了 提示已经绑定过了  否则去绑定
@@ -354,10 +357,29 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 					}
 				});
 			} else {
-				Intent intent = new Intent(getActivity(), LoginActivity.class);
-				intent.putExtra("from", scanResult);
-				startActivity(intent);
-				getActivity().finish();
+
+				AppUtils.showNormalDialog(getActivity(),"提示","你当前处于未登录状态，请选择登录或注册","去注册","去登陆", new DialogClickInterface() {
+					@Override
+					public void onClick() {
+
+						//去登陆
+
+						Intent intent = new Intent(getActivity(), LoginActivity.class);
+						intent.putExtra("from", scanResult);
+						startActivity(intent);
+//						getActivity().finish();
+					}
+
+					@Override
+					public void nagtiveOnClick() {
+						//去注册
+						Intent intent = new Intent(getActivity(), RegisterActivity.class);
+						intent.putExtra("from", scanResult);
+						startActivity(intent);
+//						getActivity().finish();
+					}
+				});
+
 			}
 
 		}
@@ -437,12 +459,12 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 //				}
 				break;
 			case R.id.ivScan:
-				if (Constant.IS_LOGIN) {
+//				if (Constant.IS_LOGIN) {
 					runPermission();
-				}else {
-					Intent intentExit = new Intent(getActivity(), LoginActivity.class);
-					getActivity().startActivity(intentExit);
-				}
+//				}else {
+//					Intent intentExit = new Intent(getActivity(), LoginActivity.class);
+//					getActivity().startActivity(intentExit);
+//				}
 				break;
 		}
 	}
@@ -525,7 +547,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 	}
 
 	private void runPermission() {
-		if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+		if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
 				!= PackageManager.PERMISSION_GRANTED) {
 			//申请WRITE_EXTERNAL_STORAGE权限
 			//ActivityCompat.requestPermissions(getActivity(),

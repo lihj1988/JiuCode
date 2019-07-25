@@ -16,6 +16,8 @@ public class BaseResultEntity {
 	private String msg;
 	private String code;
 	private String count;
+	private String version_no;
+	private String download_url;
 
 	public String getMsg() {
 		return msg;
@@ -39,5 +41,21 @@ public class BaseResultEntity {
 
 	public void setCount(String count) {
 		this.count = count;
+	}
+
+	public String getVersion_no() {
+		return version_no;
+	}
+
+	public void setVersion_no(String version_no) {
+		this.version_no = version_no;
+	}
+
+	public String getDownload_url() {
+		return download_url;
+	}
+
+	public void setDownload_url(String download_url) {
+		this.download_url = download_url;
 	}
 }

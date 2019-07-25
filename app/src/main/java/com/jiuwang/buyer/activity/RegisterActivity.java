@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.constant.Constant;
@@ -89,6 +90,7 @@ public class RegisterActivity extends BaseActivity {
 	private boolean boo1;
 	private LoadingDialog loadingDialog;
 	private String invite_code;
+	private String invite;
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
@@ -105,6 +107,8 @@ public class RegisterActivity extends BaseActivity {
 		setContentView(R.layout.activity_register);
 		ButterKnife.bind(this);
 		mActivity = this;
+		Intent intent = getIntent();
+		invite = intent.getStringExtra("from");
 		initView();
 	}
 
@@ -115,6 +119,9 @@ public class RegisterActivity extends BaseActivity {
 		String str1 = "已有注册账号？<font color='#1897d6'>立即登录</font>";
 		tvLogin.setText(Html.fromHtml(str1));
 		setTopView(topView);
+		if (invite != null) {
+			et_invite_code.setText(invite);
+		}
 
 	}
 
@@ -180,6 +187,19 @@ public class RegisterActivity extends BaseActivity {
 					}
 				}
 		);
+
+		AppUtils.showNormalDialog(RegisterActivity.this, "确认您的选择","取消注册？", "取消", "确定", new DialogClickInterface() {
+			@Override
+			public void nagtiveOnClick() {
+
+
+			}
+
+			@Override
+			public void onClick() {
+				MyApplication.getInstance().finishActivity(mActivity);
+			}
+		});
 
 	}
 
@@ -278,7 +298,7 @@ public class RegisterActivity extends BaseActivity {
 							DialogUtil.cancel();
 						}
 					});
-				}else {
+				} else {
 					MyToastView.showToast(baseResultEntity.getMsg(), RegisterActivity.this);
 				}
 			}

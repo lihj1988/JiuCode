@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.camera.zxing.encoding.EncodingHandler;
-import com.jiuwang.buyer.util.AppUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,6 +35,8 @@ public class InviteCodeActivity extends BaseActivity {
 	Button onclickLayoutRight;
 	@Bind(R.id.ivInviteCode)
 	ImageView ivInviteCode;
+	@Bind(R.id.tvInviteCode)
+	TextView tvInviteCode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,8 @@ public class InviteCodeActivity extends BaseActivity {
 		actionbarText.setText("我的邀请码");
 		Intent intent = getIntent();
 		String invite_code = intent.getStringExtra("invite_code");
-		Bitmap bitmapLogo =   BitmapFactory.decodeResource(getResources(), R.mipmap.app_logo);
+		tvInviteCode.setText(invite_code);
+		Bitmap bitmapLogo = BitmapFactory.decodeResource(getResources(), R.mipmap.app_logo);
 		//生成二维码
 		Bitmap qrCode = EncodingHandler.createQRCode(invite_code, 650, 650, bitmapLogo);
 		ivInviteCode.setImageBitmap(qrCode);

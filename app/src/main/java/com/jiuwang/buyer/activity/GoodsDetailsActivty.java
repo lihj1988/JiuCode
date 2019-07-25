@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.gxz.PagerSlidingTabStrip;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
-import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.bean.GoodsDetailsBean;
 import com.jiuwang.buyer.constant.Constant;
@@ -32,7 +31,6 @@ import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.widget.NoScrollViewPager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,8 +115,7 @@ public class GoodsDetailsActivty extends BaseActivity {
 		goodsCommentFragment = new GoodsCommentFragment();
 		goodsCommentFragment.setArguments(bundle);
 		fragmentList.add(goodsCommentFragment);
-		vp_content.setAdapter(new ItemTitlePagerAdapter(getSupportFragmentManager(),
-				fragmentList, new String[]{"商品", "详情", "评价"}));
+		vp_content.setAdapter(new ItemTitlePagerAdapter(getSupportFragmentManager(),fragmentList, new String[]{"商品", "详情", "评价"}));
 		vp_content.setOffscreenPageLimit(3);
 		psts_tabs.setViewPager(vp_content);
 	}

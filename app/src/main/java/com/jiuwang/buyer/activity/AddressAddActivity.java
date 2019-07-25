@@ -22,6 +22,7 @@ import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.google.gson.Gson;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AreaBean;
@@ -30,8 +31,8 @@ import com.jiuwang.buyer.bean.JsonBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.GetJsonDataUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
@@ -298,18 +299,18 @@ public class AddressAddActivity extends BaseActivity {
 	//返回&销毁Activity
 	private void returnActivity() {
 
-		DialogUtil.query(
-				mActivity,
-				"确认您的选择",
-				"取消添加收货地址",
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						DialogUtil.cancel();
-						mApplication.finishActivity(mActivity);
-					}
-				}
-		);
+		AppUtils.showNormalDialog(AddressAddActivity.this, "确认您的选择", "取消添加收货地址", "取消", "确定", new DialogClickInterface() {
+			@Override
+			public void nagtiveOnClick() {
+
+
+			}
+
+			@Override
+			public void onClick() {
+				mApplication.finishActivity(mActivity);
+			}
+		});
 
 	}
 

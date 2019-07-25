@@ -7,6 +7,7 @@ package com.jiuwang.buyer.constant;
 
 public class Constant {
 	public static  boolean IS_LOGIN = false;
+	public static  boolean IS_DEBUG = false;//是否是调试
 	public static final String PAGESIZE = "10";
 	public static final String HTTP_SUCCESS_CODE = "0";
 	public static final String HTTP_FAIL_CODE = "1";

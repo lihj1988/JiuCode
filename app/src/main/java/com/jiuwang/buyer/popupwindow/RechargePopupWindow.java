@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.LoginActivity;
@@ -121,7 +122,9 @@ public class RechargePopupWindow extends PopupWindow {
 		this.context = context;
 		this.orderBean = orderBean;
 		this.type = type;
-//		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+		if(Constant.IS_DEBUG){
+			EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+		}
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mMenuView = inflater.inflate(R.layout.popup_recharge, null);

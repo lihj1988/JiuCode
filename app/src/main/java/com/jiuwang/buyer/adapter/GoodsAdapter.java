@@ -81,7 +81,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 				}else {
 					Intent intentExit = new Intent(context, LoginActivity.class);
 					context.startActivity(intentExit);
-					context.finish();
+//					context.finish();
 				}
 
 

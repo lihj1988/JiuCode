@@ -33,6 +33,8 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.net.HttpUtils;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -44,7 +46,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+import io.reactivex.functions.Consumer;
 
 
 public class AppUtils {
@@ -700,38 +702,37 @@ public class AppUtils {
 
 	// 获得当前 版本
 	public static void getSystemVersion(final Activity activity, final PermissionsUtils.IPermissionsResult permissionsResult, final String come_from) {
-//		if (AppUtils.getNetworkRequest(activity)) {
-//			mLoadingDialog = AppUtils.setDialog_wait(activity, "1");
-//			HashMap<String, String> map = new HashMap<>();
-//			HttpUtils.version(map, new Consumer<BaseResultEntity>() {
-//				@Override
-//				public void accept(BaseResultEntity baseResultEntity) throws Exception {
-//					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
-////								HomeEntity homeEntity = baseEntity.getResult();
-////								application.url_langde = homeEntity.getDownload_url();
-////								Constant.serverVersion = homeEntity.getVersion_android();
-//								checkVersion(activity, permissionsResult, come_from);
-//							} else {
-////								AppUtils.showToast(baseEntity.getMsg(), activity);
-//							}
-//							mLoadingDialog.dismiss();
-//				}
-//			}, new Consumer<Throwable>() {
-//				@Override
-//				public void accept(Throwable throwable) throws Exception {
-//					mLoadingDialog.dismiss();
-//				}
-//			});
-//
-//		}
+		if (AppUtils.getNetworkRequest(activity)) {
+			mLoadingDialog = AppUtils.setDialog_wait(activity, "1");
+			HashMap<String, String> map = new HashMap<>();
+			HttpUtils.version(map, new Consumer<BaseResultEntity>() {
+				@Override
+				public void accept(BaseResultEntity baseResultEntity) throws Exception {
+					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+//								HomeEntity homeEntity = baseEntity.getResult();
+//								application.url_langde = homeEntity.getDownload_url();
+//								Constant.serverVersion = homeEntity.getVersion_android();
+								checkVersion(activity, permissionsResult, come_from);
+							} else {
+//								AppUtils.showToast(baseEntity.getMsg(), activity);
+							}
+							mLoadingDialog.dismiss();
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+					mLoadingDialog.dismiss();
+				}
+			});
+
+		}
 	}
 
 	public static void checkVersion(final Activity activity, final PermissionsUtils.IPermissionsResult permissionsResult, String come_from) {
 		if (!AppUtils.isNull(Constant.localVersion)
 				&& !AppUtils
 				.isNull(Constant.serverVersion)) {
-			if (Constant.localVersion
-					.compareTo(Constant.serverVersion) < 0) {
+			if (Constant.localVersion.compareTo(Constant.serverVersion) < 0) {
 				// 发现新版本，提示用户更新
 				final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
 				dialog.show();
@@ -803,6 +804,42 @@ public class AppUtils {
 
 			}
 		});
+	}
+
+	public static void showNormalDialog(final Activity activity, String titleText,String context,String negative,String positive, final DialogClickInterface dialogClickInterface) {
+
+		final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
+		dialog.show();
+		Window window = dialog.getWindow();
+		window.setContentView(R.layout.dialog_normal_one_button);
+		RelativeLayout relative_button2 = (RelativeLayout) window.findViewById(R.id.relative_button2);
+		Button bt1 = (Button) window.findViewById(R.id.bt1_quxiao);
+		Button bt2 = (Button) window.findViewById(R.id.bt2_queding);
+		TextView title = (TextView) window.findViewById(R.id.title);
+		title.setText(titleText);
+		TextView tv_context = (TextView) window
+				.findViewById(R.id.tv_content);
+		tv_context.setTextColor(activity.getResources().getColor(R.color.black));
+		tv_context.setText(context);
+		relative_button2.setVisibility(View.VISIBLE);
+		bt1.setText(negative);
+		bt2.setText(positive);
+		bt1.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.cancel();
+				dialogClickInterface.nagtiveOnClick();
+			}
+		});
+		bt2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.cancel();
+				dialogClickInterface.onClick();
+
+			}
+		});
+
 	}
 
 

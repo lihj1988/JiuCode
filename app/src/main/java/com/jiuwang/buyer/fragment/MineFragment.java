@@ -325,6 +325,7 @@ public class MineFragment extends Fragment {
 				MyApplication.getInstance().stopService(new Intent(MyApplication.getInstance(), UpdateService.class));
 				Intent intentExit = new Intent(getActivity(), LoginActivity.class);
 				startActivity(intentExit);
+				getActivity().finish();
 				break;
 			case R.id.civAuther://头像
 				break;

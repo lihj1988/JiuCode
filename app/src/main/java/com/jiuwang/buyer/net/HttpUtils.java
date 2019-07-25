@@ -188,7 +188,9 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 
-	}/**
+	}
+
+	/**
 	 * 购物车结算
 	 *
 	 * @param map
@@ -203,6 +205,7 @@ public class HttpUtils {
 				.subscribe(consumer, throwableConsumer);
 
 	}
+
 	/**
 	 * 获取收货地址
 	 *
@@ -320,6 +323,7 @@ public class HttpUtils {
 
 	/**
 	 * 获取用户信息
+	 *
 	 * @param map
 	 * @param consumer
 	 * @param throwableConsumer
@@ -331,8 +335,10 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 	}
+
 	/**
 	 * 用户信息操作
+	 *
 	 * @param map
 	 * @param consumer
 	 * @param throwableConsumer
@@ -344,8 +350,10 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 	}
+
 	/**
 	 * 获取用户信息
+	 *
 	 * @param map
 	 * @param consumer
 	 * @param throwableConsumer
@@ -357,8 +365,10 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 	}
+
 	/**
 	 * 资金
+	 *
 	 * @param map
 	 * @param consumer
 	 * @param throwableConsumer
@@ -370,8 +380,10 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 	}
+
 	/**
 	 * 余额付款
+	 *
 	 * @param map
 	 * @param consumer
 	 * @param throwableConsumer
@@ -383,8 +395,10 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 	}
+
 	/**
 	 * 被邀请人查询
+	 *
 	 * @param map
 	 * @param consumer
 	 * @param throwableConsumer
@@ -396,8 +410,10 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 	}
+
 	/**
 	 * 提现
+	 *
 	 * @param map
 	 * @param consumer
 	 * @param throwableConsumer
@@ -408,8 +424,11 @@ public class HttpUtils {
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
-	}/**
+	}
+
+	/**
 	 * 获取版本信息
+	 *
 	 * @param map
 	 * @param consumer
 	 * @param throwableConsumer

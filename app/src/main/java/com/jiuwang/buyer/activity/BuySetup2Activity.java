@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AuthResult;
@@ -39,8 +40,8 @@ import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
 
@@ -276,22 +277,20 @@ public class BuySetup2Activity extends BaseActivity {
 
 	//返回&销毁Activity
 	private void returnActivity() {
+		AppUtils.showNormalDialog(BuySetup2Activity.this, "确认您的选择", "取消支付", "取消", "确定", new DialogClickInterface() {
+			@Override
+			public void nagtiveOnClick() {
 
-		DialogUtil.query(
-				mActivity,
-				"确认您的选择",
-				"取消支付？",
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						DialogUtil.cancel();
-						startActivity(new Intent(BuySetup2Activity.this,OrderActivity.class));
-						mApplication.finishActivity(mActivity);
-					}
-				}
-		);
-//		startActivity(new Intent(BuySetup2Activity.this,OrderActivity.class));
-//		mApplication.finishActivity(mActivity);
+
+			}
+
+			@Override
+			public void onClick() {
+				startActivity(new Intent(BuySetup2Activity.this,OrderActivity.class));
+				mApplication.finishActivity(mActivity);
+			}
+		});
+
 	}
 
 	@OnClick({R.id.onclick_layout_left, R.id.payTextView})
