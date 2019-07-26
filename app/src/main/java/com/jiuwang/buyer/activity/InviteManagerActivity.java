@@ -1,16 +1,13 @@
 package com.jiuwang.buyer.activity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.InviteManagerAdapter;
 import com.jiuwang.buyer.base.BaseActivity;
@@ -18,7 +15,6 @@ import com.jiuwang.buyer.bean.InviteBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.InviteEntity;
 import com.jiuwang.buyer.net.HttpUtils;
-import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 
 import java.util.ArrayList;
@@ -34,7 +30,7 @@ import io.reactivex.functions.Consumer;
  * desc:邀请人管理
  */
 
-public class InviteManagerActivity extends BaseActivity implements XRecyclerView.LoadingListener {
+public class InviteManagerActivity extends BaseActivity  {
 	@Bind(R.id.topView)
 	LinearLayout topView;
 	@Bind(R.id.actionbar_text)
@@ -43,8 +39,8 @@ public class InviteManagerActivity extends BaseActivity implements XRecyclerView
 	RelativeLayout onclickLayoutLeft;
 	@Bind(R.id.onclick_layout_right)
 	Button onclickLayoutRight;
-	@Bind(R.id.listView)
-	XRecyclerView listView;
+//	@Bind(R.id.listView)
+//	XRecyclerView listView;
 	private int page = 1;
 	private List<InviteBean> inviteBeanList;
 	private InviteManagerAdapter inviteManagerAdapter;
@@ -57,8 +53,8 @@ public class InviteManagerActivity extends BaseActivity implements XRecyclerView
 		ButterKnife.bind(this);
 		inviteBeanList = new ArrayList<>();
 		hashMap = new HashMap<>();
-		hashMap.put("currPage", String.valueOf(page));
-		hashMap.put("pageSize", Constant.PAGESIZE);
+//		hashMap.put("currPage", String.valueOf(page));
+//		hashMap.put("pageSize", Constant.PAGESIZE);
 		initView();
 		initData();
 
@@ -74,17 +70,17 @@ public class InviteManagerActivity extends BaseActivity implements XRecyclerView
 						if(page==1){
 							inviteBeanList.clear();
 						}
-						inviteBeanList.addAll(inviteEntity.getData());
-						if(inviteManagerAdapter!=null){
-							inviteManagerAdapter.notifyDataSetChanged();
-						}else {
-							setAdapter();
-						}
-						if(page==1){
-							listView.refreshComplete();
-						}else {
-							listView.loadMoreComplete();
-						}
+//						inviteBeanList.addAll(inviteEntity.getData());
+//						if(inviteManagerAdapter!=null){
+//							inviteManagerAdapter.notifyDataSetChanged();
+//						}else {
+//							setAdapter();
+//						}
+//						if(page==1){
+//							listView.refreshComplete();
+//						}else {
+//							listView.loadMoreComplete();
+//						}
 
 					}else if(Constant.HTTP_LOGINOUTTIME_CODE.equals(inviteEntity.getCode())){
 						startActivity(new Intent(InviteManagerActivity.this, LoginActivity.class));
@@ -101,17 +97,17 @@ public class InviteManagerActivity extends BaseActivity implements XRecyclerView
 	}
 	private void setAdapter(){
 		inviteManagerAdapter = new InviteManagerAdapter(InviteManagerActivity.this,inviteBeanList);
-		listView.setAdapter(inviteManagerAdapter);
+//		listView.setAdapter(inviteManagerAdapter);
 	}
 	private void initView() {
 		setTopView(topView);
 		actionbarText.setText("邀请人管理");
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
-		AppUtils.initListView(InviteManagerActivity.this,listView,true,true);
-		Drawable dividerDrawable = ContextCompat.getDrawable(InviteManagerActivity.this, R.drawable.divider_sample_low);
-		listView.addItemDecoration(listView.new DividerItemDecoration(dividerDrawable));
-		listView.setLoadingListener(this);
-		listView.refresh();
+//		AppUtils.initListView(InviteManagerActivity.this,listView,true,true);
+//		Drawable dividerDrawable = ContextCompat.getDrawable(InviteManagerActivity.this, R.drawable.divider_sample_low);
+//		listView.addItemDecoration(listView.new DividerItemDecoration(dividerDrawable));
+//		listView.setLoadingListener(this);
+//		listView.refresh();
 		onclickLayoutLeft.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -120,15 +116,15 @@ public class InviteManagerActivity extends BaseActivity implements XRecyclerView
 		});
 	}
 
-	@Override
-	public void onRefresh() {
-		page = 1;
-		initData();
-	}
-
-	@Override
-	public void onLoadMore() {
-		page++;
-		initData();
-	}
+//	@Override
+//	public void onRefresh() {
+//		page = 1;
+//		initData();
+//	}
+//
+//	@Override
+//	public void onLoadMore() {
+//		page++;
+//		initData();
+//	}
 }
