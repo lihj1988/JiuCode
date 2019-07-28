@@ -57,6 +57,7 @@
 		<activity android:name=".activity.EditAccountActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.InviteManagerActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".activity.CashOutActivity" android:screenOrientation="portrait"/>
+		<activity android:name=".activity.InviteCodeEditActivity" android:screenOrientation="portrait"/>
 		<activity android:name=".camera.zxing.activity.CaptureActivity" android:screenOrientation="portrait"/>
 
 	</application>

@@ -10,8 +10,9 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -48,12 +49,7 @@ import io.reactivex.functions.Consumer;
 public class AddressActivity extends BaseActivity implements XRecyclerView.LoadingListener {
 
 	private static final String TAG = AddressActivity.class.getName();
-	@Bind(R.id.backImageView)
-	ImageView backImageView;
-	@Bind(R.id.titleTextView)
-	TextView titleTextView;
-	@Bind(R.id.moreImageView)
-	ImageView moreImageView;
+
 	@Bind(R.id.addressListView)
 	XRecyclerView addressListView;
 	@Bind(R.id.stateTextView)
@@ -62,6 +58,12 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 	TextView tipsTextView;
 	@Bind(R.id.topView)
 	LinearLayout topView;
+	@Bind(R.id.actionbar_text)
+	TextView actionbarText;
+	@Bind(R.id.onclick_layout_left)
+	RelativeLayout onclickLayoutLeft;
+	@Bind(R.id.onclick_layout_right)
+	Button onclickLayoutRight;
 	private Activity mActivity;
 	private MyApplication mApplication;
 
@@ -116,8 +118,8 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 
 		modelString = mActivity.getIntent().getStringExtra("model");
 
-		titleTextView.setText("收货地址");
-		moreImageView.setImageResource(R.drawable.ic_action_add);
+		actionbarText.setText("收货地址");
+		onclickLayoutRight.setText("添加地址");
 		mArrayList = new ArrayList<>();
 		AppUtils.initListView(AddressActivity.this, addressListView, true, false);
 		Drawable dividerDrawable = ContextCompat.getDrawable(AddressActivity.this, R.drawable.divider_sample);
@@ -270,15 +272,13 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 
 	}
 
-	@OnClick({R.id.backImageView, R.id.tipsTextView, R.id.moreImageView})
+	@OnClick({R.id.onclick_layout_left,R.id.onclick_layout_right})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
-			case R.id.backImageView:
+			case R.id.onclick_layout_left:
 				returnActivity();
 				break;
-			case R.id.tipsTextView:
-				break;
-			case R.id.moreImageView:
+			case R.id.onclick_layout_right:
 				startActivity(new Intent(AddressActivity.this, AddressAddActivity.class).putExtra("mode", "add"));
 				break;
 		}
@@ -300,6 +300,7 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 	public void onLoadMore() {
 		page++;
 	}
+
 
 	class AddressBroadCast extends BroadcastReceiver {
 

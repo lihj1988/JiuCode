@@ -25,7 +25,9 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.AddressActivity;
 import com.jiuwang.buyer.activity.BalanceActivity;
 import com.jiuwang.buyer.activity.BindAccountActivity;
+import com.jiuwang.buyer.activity.CashOutActivity;
 import com.jiuwang.buyer.activity.InviteCodeActivity;
+import com.jiuwang.buyer.activity.InviteCodeEditActivity;
 import com.jiuwang.buyer.activity.InviteManagerActivity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
@@ -100,14 +102,14 @@ public class MineFragment extends Fragment {
 	TextView tvExit;
 	@Bind(R.id.civAuther)
 	CircleImageView civAuther;
-	@Bind(R.id.recharge)
-	TextView recharge;
+	//	@Bind(R.id.recharge)
+//	TextView recharge;
 	@Bind(R.id.userRelativeLayout)
 	LinearLayout userRelativeLayout;
 	@Bind(R.id.tvUserName)
 	TextView tvUserName;
-	@Bind(R.id.tvMoneyName)
-	TextView tvMoneyName;
+	//	@Bind(R.id.tvMoneyName)
+//	TextView tvMoneyName;
 	@Bind(R.id.tvBalance)
 	TextView tvBalance;
 	@Bind(R.id.tvTrialAmount)
@@ -115,8 +117,17 @@ public class MineFragment extends Fragment {
 	@Bind(R.id.tvMyInviteCode)
 	TextView tvMyInviteCode;
 	@Bind(R.id.tvInviteManager)
-	TextView tvInviteManager;@Bind(R.id.tvAvailAmount)
+	TextView tvInviteManager;
+	@Bind(R.id.tvBindInviteCode)
+	TextView tvBindInviteCode;
+	@Bind(R.id.tvAvailAmount)
 	TextView tvAvailAmount;
+	@Bind(R.id.llBalance)
+	LinearLayout llBalance;
+	@Bind(R.id.llAvailAmount)
+	LinearLayout llAvailAmount;
+	@Bind(R.id.tvMyAccount)
+	TextView tvMyAccount;
 	private View view;
 	private MainActivity mActivity;
 	private String userCode;
@@ -163,9 +174,9 @@ public class MineFragment extends Fragment {
 								tvUserName.setText(userBean.getMobile_number());
 								invite_code = userBean.getInvite_code();
 								if ("".equals(userBean.getTrial_amount())) {
-									tvTrialAmount.setText("¥ 0.00 元");
+									tvTrialAmount.setText("0.00");
 								} else {
-									tvTrialAmount.setText("¥ " + CommonUtil.decimalFormat(Double.parseDouble(userBean.getTrial_amount()), "0") + " 元");
+									tvTrialAmount.setText("" + CommonUtil.decimalFormat(Double.parseDouble(userBean.getTrial_amount()), "0") + "");
 								}
 								String avail_amount = "";
 								if ("".equals(userBean.getAvail_amount())) {
@@ -174,12 +185,12 @@ public class MineFragment extends Fragment {
 									avail_amount = CommonUtil.decimalFormat(Double.parseDouble(userBean.getAvail_amount()), "0");
 								}
 								if ("".equals(userBean.getAccount_balance())) {
-									tvBalance.setText("¥ 0.00 元");
+									tvBalance.setText("0.00");
 								} else {
-									tvBalance.setText("¥ " + CommonUtil.decimalFormat(Double.parseDouble(userBean.getAccount_balance()), "0") + " 元");
+									tvBalance.setText("" + CommonUtil.decimalFormat(Double.parseDouble(userBean.getAccount_balance()), "0") + "");
 								}
-								tvMoneyName.setText("账户余额：");
-								tvAvailAmount.setText("¥ "+avail_amount+" 元");
+//								tvMoneyName.setText("账户余额：");
+								tvAvailAmount.setText("" + avail_amount + "");
 								tvBalance.setOnClickListener(new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
@@ -276,7 +287,7 @@ public class MineFragment extends Fragment {
 
 	@OnClick({R.id.orderTextView, R.id.waitPaymentRelativeLayout, R.id.waitDeliverRelativeLayout, R.id.waitReceiptRelativeLayout,
 			R.id.waitEvaluateRelativeLayout, R.id.waitRefundRelativeLayout, R.id.addressTextView, R.id.settingTextView,
-			R.id.tv_exit, R.id.civAuther, R.id.recharge, R.id.tvMyInviteCode, R.id.tvMyAccount, R.id.tvInviteManager})
+			R.id.tv_exit, R.id.civAuther, R.id.tvMyInviteCode, R.id.tvMyAccount, R.id.tvInviteManager, R.id.llBalance, R.id.llAvailAmount, R.id.tvBindInviteCode})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.orderTextView:
@@ -329,11 +340,11 @@ public class MineFragment extends Fragment {
 				break;
 			case R.id.civAuther://头像
 				break;
-			case R.id.recharge://充值
-				Intent intentRecharge = new Intent(getActivity(), RechargeActivity.class);
-				intentRecharge.putExtra("type", "mine");
-				getActivity().startActivity(intentRecharge);
-				break;
+//			case R.id.recharge://充值
+//				Intent intentRecharge = new Intent(getActivity(), RechargeActivity.class);
+//				intentRecharge.putExtra("type", "mine");
+//				getActivity().startActivity(intentRecharge);
+//				break;
 			case R.id.tvMyInviteCode://我的邀请码
 				if (null == invite_code || "".equals(invite_code)) {
 					MyToastView.showToast("没有邀请码", getActivity());
@@ -357,6 +368,19 @@ public class MineFragment extends Fragment {
 				Intent intentInviteManager = new Intent(getActivity(), InviteManagerActivity.class);
 				getActivity().startActivity(intentInviteManager);
 
+				break;
+			case R.id.llBalance:
+				startActivity(new Intent(getActivity(), BalanceActivity.class));
+				break;
+			case R.id.llAvailAmount:
+				//提现
+				Intent intentCashout = new Intent(getActivity(), CashOutActivity.class);
+				getActivity().startActivity(intentCashout);
+				break;
+			case R.id.tvBindInviteCode:
+				//提现
+				Intent intentBindInviteCode= new Intent(getActivity(), InviteCodeEditActivity.class);
+				getActivity().startActivity(intentBindInviteCode);
 				break;
 		}
 	}
