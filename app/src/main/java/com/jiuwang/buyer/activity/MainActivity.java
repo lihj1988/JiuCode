@@ -233,7 +233,6 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 						}
 					})
 					.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							// 点击“返回”后的操作,这里不设置没有任何操作
