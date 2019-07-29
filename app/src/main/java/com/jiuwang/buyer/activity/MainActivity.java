@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 			if (invite != null && !invite.equals("")) {
 				bindInvite();
 			}
-
+			AppUtils.getSystemVersion(MainActivity.this, permissionsResult, "1");
 		}
 
 
@@ -102,7 +102,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 							startActivity(new Intent(MainActivity.this, LoginActivity.class));
 							finish();
 						}
-						AppUtils.getSystemVersion(MainActivity.this, permissionsResult, "1");
+
 					}
 
 					@Override

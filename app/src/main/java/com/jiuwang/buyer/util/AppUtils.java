@@ -705,6 +705,7 @@ public class AppUtils {
 		if (AppUtils.getNetworkRequest(activity)) {
 			mLoadingDialog = AppUtils.setDialog_wait(activity, "1");
 			HashMap<String, String> map = new HashMap<>();
+			map.put("act","version");
 			HttpUtils.version(map, new Consumer<BaseResultEntity>() {
 				@Override
 				public void accept(BaseResultEntity baseResultEntity) throws Exception {

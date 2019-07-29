@@ -192,7 +192,7 @@ public interface QNewsService {
 	);
 
 	//获取版本
-	@POST("app/sys_action.jsp")
+	@POST("sys/sys_action.jsp")
 	Observable<BaseResultEntity> version(
 			@QueryMap HashMap<String, String> map
 	);
