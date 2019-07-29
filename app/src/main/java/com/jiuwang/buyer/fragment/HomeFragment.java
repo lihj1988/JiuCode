@@ -52,6 +52,9 @@ import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.view.ADInfo;
 import com.jiuwang.buyer.view.ImageCycleView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -331,34 +334,52 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 			final String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
 			//将扫描出的信息显示出来
 			LogUtils.e(TAG, scanResult);
+			String inviteCode = "";
+			String type = "";
+
+			try {
+				JSONObject object = new JSONObject(scanResult);
+				inviteCode = object.getString("text");
+				type = object.getString("type");
+			} catch (JSONException e) {
+				e.printStackTrace();
+				MyToastView.showToast("当前二维码无法识别", getActivity());
+				return;
+			}
 			//检验账号是否绑定过邀请码 如果绑定了 提示已经绑定过了  否则去绑定
 //			MyToastView.showToast(scanResult, getActivity());
+
 			if (Constant.IS_LOGIN) {
 				final LoadingDialog loadingDialog = new LoadingDialog(getActivity());
 				loadingDialog.show();
-				HashMap<String, String> map = new HashMap<>();
-				map.put("act", "invite");
-				map.put("from", scanResult);
-				CommonHttpUtils.ref_action(map, new CommonHttpUtils.CallingBack() {
-					@Override
-					public void successBack(BaseResultEntity baseResultEntity) {
-						loadingDialog.dismiss();
-						MyToastView.showToast(baseResultEntity.getMsg(), getActivity());
-						if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
-							startActivity(new Intent(getActivity(), LoginActivity.class));
-							getActivity().finish();
+				if ("inviteCode".equals(type)) {
+					HashMap<String, String> map = new HashMap<>();
+					map.put("act", "invite");
+					map.put("from", inviteCode);
+					CommonHttpUtils.ref_action(map, new CommonHttpUtils.CallingBack() {
+						@Override
+						public void successBack(BaseResultEntity baseResultEntity) {
+							loadingDialog.dismiss();
+							MyToastView.showToast(baseResultEntity.getMsg(), getActivity());
+							if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+								startActivity(new Intent(getActivity(), LoginActivity.class));
+								getActivity().finish();
+							}
 						}
-					}
 
-					@Override
-					public void failBack() {
-						loadingDialog.dismiss();
-						MyToastView.showToast(getActivity().getResources().getString(R.string.msg_error_operation), getActivity());
-					}
-				});
+						@Override
+						public void failBack() {
+							loadingDialog.dismiss();
+							MyToastView.showToast(getActivity().getResources().getString(R.string.msg_error_operation), getActivity());
+						}
+
+					});
+				}else {
+
+				}
 			} else {
 
-				AppUtils.showNormalDialog(getActivity(),"提示","你当前处于未登录状态，请选择登录或注册","去注册","去登陆", new DialogClickInterface() {
+				AppUtils.showNormalDialog(getActivity(), "提示", "你当前处于未登录状态，请选择登录或注册", "去注册", "去登陆", new DialogClickInterface() {
 					@Override
 					public void onClick() {
 
@@ -460,7 +481,7 @@ public class HomeFragment extends Fragment implements XRecyclerView.LoadingListe
 				break;
 			case R.id.ivScan:
 //				if (Constant.IS_LOGIN) {
-					runPermission();
+				runPermission();
 //				}else {
 //					Intent intentExit = new Intent(getActivity(), LoginActivity.class);
 //					getActivity().startActivity(intentExit);

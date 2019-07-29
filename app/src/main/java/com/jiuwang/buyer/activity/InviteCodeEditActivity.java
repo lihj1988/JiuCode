@@ -81,11 +81,18 @@ public class InviteCodeEditActivity extends BaseActivity {
 						@Override
 						public void successBack(BaseResultEntity baseResultEntity) {
 							loadingDialog.dismiss();
+
 							MyToastView.showToast(baseResultEntity.getMsg(), InviteCodeEditActivity.this);
 							if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
 								startActivity(new Intent(InviteCodeEditActivity.this, LoginActivity.class));
 								finish();
+							}else if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+								Intent intent = new Intent();
+								intent.setAction("minerefresh");
+								sendBroadcast(intent);
+								finish();
 							}
+
 						}
 
 						@Override
@@ -97,7 +104,6 @@ public class InviteCodeEditActivity extends BaseActivity {
 				}
 				break;
 		}
-		finish();
 	}
 
 

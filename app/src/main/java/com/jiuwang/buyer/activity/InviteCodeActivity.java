@@ -15,6 +15,9 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.camera.zxing.encoding.EncodingHandler;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -48,10 +51,17 @@ public class InviteCodeActivity extends BaseActivity {
 		actionbarText.setText("我的邀请码");
 		Intent intent = getIntent();
 		String invite_code = intent.getStringExtra("invite_code");
+		JSONObject object = new JSONObject();
+		try {
+			object.put("type","inviteCode");
+			object.put("text",invite_code);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		tvInviteCode.setText(invite_code);
 		Bitmap bitmapLogo = BitmapFactory.decodeResource(getResources(), R.mipmap.app_logo);
 		//生成二维码
-		Bitmap qrCode = EncodingHandler.createQRCode(invite_code, 650, 650, bitmapLogo);
+		Bitmap qrCode = EncodingHandler.createQRCode(object.toString(), 650, 650, bitmapLogo);
 		ivInviteCode.setImageBitmap(qrCode);
 	}
 
