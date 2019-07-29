@@ -56,7 +56,8 @@ public class CashOutActivity extends BaseActivity {
 	@Bind(R.id.tvAll)
 	TextView tvAll;
 	private String avail_amount;
-
+	private String account_name;
+	private String account_no;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class CashOutActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		selectUser();
 		initView();
+
 
 	}
 
@@ -76,8 +78,9 @@ public class CashOutActivity extends BaseActivity {
 			public void successBack(UserBean userBean) {
 				avail_amount = userBean.getAvail_amount();
 				etMoney.setHint("可提现金额" + avail_amount + "元");
-				etName.setText(userBean.getAccount_name());
-				etAccount.setText(userBean.getAccount_no());
+				account_name = userBean.getAccount_name();
+				account_no = userBean.getAccount_no();
+
 				loadingDialog.dismiss();
 			}
 
@@ -93,6 +96,18 @@ public class CashOutActivity extends BaseActivity {
 		actionbarText.setText("支付宝提现");
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
 
+		if ("".equals(account_name)) {
+			etName.setEnabled(true);
+		} else {
+			etName.setEnabled(false);
+			etName.setText(account_name);
+		}
+		if ("".equals(account_no)) {
+			etAccount.setEnabled(true);
+		} else {
+			etAccount.setEnabled(false);
+			etAccount.setText(account_no);
+		}
 
 	}
 

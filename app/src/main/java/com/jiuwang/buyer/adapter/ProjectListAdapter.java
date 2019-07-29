@@ -103,11 +103,11 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 					//格林尼治+或-
 					df.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 					Date parse_stop_time = df.parse(projectList.get(position).getStop_time());
-//						Date parse_start_time = df.parse(projectList.get(position).getStop_time());
+						Date parse_server_time = df.parse(projectList.get(position).getServr_time());
 					long time_stop_time = parse_stop_time.getTime();
-//						long time_start_time = parse_start_time.getTime();
+						long time_servert_time = parse_server_time.getTime();
 					//计算时间差
-					l = time_stop_time - currentTime;
+					l = time_stop_time - time_servert_time;
 					holder.llItem.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -234,62 +234,8 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 		}
 
 	}
-
 	public interface ProjectItemOnClickListener {
 		abstract void itemOnClick(int position);
 
 	}
-
-
-	private void exeTimer(long time, final int position, ProjectListAdapter.ViewHolder holder) {
-		new MyCountDownTimer(time, 1000, position, holder) {
-
-		}.start();
-
-	}
-
-	public class MyCountDownTimer extends CountDownTimer {
-
-		private int position;
-		private ProjectListAdapter.ViewHolder holder;
-
-		public MyCountDownTimer(long millisInFuture, long countDownInterval, int position, ProjectListAdapter.ViewHolder holder) {
-			super(millisInFuture, countDownInterval);
-			this.position = position;
-			this.holder = holder;
-		}
-
-		@Override
-		public void onTick(long millisUntilFinished) {
-			// Log.v("CountDownTimerTest", "onTick millisUntilFinished = " + millisUntilFinished);
-
-			// Log.v("CountDownTimerTest", "onTick millisUntilFinished = " + millisUntilFinished);
-//			projectList.get(position).end_date = millisUntilFinished + "";
-			//if (position == 0) {
-//			notifyItemChanged(position);
-//			notifyDataSetChanged();
-			//}
-			long[] longs = CommonUtil.longToString(millisUntilFinished);
-			holder.tvDay.setText(String.valueOf(longs[0]).length() == 1 ? "0" + String.valueOf(longs[0]) : String.valueOf(longs[0]));
-			holder.tvHour.setText(String.valueOf(longs[1]).length() == 1 ? "0" + String.valueOf(longs[1]) : String.valueOf(longs[1]));
-			holder.tvMin.setText(String.valueOf(longs[2]).length() == 1 ? "0" + String.valueOf(longs[2]) : String.valueOf(longs[2]));
-			holder.tvSec.setText(String.valueOf(longs[3]).length() == 1 ? "0" + String.valueOf(longs[3]) : String.valueOf(longs[3]));
-
-		}
-
-		@Override
-		public void onFinish() {
-			Intent intent = new Intent();
-			intent.setAction("refreshProject");
-			context.sendBroadcast(intent);
-			projectList.get(position).setStatus_name("已结束");
-
-//			MyCountDownTimer.this.onFinish();
-//			notifyDataSetChanged();
-
-		}
-
-	}
-
-
 }
