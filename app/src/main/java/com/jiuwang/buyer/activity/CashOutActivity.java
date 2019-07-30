@@ -96,13 +96,13 @@ public class CashOutActivity extends BaseActivity {
 		actionbarText.setText("支付宝提现");
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
 
-		if ("".equals(account_name)) {
+		if (account_name==null||"".equals(account_name)) {
 			etName.setEnabled(true);
 		} else {
 			etName.setEnabled(false);
 			etName.setText(account_name);
 		}
-		if ("".equals(account_no)) {
+		if (account_no==null||"".equals(account_no)) {
 			etAccount.setEnabled(true);
 		} else {
 			etAccount.setEnabled(false);
