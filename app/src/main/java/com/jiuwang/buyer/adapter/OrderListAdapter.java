@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.BuySetup2Activity;
+import com.jiuwang.buyer.activity.OrderDetailedActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.constant.Constant;
@@ -29,9 +30,10 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 
 	private Context context;
 	private onItemChange mOnItemChange;
+
 	private List<OrderBean> mArrayList;
 
-	public OrderListAdapter( Context context, List<OrderBean> arrayList) {
+	public OrderListAdapter(Context context, List<OrderBean> arrayList) {
 
 		this.mArrayList = arrayList;
 		this.context = context;
@@ -44,16 +46,17 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 	}
 
 	@Override
-	public void onBindViewHolder(ViewHolder holder, int position) {
+	public void onBindViewHolder(ViewHolder holder, final int position) {
 
 		final OrderBean orderBean = mArrayList.get(position);
 
 //		holder.mListView.setLayoutManager(new LinearLayoutManager(mActivity));
-		AppUtils.initListView(MyApplication.getInstance(),holder.mListView,false,false);
+		AppUtils.initListView(MyApplication.getInstance(), holder.mListView, false, false);
 		holder.mListView.setAdapter(new GoodsOrderListAdapter(context, orderBean.getDetail_list()));
 		holder.storeTextView.setText(orderBean.getGrouping_name_seller());
 		holder.stateTextView.setText(orderBean.getNotes());
 		holder.tvOrderId.setText(orderBean.getId());
+		holder.stateTextView.setText(orderBean.getStatus_name());
 
 		String total = "共 <font color='#FF5001'>" + orderBean.getTotal_quantity() + "</font> 件商品";
 		total += "，共 <font color='#FF5001'>￥ " + orderBean.getTotal_amount() + "</font> 元";
@@ -65,7 +68,10 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 		holder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				Intent intent = new Intent();
+				intent.putExtra("data",orderBean);
+				intent.setClass(context, OrderDetailedActivity.class);
+				context.startActivity(intent);
 			}
 		});
 		switch (orderBean.getStatus()) {
@@ -77,7 +83,8 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 					@Override
 					public void onClick(View view) {
 						//取消订单
-						MyToastView.showToast("开发中",context);
+//						MyToastView.showToast("开发中",context);
+
 					}
 				});
 				holder.operaTextView.setOnClickListener(new View.OnClickListener() {
@@ -85,9 +92,9 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 					public void onClick(View view) {
 						//去付款
 						Intent intentBuy2 = new Intent();
-						intentBuy2.setClass(context,BuySetup2Activity.class);
-						intentBuy2.putExtra("data",orderBean);
-						intentBuy2.putExtra("pay_sn","online");
+						intentBuy2.setClass(context, BuySetup2Activity.class);
+						intentBuy2.putExtra("data", orderBean);
+						intentBuy2.putExtra("pay_sn", "online");
 						context.startActivity(intentBuy2);
 					}
 				});
@@ -103,14 +110,13 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 //						MyToastView.showToast("开发中",mActivity);
 
 
-
 					}
 				});
 				holder.operaTextView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
 						//退货/款
-						MyToastView.showToast("开发中",context);
+						MyToastView.showToast("开发中", context);
 					}
 				});
 				break;
@@ -146,7 +152,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 			mLinearLayout = (LinearLayout) view.findViewById(R.id.mainLinearLayout);
 			storeTextView = (TextView) view.findViewById(R.id.storeTextView);
 			stateTextView = (TextView) view.findViewById(R.id.stateTextView);
-			mListView =  view.findViewById(R.id.mainListView);
+			mListView = view.findViewById(R.id.mainListView);
 
 			infoTextView = (TextView) view.findViewById(R.id.infoTextView);
 			optionTextView = (TextView) view.findViewById(R.id.optionTextView);
@@ -162,8 +168,11 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 		this.mOnItemChange = itemChange;
 	}
 
+
+
 	public interface onItemChange {
 		void onChange();
 	}
+
 
 }

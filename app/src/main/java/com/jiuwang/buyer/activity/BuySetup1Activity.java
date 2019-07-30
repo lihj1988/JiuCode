@@ -408,6 +408,7 @@ public class BuySetup1Activity extends BaseActivity {
 	private void selectAddress() {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("act", "");
+		map.put("is_default", "1");
 		HttpUtils.selectAddressList(map, new Consumer<AddressEntity>() {
 			@Override
 			public void accept(AddressEntity addressEntity) throws Exception {
