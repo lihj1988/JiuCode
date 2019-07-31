@@ -37,6 +37,11 @@ public class OrderBean implements Serializable {
 	private String business_type;
 	private String status_name;
 	private String pay_mode;
+	private String order_type;//订单类型
+	private String order_type_name;
+	private String consignee_name;
+	private String consignee_telephone;
+	private String destination;
 
 	public String getId() {
 		return id;
@@ -212,6 +217,46 @@ public class OrderBean implements Serializable {
 
 	public void setPay_mode(String pay_mode) {
 		this.pay_mode = pay_mode;
+	}
+
+	public String getOrder_type() {
+		return order_type;
+	}
+
+	public void setOrder_type(String order_type) {
+		this.order_type = order_type;
+	}
+
+	public String getOrder_type_name() {
+		return order_type_name;
+	}
+
+	public void setOrder_type_name(String order_type_name) {
+		this.order_type_name = order_type_name;
+	}
+
+	public String getConsignee_name() {
+		return consignee_name;
+	}
+
+	public void setConsignee_name(String consignee_name) {
+		this.consignee_name = consignee_name;
+	}
+
+	public String getConsignee_telephone() {
+		return consignee_telephone;
+	}
+
+	public void setConsignee_telephone(String consignee_telephone) {
+		this.consignee_telephone = consignee_telephone;
+	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
 	}
 
 	public static class DetailListBean implements Serializable{

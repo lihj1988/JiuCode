@@ -1,7 +1,10 @@
 package com.jiuwang.buyer.fragment;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -33,7 +36,6 @@ import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
 
-
 /**
  * author：lihj
  * desc：订单页面
@@ -49,6 +51,7 @@ public class OrderChildFragment extends Fragment implements XRecyclerView.Loadin
 	private int page = 1;
 	private OrderListAdapter mAdapter;
 	private int position;
+	private MyRefreshReceiver myRceiver;
 
 	@Nullable
 	@Override
@@ -60,8 +63,13 @@ public class OrderChildFragment extends Fragment implements XRecyclerView.Loadin
 		orderArrayList = new ArrayList<>();
 		initView();
 		initData();
+		myRceiver = new MyRefreshReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("refreshOrder");
+		getActivity().registerReceiver(myRceiver, filter);
 		return view;
 	}
+
 	//初始化控件
 	private void initView() {
 
@@ -164,6 +172,7 @@ public class OrderChildFragment extends Fragment implements XRecyclerView.Loadin
 	public void onDestroyView() {
 		super.onDestroyView();
 		ButterKnife.unbind(this);
+		getActivity().unregisterReceiver(myRceiver);
 	}
 
 	@Override
@@ -178,5 +187,12 @@ public class OrderChildFragment extends Fragment implements XRecyclerView.Loadin
 		page++;
 		listView.loadMoreComplete();
 		selectOrder(position);
+	}
+
+	class MyRefreshReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			selectOrder(position);
+		}
 	}
 }

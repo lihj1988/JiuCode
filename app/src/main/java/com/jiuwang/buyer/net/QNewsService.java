@@ -111,6 +111,11 @@ public interface QNewsService {
 	Observable<OrderEntity> selectOrder(
 			@QueryMap HashMap<String, String> map
 	);
+	//订单相关操作
+	@POST("admin/order/order_action.jsp")
+	Observable<OrderEntity> orderInfo(
+			@QueryMap HashMap<String, String> map
+	);
 
 
 	//获得购物车数量和可用余额

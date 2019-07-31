@@ -14,13 +14,17 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.BuySetup2Activity;
+import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.OrderDetailedActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.net.CommonHttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.MyToastView;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -74,58 +78,121 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 				context.startActivity(intent);
 			}
 		});
-		switch (orderBean.getStatus()) {
-			case Constant.ORDER_STATUS_UNPAY://未付款
-				holder.rlDeal.setVisibility(View.VISIBLE);
-				holder.optionTextView.setText("取消订单");
-				holder.operaTextView.setText("去支付");
-				holder.optionTextView.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						//取消订单
+		if (!"1".equals(orderBean.getOrder_type())) {
+			switch (orderBean.getStatus()) {
+				case Constant.ORDER_STATUS_UNPAY://未付款
+					holder.rlDeal.setVisibility(View.VISIBLE);
+					holder.optionTextView.setText("取消订单");
+					holder.operaTextView.setText("去支付");
+					holder.optionTextView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							//取消订单
 //						MyToastView.showToast("开发中",context);
+							orderInfo(orderBean,Constant.ACTION_ACT_CANCLE);
+						}
+					});
+					holder.operaTextView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							//去付款
+							Intent intentBuy2 = new Intent();
+							intentBuy2.setClass(context, BuySetup2Activity.class);
+							intentBuy2.putExtra("data", orderBean);
+							intentBuy2.putExtra("pay_sn", "online");
+							context.startActivity(intentBuy2);
+						}
+					});
+					break;
+				case Constant.ORDER_STATUS_PAYED://已付款
+					holder.rlDeal.setVisibility(View.VISIBLE);
+					holder.optionTextView.setVisibility(View.GONE);
+					holder.operaTextView.setText("退货/款");
 
-					}
-				});
-				holder.operaTextView.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						//去付款
-						Intent intentBuy2 = new Intent();
-						intentBuy2.setClass(context, BuySetup2Activity.class);
-						intentBuy2.putExtra("data", orderBean);
-						intentBuy2.putExtra("pay_sn", "online");
-						context.startActivity(intentBuy2);
-					}
-				});
-				break;
-			case Constant.ORDER_STATUS_PAYED://已付款
-				holder.rlDeal.setVisibility(View.VISIBLE);
-				holder.optionTextView.setText("确认收货");
-				holder.operaTextView.setText("退货/款");
-				holder.optionTextView.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						//订单详细
-//						MyToastView.showToast("开发中",mActivity);
-
-
-					}
-				});
-				holder.operaTextView.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						//退货/款
-						MyToastView.showToast("开发中", context);
-					}
-				});
-				break;
-			case Constant.ORDER_STATUS_FINISH:
-				holder.rlDeal.setVisibility(View.GONE);
-				break;
-			default:
-				break;
+					holder.operaTextView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							//退货/款
+							orderInfo(orderBean,"");
+						}
+					});
+					break;
+				case Constant.ORDER_STATUS_SEND:
+					holder.rlDeal.setVisibility(View.VISIBLE);
+					holder.optionTextView.setVisibility(View.GONE);
+					holder.operaTextView.setText("确认收货");
+					holder.operaTextView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							//确认收货
+							MyToastView.showToast("开发中", context);
+							orderInfo(orderBean,"");
+						}
+					});
+					break;
+				case Constant.ORDER_STATUS_FINISH:
+					holder.rlDeal.setVisibility(View.GONE);
+					break;
+				default:
+					break;
+			}
+		}else {
+			switch (orderBean.getStatus()) {
+				case Constant.ORDER_STATUS_UNPAY:
+					holder.rlDeal.setVisibility(View.GONE);
+					break;
+				case Constant.ORDER_STATUS_PAYED:
+					holder.rlDeal.setVisibility(View.GONE);
+					break;
+				case Constant.ORDER_STATUS_SEND:
+					holder.rlDeal.setVisibility(View.VISIBLE);
+					holder.optionTextView.setVisibility(View.GONE);
+					holder.operaTextView.setText("确认收货");
+					holder.operaTextView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							//确认收货
+							MyToastView.showToast("开发中", context);
+							orderInfo(orderBean,"");
+						}
+					});
+					break;
+				case Constant.ORDER_STATUS_FINISH:
+					holder.rlDeal.setVisibility(View.GONE);
+					break;
+				default:
+					break;
+			}
 		}
+
+	}
+
+	private void orderInfo(OrderBean orderBean,String act) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("id", orderBean.getId());
+		map.put("act", act);
+		CommonHttpUtils.orderInfo(map, new CommonHttpUtils.CallingBack() {
+			@Override
+			public void successBack(BaseResultEntity baseResultEntity) {
+				if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+					Intent intent = new Intent();
+					intent.setAction("refreshOrder");
+					context.sendBroadcast(intent);
+
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+					MyToastView.showToast(baseResultEntity.getMsg(),context);
+					context.startActivity(new Intent(context,LoginActivity.class));
+					MyApplication.currentActivity.finish();
+				}else {
+					MyToastView.showToast(baseResultEntity.getMsg(),context);
+				}
+			}
+
+			@Override
+			public void failBack() {
+				MyToastView.showToast(context.getResources().getString(R.string.msg_error_operation),context);
+			}
+		});
 	}
 
 	@Override

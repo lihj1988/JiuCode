@@ -109,6 +109,7 @@ public class OrderActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+		MyApplication.currentActivity = this;
 		mFragmentManager = getFragmentManager();
 		setContentView(R.layout.activity_order);
 		ButterKnife.bind(this);
@@ -189,8 +190,6 @@ public class OrderActivity extends BaseActivity {
 			public void onTabSelected(Tab tab) {
 
 
-
-//				transaction.commitAllowingStateLoss();
 			}
 
 			@Override
@@ -215,109 +214,13 @@ public class OrderActivity extends BaseActivity {
 
 	}
 
-//	private void selectOrder(int position) {
-//
-//		if (CommonUtil.getNetworkRequest(OrderActivity.this)) {
-//			HashMap<String, String> hashMap = new HashMap<>();
-//			hashMap.put("currPage", String.valueOf(page));
-//			hashMap.put("pageSize", Constant.PAGESIZE);
-//			if (position == 0) {
-//
-//			} else if (position == 1) {
-//				hashMap.put("status", "0");
-//			} else if (position == 2) {
-//				hashMap.put("status", "1");
-//			} else if (position == 3) {
-//				hashMap.put("status", "2");
-//			}
-//			HttpUtils.selectOrder(hashMap, new Consumer<OrderEntity>() {
-//				@Override
-//				public void accept(OrderEntity orderEntity) throws Exception {
-//					if (Constant.HTTP_SUCCESS_CODE.equals(orderEntity.getCode())) {
-//
-//						if (page == 1) {
-//							orderArrayList.clear();
-//						}
-//						if (orderEntity.getData() != null) {
-//							for (int i = 0; i < orderEntity.getData().size(); i++) {
-//								List<OrderBean.DetailListBean> detailsList = new ArrayList<OrderBean.DetailListBean>();
-//								String[] goods_name = orderEntity.getData().get(i).getGoods_name().split(",");
-//								String[] quantity = orderEntity.getData().get(i).getQuantity().split(",");
-//								String[] sale_price = orderEntity.getData().get(i).getSale_price().split(",");
-//								String[] pic_url = orderEntity.getData().get(i).getPic_url().split(",");
-//								for (int j = 0; j < goods_name.length; j++) {
-//
-//									OrderBean.DetailListBean detailListBean = new OrderBean.DetailListBean();
-//									detailListBean.setGoods_name(goods_name[j]);
-//									detailListBean.setGoods_num(quantity[j]);
-//									detailListBean.setGoods_price(sale_price[j]);
-//									if (pic_url.length < goods_name.length) {
-//										detailListBean.setPic_url(pic_url[0]);
-//									}else {
-//
-//									detailListBean.setPic_url(pic_url[j]);
-//									}
-//									detailsList.add(detailListBean);
-//								}
-//								orderEntity.getData().get(i).setDetail_list(detailsList);
-//							}
-//
-//						}
-//						orderArrayList.addAll(orderEntity.getData());
-//
-//						if (mAdapter != null) {
-//							mAdapter.notifyDataSetChanged();
-//						} else {
-//							setAdapter();
-//						}
-//						if (page == 1) {
-//							xrvOrder.refreshComplete();
-//						} else {
-//							xrvOrder.loadMoreComplete();
-//						}
-//
-//					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(orderEntity.getCode())) {
-//						MyToastView.showToast(orderEntity.getMsg(), OrderActivity.this);
-//						Intent intent = new Intent(OrderActivity.this, LoginActivity.class);
-//						startActivity(intent);
-//						finish();
-//					}
-//				}
-//
-//
-//			}, new Consumer<Throwable>() {
-//				@Override
-//				public void accept(Throwable throwable) throws Exception {
-//
-//				}
-//			});
-//		}
-//
-//	}
 
-//	private void setAdapter() {
-//		mAdapter = new OrderListAdapter(mApplication, mActivity, orderArrayList);
-//		xrvOrder.setAdapter(mAdapter);
-//	}
 
 	@OnClick(R.id.onclick_layout_left)
 	public void onViewClicked() {
 		returnActivity();
 	}
 
-//	@Override
-//	public void onRefresh() {
-//		page = 1;
-//		xrvOrder.refreshComplete();
-//		selectOrder(position);
-//	}
-//
-//	@Override
-//	public void onLoadMore() {
-//		page++;
-//		xrvOrder.loadMoreComplete();
-//		selectOrder(position);
-//	}
 
 	@Override
 	protected void onDestroy() {
@@ -331,4 +234,5 @@ public class OrderActivity extends BaseActivity {
 			finish();
 		}
 	}
+
 }

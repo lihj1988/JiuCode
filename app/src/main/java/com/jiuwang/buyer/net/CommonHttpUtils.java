@@ -54,6 +54,22 @@ public class CommonHttpUtils {
 		});
 	}
 
+
+	//订单操作
+	public static void orderInfo(HashMap<String, String> map, final CallingBack callingBack){
+		HttpUtils.orderInfo(map, new Consumer<BaseResultEntity>() {
+			@Override
+			public void accept(BaseResultEntity baseResultEntity) throws Exception {
+				callingBack.successBack(baseResultEntity);
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+				callingBack.failBack();
+			}
+		});
+	}
+
 	public interface UserCallBack{
 		void successBack(UserBean userBean);
 		void failBack();

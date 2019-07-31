@@ -239,7 +239,7 @@ public class HttpUtils {
 	}
 
 	/**
-	 * 获取收货地址-相关操作
+	 * 订单
 	 *
 	 * @param map
 	 * @return
@@ -252,6 +252,20 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 
+	}
+	/**
+	 * 订单操作
+	 *
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void orderInfo(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.orderInfo(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
 	}
 
 

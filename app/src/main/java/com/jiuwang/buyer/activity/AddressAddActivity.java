@@ -262,7 +262,7 @@ public class AddressAddActivity extends BaseActivity {
 			hashMap.put("prov_cd", provcode);
 			hashMap.put("city_cd", citycode);
 			hashMap.put("area_cd", areacode);
-			hashMap.put("consignee_address", proEditText.getText().toString() + address);
+			hashMap.put("consignee_address",  address);
 			hashMap.put("destination", proEditText.getText().toString() + address);
 			hashMap.put("is_default",is_default);
 			HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {

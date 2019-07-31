@@ -325,6 +325,9 @@ public class BuySetup1Activity extends BaseActivity {
 				HashMap<String, String> map = new HashMap<>();
 				map.put("act", Constant.ACTION_ACT_ADD);
 				map.put("id", goodsIds);
+				map.put("consignee_name", consignee_name);
+				map.put("consignee_telephone", consignee_telephone);
+				map.put("destination", destination_address);
 				HttpUtils.settlement(map, new Consumer<OrderEntity>() {
 					@Override
 					public void accept(OrderEntity baseResultEntity) throws Exception {

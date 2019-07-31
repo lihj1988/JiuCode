@@ -3,9 +3,7 @@ package com.jiuwang.buyer.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,10 +17,14 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AddressBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.bean.OrderBean;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.net.CommonHttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.MyToastView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -56,8 +58,15 @@ public class OrderDetailedActivity extends BaseActivity {
 	TextView paymentTitleTextView;
 	@Bind(R.id.tvAmount)
 	TextView tvAmount;
-	@Bind(R.id.confirmTextView)
-	Button confirmTextView;
+	@Bind(R.id.optionTextView)
+	TextView optionTextView;
+	@Bind(R.id.operaTextView)
+	TextView operaTextView;
+	@Bind(R.id.tvState)
+	TextView tvState;
+	@Bind(R.id.rlDeal)
+	LinearLayout rlDeal;
+
 	private MyApplication mApplication;
 	private String address_id;
 	private String destination_prov_cd;
@@ -66,6 +75,8 @@ public class OrderDetailedActivity extends BaseActivity {
 	private String consignee_name;
 	private String consignee_telephone;
 	private String destination_address;
+	private double amount;
+	private OrderBean orderBean;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,9 +85,9 @@ public class OrderDetailedActivity extends BaseActivity {
 		ButterKnife.bind(this);
 //		mActivity = this;
 		mApplication = (MyApplication) getApplication();
-		initView();
+
 		Intent intent = getIntent();
-		OrderBean orderBean = (OrderBean) intent.getSerializableExtra("data");
+		orderBean = (OrderBean) intent.getSerializableExtra("data");
 
 		List<CarGoodsBean> detailsList = new ArrayList<CarGoodsBean>();
 		String[] goods_name = orderBean.getGoods_name().split(",");
@@ -95,17 +106,203 @@ public class OrderDetailedActivity extends BaseActivity {
 				detailListBean.setPic_url(pic_url[i]);
 			}
 			detailsList.add(detailListBean);
+			amount += Double.parseDouble(sale_price[i]) * Double.parseDouble(quantity[i]);
 		}
-
+		tvAmount.setText("￥" + AppUtils.decimalFormat(amount, "0") + "元");
 		AppUtils.initListView(OrderDetailedActivity.this, mainListView, false, false);
 		GoodsBuyListAdapter mAdapter = new GoodsBuyListAdapter(OrderDetailedActivity.this, detailsList);
 		mainListView.setAdapter(mAdapter);
+		initView();
 	}
 
 	private void initView() {
 		setTopView(topView);
 		titleTextView.setText("订单详情");
+		tvState.setText(orderBean.getStatus_name());
+		nameTextView.setText(orderBean.getConsignee_name());
+		phoneTextView.setText(orderBean.getConsignee_telephone());
+		addressTextView.setText(orderBean.getDestination());
+		if (!"1".equals(orderBean.getOrder_type())) {
+			addressRelativeLayout.setClickable(false);
+			switch (orderBean.getStatus()) {
+				case Constant.ORDER_STATUS_UNPAY://未付款
+					rlDeal.setVisibility(View.VISIBLE);
+					optionTextView.setText("取消订单");
+					operaTextView.setText("去支付");
+					optionTextView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							HashMap<String, String> map = new HashMap<>();
+							map.put("id", orderBean.getId());
+							map.put("act", Constant.ACTION_ACT_CANCLE);
+							//取消订单
+							CommonHttpUtils.orderInfo(map, new CommonHttpUtils.CallingBack() {
+								@Override
+								public void successBack(BaseResultEntity baseResultEntity) {
+
+								}
+
+								@Override
+								public void failBack() {
+
+								}
+							});
+
+						}
+					});
+					operaTextView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							//去付款
+							Intent intentBuy2 = new Intent();
+							intentBuy2.setClass(OrderDetailedActivity.this, BuySetup2Activity.class);
+							intentBuy2.putExtra("data", orderBean);
+							intentBuy2.putExtra("pay_sn", "online");
+							startActivity(intentBuy2);
+						}
+					});
+					break;
+				case Constant.ORDER_STATUS_PAYED://已付款
+					rlDeal.setVisibility(View.VISIBLE);
+					optionTextView.setVisibility(View.GONE);
+					operaTextView.setText("退货/款");
+					operaTextView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							//退货/款
+							HashMap<String, String> map = new HashMap<>();
+							map.put("id", orderBean.getId());
+							map.put("act", "");
+							CommonHttpUtils.orderInfo(map, new CommonHttpUtils.CallingBack() {
+								@Override
+								public void successBack(BaseResultEntity baseResultEntity) {
+									if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+										Intent intent = new Intent();
+										intent.setAction("refreshOrder");
+										sendBroadcast(intent);
+										finish();
+									} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
+										startActivity(new Intent(OrderDetailedActivity.this,LoginActivity.class));
+										finish();
+									}else {
+										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
+									}
+								}
+
+								@Override
+								public void failBack() {
+									MyToastView.showToast(getResources().getString(R.string.msg_error_operation),OrderDetailedActivity.this);
+								}
+							});
+						}
+					});
+					break;
+				case Constant.ORDER_STATUS_CANCLE:
+					rlDeal.setVisibility(View.VISIBLE);
+					optionTextView.setVisibility(View.GONE);
+					operaTextView.setText("删除订单");
+					operaTextView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							//删除
+							HashMap<String, String> map = new HashMap<>();
+							map.put("id", orderBean.getId());
+							map.put("act", Constant.ACTION_ACT_DELETE);
+							//取消订单
+							CommonHttpUtils.orderInfo(map, new CommonHttpUtils.CallingBack() {
+								@Override
+								public void successBack(BaseResultEntity baseResultEntity) {
+									if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+										Intent intent = new Intent();
+										intent.setAction("refreshOrder");
+										sendBroadcast(intent);
+										finish();
+									} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
+										startActivity(new Intent(OrderDetailedActivity.this,LoginActivity.class));
+										finish();
+									}else {
+										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
+									}
+								}
+
+								@Override
+								public void failBack() {
+									MyToastView.showToast(getResources().getString(R.string.msg_error_operation),OrderDetailedActivity.this);
+								}
+							});
+						}
+					});
+					break;
+				case Constant.ORDER_STATUS_FINISH:
+					rlDeal.setVisibility(View.GONE);
+					break;
+				default:
+					break;
+			}
+		} else {
+
+			addressRelativeLayout.setClickable(true);
+			switch (orderBean.getStatus()) {
+
+				case Constant.ORDER_STATUS_SEND:
+					rlDeal.setVisibility(View.VISIBLE);
+					optionTextView.setVisibility(View.GONE);
+					operaTextView.setText("确认收货");
+					operaTextView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							//确认收货
+							MyToastView.showToast("开发中", OrderDetailedActivity.this);
+
+							HashMap<String, String> map = new HashMap<>();
+							map.put("id", orderBean.getId());
+							map.put("act", "");
+							CommonHttpUtils.orderInfo(map, new CommonHttpUtils.CallingBack() {
+								@Override
+								public void successBack(BaseResultEntity baseResultEntity) {
+									if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+										Intent intent = new Intent();
+										intent.setAction("refreshOrder");
+										sendBroadcast(intent);
+										finish();
+									} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
+										startActivity(new Intent(OrderDetailedActivity.this,LoginActivity.class));
+										finish();
+									}else {
+										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
+									}
+								}
+
+								@Override
+								public void failBack() {
+									MyToastView.showToast(getResources().getString(R.string.msg_error_operation),OrderDetailedActivity.this);
+								}
+							});
+						}
+					});
+					break;
+				case Constant.ORDER_STATUS_PAYED:
+					if ("".equals(orderBean.getConsignee_name())) {
+						addressRelativeLayout.setClickable(true);
+					} else {
+						addressRelativeLayout.setClickable(false);
+					}
+					break;
+				case Constant.ORDER_STATUS_UNPAY:
+				case Constant.ORDER_STATUS_FINISH:
+					addressRelativeLayout.setClickable(false);
+					rlDeal.setVisibility(View.GONE);
+					break;
+				default:
+					break;
+			}
+		}
+
 	}
+
 	@Override
 	protected void onActivityResult(int req, int res, Intent data) {
 		super.onActivityResult(req, res, data);
@@ -120,35 +317,6 @@ public class OrderDetailedActivity extends BaseActivity {
 			}
 
 		}
-//		else {
-//			switch (req) {
-//				case MyApplication.CODE_CHOOSE_ADDRESS:
-//					DialogUtil.query(
-//							mActivity,
-//							"确认您的选择",
-//							"添加收货地址？",
-//							new View.OnClickListener() {
-//								@Override
-//								public void onClick(View v) {
-//									DialogUtil.cancel();
-//									Intent intent = new Intent(mActivity, AddressActivity.class);
-//									intent.putExtra("model", "choose");
-//									mApplication.startActivity(mActivity, intent, MyApplication.CODE_CHOOSE_ADDRESS);
-//								}
-//							},
-//							new View.OnClickListener() {
-//								@Override
-//								public void onClick(View v) {
-//									DialogUtil.cancel();
-//									mApplication.finishActivity(mActivity);
-//								}
-//							}
-//					);
-//					break;
-//				default:
-//					break;
-//			}
-//		}
 	}
 
 	//设置地址
@@ -165,18 +333,18 @@ public class OrderDetailedActivity extends BaseActivity {
 		addressTextView.setText(destination_address);
 
 	}
-	@OnClick({R.id.backImageView, R.id.addressRelativeLayout, R.id.confirmTextView})
+
+	@OnClick({R.id.backImageView, R.id.addressRelativeLayout})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.backImageView:
+				finish();
 				break;
 			case R.id.addressRelativeLayout:
 				//
 				Intent intent = new Intent(OrderDetailedActivity.this, AddressActivity.class);
 				intent.putExtra("model", "choose");
 				mApplication.startActivity(OrderDetailedActivity.this, intent, MyApplication.CODE_CHOOSE_ADDRESS);
-				break;
-			case R.id.confirmTextView:
 				break;
 		}
 	}

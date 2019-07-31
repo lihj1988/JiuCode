@@ -22,7 +22,25 @@
 			android:layout_weight="1">
 
 			<LinearLayout style="@style/Layout.Linear">
-
+				<TextView
+					android:textColor="@color/white"
+					android:background="@color/app_main_color"
+					android:textSize="@dimen/text_bigger"
+					android:gravity="center"
+					android:paddingTop="@dimen/padding_size_30"
+					android:text="订单状态"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+				<TextView
+					android:id="@+id/tvState"
+					android:textColor="@color/white"
+					android:background="@color/app_main_color"
+					android:textSize="@dimen/text_big"
+					android:gravity="center"
+					android:text="已完成"
+					android:paddingBottom="@dimen/padding_size_30"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
 				<TextView
 					android:id="@+id/addressTitleTextView"
 					style="@style/TextView.ItemStoreName"
@@ -108,6 +126,7 @@
 		</ScrollView>
 
 		<LinearLayout
+			android:gravity="center_vertical"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:padding="@dimen/padding_size_10">
@@ -119,17 +138,30 @@
 				android:layout_weight="1"
 				android:textColor="@color/red"
 				android:textStyle="bold"/>
-
-			<Button
-				android:id="@+id/confirmTextView"
+			<LinearLayout
+				android:id="@+id/rlDeal"
 				android:layout_width="wrap_content"
-				android:layout_height="40dip"
-				android:background="@drawable/btn_selecter"
-				android:gravity="center"
-				android:paddingLeft="@dimen/padding_size_10"
-				android:paddingRight="@dimen/padding_size_10"
-				android:text="提交订单"
-				android:textColor="@color/white"/>
+				android:layout_height="wrap_content"
+				android:paddingBottom="@dimen/padding_size_8"
+				android:paddingLeft="@dimen/padding_size_20"
+				android:paddingRight="@dimen/padding_size_20"
+				android:paddingTop="@dimen/padding_size_8">
+
+				<TextView
+					android:id="@+id/optionTextView"
+					style="@style/TextView.Button"
+					android:text="删除订单"/>
+
+				<TextView
+					android:layout_marginLeft="@dimen/padding_size_20"
+					android:id="@+id/operaTextView"
+					style="@style/TextView.Button"
+					android:layout_alignParentEnd="true"
+					android:layout_alignParentRight="true"
+					android:text="删除订单"/>
+
+			</LinearLayout>
+
 		</LinearLayout>
 	</LinearLayout>
 

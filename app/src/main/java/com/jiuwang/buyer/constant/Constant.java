@@ -19,6 +19,7 @@ public class Constant {
 	public static final String ACTION_ACT_ADD = "1";
 	public static final String ACTION_ACT_UPDATA = "2";
 	public static final String ACTION_ACT_DELETE = "3";
+	public static final String ACTION_ACT_CANCLE = "4";
 	//支付宝AppID
 //	public static final String ALIPAY_APPID = "2016101000655785";
 	public static final String ALIPAY_APPID = "2019072165954132";//生产环境

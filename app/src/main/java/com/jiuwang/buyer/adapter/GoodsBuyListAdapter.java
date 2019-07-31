@@ -12,13 +12,10 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.CarGoodsBean;
-import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -57,7 +54,8 @@ public class GoodsBuyListAdapter extends RecyclerView.Adapter<GoodsBuyListAdapte
         info = info + " <font color='#FF5001'>" + goods_num + " 件"+ "</font><br>";
         info = info + "共 <font color='#FF5001'>" + AppUtils.decimalFormat((goods_price * goods_num),"0") + " 元"+ "</font>";
         holder.infoTextView.setText(Html.fromHtml(info));
-        CommonUtil.loadImage(mActivity, NetURL.PIC_BASEURL+carGoodsBean.getPic_url(),holder.mImageView);
+        String pic_url[] = carGoodsBean.getPic_url().split("\\|");
+        CommonUtil.loadImage(mActivity, NetURL.PIC_BASEURL+pic_url[0],holder.mImageView);
 
     }
 
