@@ -132,21 +132,24 @@ public class OrderDetailedActivity extends BaseActivity {
 					optionTextView.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {
-							HashMap<String, String> map = new HashMap<>();
-							map.put("id", orderBean.getId());
-							map.put("act", Constant.ACTION_ACT_CANCLE);
-							//取消订单
-							CommonHttpUtils.orderInfo(map, new CommonHttpUtils.CallingBack() {
-								@Override
-								public void successBack(BaseResultEntity baseResultEntity) {
-
-								}
-
-								@Override
-								public void failBack() {
-
-								}
-							});
+//							HashMap<String, String> map = new HashMap<>();
+//							map.put("consignee_name", consignee_name);
+//							map.put("consignee_telephone", consignee_telephone);
+//							map.put("id",destination_address );
+//							map.put("id", orderBean.getId());
+//							map.put("act","9");
+//							//取消订单
+//							CommonHttpUtils.orderInfo(map, new CommonHttpUtils.CallingBack() {
+//								@Override
+//								public void successBack(BaseResultEntity baseResultEntity) {
+//
+//								}
+//
+//								@Override
+//								public void failBack() {
+//
+//								}
+//							});
 
 						}
 					});
@@ -182,17 +185,17 @@ public class OrderDetailedActivity extends BaseActivity {
 										sendBroadcast(intent);
 										finish();
 									} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
-										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
-										startActivity(new Intent(OrderDetailedActivity.this,LoginActivity.class));
+										MyToastView.showToast(baseResultEntity.getMsg(), OrderDetailedActivity.this);
+										startActivity(new Intent(OrderDetailedActivity.this, LoginActivity.class));
 										finish();
-									}else {
-										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
+									} else {
+										MyToastView.showToast(baseResultEntity.getMsg(), OrderDetailedActivity.this);
 									}
 								}
 
 								@Override
 								public void failBack() {
-									MyToastView.showToast(getResources().getString(R.string.msg_error_operation),OrderDetailedActivity.this);
+									MyToastView.showToast(getResources().getString(R.string.msg_error_operation), OrderDetailedActivity.this);
 								}
 							});
 						}
@@ -219,17 +222,17 @@ public class OrderDetailedActivity extends BaseActivity {
 										sendBroadcast(intent);
 										finish();
 									} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
-										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
-										startActivity(new Intent(OrderDetailedActivity.this,LoginActivity.class));
+										MyToastView.showToast(baseResultEntity.getMsg(), OrderDetailedActivity.this);
+										startActivity(new Intent(OrderDetailedActivity.this, LoginActivity.class));
 										finish();
-									}else {
-										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
+									} else {
+										MyToastView.showToast(baseResultEntity.getMsg(), OrderDetailedActivity.this);
 									}
 								}
 
 								@Override
 								public void failBack() {
-									MyToastView.showToast(getResources().getString(R.string.msg_error_operation),OrderDetailedActivity.this);
+									MyToastView.showToast(getResources().getString(R.string.msg_error_operation), OrderDetailedActivity.this);
 								}
 							});
 						}
@@ -242,10 +245,13 @@ public class OrderDetailedActivity extends BaseActivity {
 					break;
 			}
 		} else {
+			if ("".equals(orderBean.getConsignee_name())) {
+				addressRelativeLayout.setClickable(true);
+			} else {
+				addressRelativeLayout.setClickable(false);
+			}
 
-			addressRelativeLayout.setClickable(true);
 			switch (orderBean.getStatus()) {
-
 				case Constant.ORDER_STATUS_SEND:
 					rlDeal.setVisibility(View.VISIBLE);
 					optionTextView.setVisibility(View.GONE);
@@ -268,17 +274,17 @@ public class OrderDetailedActivity extends BaseActivity {
 										sendBroadcast(intent);
 										finish();
 									} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
-										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
-										startActivity(new Intent(OrderDetailedActivity.this,LoginActivity.class));
+										MyToastView.showToast(baseResultEntity.getMsg(), OrderDetailedActivity.this);
+										startActivity(new Intent(OrderDetailedActivity.this, LoginActivity.class));
 										finish();
-									}else {
-										MyToastView.showToast(baseResultEntity.getMsg(),OrderDetailedActivity.this);
+									} else {
+										MyToastView.showToast(baseResultEntity.getMsg(), OrderDetailedActivity.this);
 									}
 								}
 
 								@Override
 								public void failBack() {
-									MyToastView.showToast(getResources().getString(R.string.msg_error_operation),OrderDetailedActivity.this);
+									MyToastView.showToast(getResources().getString(R.string.msg_error_operation), OrderDetailedActivity.this);
 								}
 							});
 						}
@@ -287,6 +293,41 @@ public class OrderDetailedActivity extends BaseActivity {
 				case Constant.ORDER_STATUS_PAYED:
 					if ("".equals(orderBean.getConsignee_name())) {
 						addressRelativeLayout.setClickable(true);
+						operaTextView.setText("保存地址");
+						operaTextView.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+								//添加收货地址
+								HashMap<String, String> map = new HashMap<>();
+								map.put("consignee_name", consignee_name);
+								map.put("consignee_telephone", consignee_telephone);
+								map.put("destination", destination_address);
+								map.put("id", orderBean.getId());
+								map.put("act", "9");
+								CommonHttpUtils.orderInfo(map, new CommonHttpUtils.CallingBack() {
+									@Override
+									public void successBack(BaseResultEntity baseResultEntity) {
+										if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+											Intent intent = new Intent();
+											intent.setAction("refreshOrder");
+											sendBroadcast(intent);
+											finish();
+										} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+											MyToastView.showToast(baseResultEntity.getMsg(), OrderDetailedActivity.this);
+											startActivity(new Intent(OrderDetailedActivity.this, LoginActivity.class));
+											finish();
+										} else {
+											MyToastView.showToast(baseResultEntity.getMsg(), OrderDetailedActivity.this);
+										}
+									}
+
+									@Override
+									public void failBack() {
+										MyToastView.showToast(getResources().getString(R.string.msg_error_operation), OrderDetailedActivity.this);
+									}
+								});
+							}
+						});
 					} else {
 						addressRelativeLayout.setClickable(false);
 					}
@@ -327,7 +368,7 @@ public class OrderDetailedActivity extends BaseActivity {
 		destination_area_cd = addressBean.getDestination_area_cd();
 		consignee_name = addressBean.getConsignee_name();
 		consignee_telephone = addressBean.getConsignee_telephone();
-		destination_address = addressBean.getDestination_address();
+		destination_address = addressBean.getDestination();
 		nameTextView.setText(consignee_name);
 		phoneTextView.setText(consignee_telephone);
 		addressTextView.setText(destination_address);

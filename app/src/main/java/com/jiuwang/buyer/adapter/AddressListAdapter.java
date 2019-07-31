@@ -1,5 +1,6 @@
 package com.jiuwang.buyer.adapter;
 
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,7 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 
 //		if (hashMap.get("is_default").equals("1")) {
 //			holder.addressTextView.setText("[默认] ");
-			holder.addressTextView.setText(addressBean.getDestination_address());
+			holder.addressTextView.setText(addressBean.getDestination());
 //		} else {
 //			holder.addressTextView.setText(hashMap.get("area_info"));
 //		}
@@ -104,7 +105,16 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 					hashMap.put("id",mArrayList.get(position).getId());
 					hashMap.put("act","4");
 					setAddress(hashMap);
-					notifyDataSetChanged();
+
+					new Handler().post(new Runnable() {
+						@Override
+						public void run() {
+							// 刷新操作
+							notifyDataSetChanged();
+						}
+					});
+
+//					notifyDataSetChanged();
 				}
 			}
 		});
