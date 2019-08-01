@@ -23,6 +23,7 @@ import com.jiuwang.buyer.fragment.HomeFragment;
 import com.jiuwang.buyer.fragment.MineFragment;
 import com.jiuwang.buyer.fragment.ProjectFragment;
 import com.jiuwang.buyer.net.CommonHttpUtils;
+import com.jiuwang.buyer.receiver.NotificationReceiver;
 import com.jiuwang.buyer.service.UpdateService;
 import com.jiuwang.buyer.spinerwidget.MyTabWidget;
 import com.jiuwang.buyer.util.AppUtils;
@@ -47,6 +48,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 	private int backIndex;
 	private MyReceiver myReceiver;
 	private String invite;
+	private NotificationReceiver notificationReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,10 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("first");
 		registerReceiver(myReceiver, filter);
+		notificationReceiver = new NotificationReceiver();
+		IntentFilter filterNotification = new IntentFilter();
+		filterNotification.addAction("com.jiuwang.buyer.receiver.NotificationReceiver");
+		registerReceiver(notificationReceiver, filterNotification);
 		if (Constant.IS_LOGIN) {
 			if (invite != null && !invite.equals("")) {
 				bindInvite();
@@ -246,6 +252,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 	protected void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(myReceiver);
+		unregisterReceiver(notificationReceiver);
 	}
 
 	class MyReceiver extends BroadcastReceiver {

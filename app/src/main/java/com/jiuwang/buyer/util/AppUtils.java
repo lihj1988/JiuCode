@@ -616,7 +616,7 @@ public class AppUtils {
 	 */
 	public static boolean isCarnumberNO(String carnumber) {
 	 /*
-     车牌号格式：汉字 + A-Z + 位A-Z或-
+	 车牌号格式：汉字 + A-Z + 位A-Z或-
      （只包括了普通车牌号，教练车和部分部队车等车牌号不包括在内）
      */
 		String carnumRegex = "[\\u4e00-\\u9fa5][a-zA-Z](([DF](?![a-zA-Z0-9]*[IO])[0-9]{4})|([0-9]{5}[DF]))|^[冀豫云辽黑湘皖鲁苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼渝京津沪新京军空海北沈兰济南广成使领A-Z]{1}[a-zA-Z0-9]{5}[a-zA-Z0-9挂学警港澳]{1}$";
@@ -705,7 +705,7 @@ public class AppUtils {
 		if (AppUtils.getNetworkRequest(activity)) {
 			mLoadingDialog = AppUtils.setDialog_wait(activity, "1");
 			HashMap<String, String> map = new HashMap<>();
-			map.put("act","version");
+			map.put("act", "version");
 			HttpUtils.version(map, new Consumer<BaseResultEntity>() {
 				@Override
 				public void accept(BaseResultEntity baseResultEntity) throws Exception {
@@ -713,11 +713,12 @@ public class AppUtils {
 //								HomeEntity homeEntity = baseEntity.getResult();
 //								application.url_langde = homeEntity.getDownload_url();
 //								Constant.serverVersion = homeEntity.getVersion_android();
-								checkVersion(activity, permissionsResult, come_from);
-							} else {
+						Constant.serverVersion = baseResultEntity.getVersion_no();
+						checkVersion(activity, permissionsResult, come_from);
+					} else {
 //								AppUtils.showToast(baseEntity.getMsg(), activity);
-							}
-							mLoadingDialog.dismiss();
+					}
+					mLoadingDialog.dismiss();
 				}
 			}, new Consumer<Throwable>() {
 				@Override
@@ -733,7 +734,7 @@ public class AppUtils {
 		if (!AppUtils.isNull(Constant.localVersion)
 				&& !AppUtils
 				.isNull(Constant.serverVersion)) {
-			if (Constant.localVersion.compareTo(Constant.serverVersion) < 0) {
+			if ((Constant.localVersion.compareTo(Constant.serverVersion) < 0)) {
 				// 发现新版本，提示用户更新
 				final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
 				dialog.show();
@@ -807,7 +808,7 @@ public class AppUtils {
 		});
 	}
 
-	public static void showNormalDialog(final Activity activity, String titleText,String context,String negative,String positive, final DialogClickInterface dialogClickInterface) {
+	public static void showNormalDialog(final Activity activity, String titleText, String context, String negative, String positive, final DialogClickInterface dialogClickInterface) {
 
 		final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
 		dialog.show();
@@ -842,8 +843,6 @@ public class AppUtils {
 		});
 
 	}
-
-
 
 
 }

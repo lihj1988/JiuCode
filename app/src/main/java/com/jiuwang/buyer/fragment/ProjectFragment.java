@@ -91,6 +91,16 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		getActivity().registerReceiver(projectReceiver, intentFilter);
 		loadingDialog = new LoadingDialog(getActivity());
 
+//		Timer timer = new Timer();
+//		TimerTask timerTask = new TimerTask() {
+//			@Override
+//			public void run() {
+//				Intent intent = new Intent();
+//				intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
+//				getActivity().sendBroadcast(intent);
+//			}
+//		};
+//		timer.schedule(timerTask,0,5000);
 		return rootView;
 	}
 
@@ -100,9 +110,6 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
 		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//		StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1,
-//				StaggeredGridLayoutManager.VERTICAL);
-//		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 		projectListView.setLayoutManager(layoutManager);
 		Drawable dividerDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.divider_sample);
 		projectListView.addItemDecoration(projectListView.new DividerItemDecoration(dividerDrawable));
@@ -169,8 +176,6 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 						}
 					});
 				}
-
-
 			}
 		});
 		projectListView.setAdapter(projectListAdapter);

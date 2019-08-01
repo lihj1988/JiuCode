@@ -2,23 +2,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 		  package="com.jiuwang.buyer">
 
-	<uses-permission android:name="android.permission.CAMERA" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.READ_LOGS" />
-	<uses-permission android:name="android.permission.CALL_PHONE" />
-	<uses-permission android:name="android.permission.SET_DEBUG_APP" />
-	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
-	<uses-permission android:name="android.permission.USE_CREDENTIALS" />
-	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
-	<uses-permission android:name="android.permission.GET_TASKS" />
-	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+	<uses-permission android:name="android.permission.CAMERA"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.READ_LOGS"/>
+	<uses-permission android:name="android.permission.CALL_PHONE"/>
+	<uses-permission android:name="android.permission.SET_DEBUG_APP"/>
+	<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+	<uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
+	<uses-permission android:name="android.permission.GET_TASKS"/>
+	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
 	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+
 	<application
 
 		android:name=".base.MyApplication"
@@ -35,32 +36,90 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
-		<activity android:name=".activity.MainActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.LoginActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.RegisterActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.SearchActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.GoodsDetailsActivty" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.RechargeActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.ForgetActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.AddressActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.AddressAddActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.BuySetup1Activity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.BuySetup2Activity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.OrderActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.OrderPayCompleteActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.CarActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.BalanceActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.BalanceListActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.BalanceDetailsActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.InviteCodeActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.BindAccountActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.EditAccountActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.InviteManagerActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.CashOutActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.InviteCodeEditActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".activity.OrderDetailedActivity" android:screenOrientation="portrait"/>
-		<activity android:name=".camera.zxing.activity.CaptureActivity" android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.MainActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.LoginActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.RegisterActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.SearchActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.GoodsDetailsActivty"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.RechargeActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.ForgetActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.AddressActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.AddressAddActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.BuySetup1Activity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.BuySetup2Activity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.OrderActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.OrderPayCompleteActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.CarActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.BalanceActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.BalanceListActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.BalanceDetailsActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.InviteCodeActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.BindAccountActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.EditAccountActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.InviteManagerActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.CashOutActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.InviteCodeEditActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".activity.OrderDetailedActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name=".camera.zxing.activity.CaptureActivity"
+			android:screenOrientation="portrait"/>
 
+		<receiver
+			android:name=".receiver.NotificationReceiver"
+			android:enabled="true"
+			android:exported="true">
+			<intent-filter android:priority="100">
+				<action android:name="com.jiuwang.buyer.receiver.NotificationReceiver"/>
+			</intent-filter>
+		</receiver>
 	</application>
 
 </manifest>
