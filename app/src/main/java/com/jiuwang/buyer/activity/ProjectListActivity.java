@@ -1,16 +1,28 @@
 package com.jiuwang.buyer.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.ProjectListAdapter;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.ProjectBean;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.ProjectEntity;
+import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.MyToastView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by lihj on 2019/6/25
@@ -23,42 +35,71 @@ public class ProjectListActivity extends BaseActivity implements XRecyclerView.L
 	private XRecyclerView projectListView;
 	private int page = 0;
 	private List<ProjectBean> projectList;
-	private ProjectListAdapter projectListAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_project_list);
 		projectListView = findViewById(R.id.projectListView);
-		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-		projectListView.setLayoutManager(layoutManager);
-		projectListView.setLoadingMoreEnabled(true);
-		projectListView.setPullRefreshEnabled(true);
+		AppUtils.initListView(ProjectListActivity.this,projectListView,true,true);
 		projectList = new ArrayList<>();
-
-//		projectListAdapter = new ProjectListAdapter(this,projectList,);
-
-//		projectListAdapter.setOnItemClickListener(new AddressListAdapter.onItemClickListener() {
-//			@Override
-//			public void onItemClick(int position) {
-//				//跳转商品详情
-//
-//			}
-//		});
+		initData();
 	}
 
-//	刷新
+	private void initData() {
+
+		HashMap<String, String> map = new HashMap<>();
+		map.put("currPage", String.valueOf(page));
+		map.put("pageSize", Constant.PAGESIZE);
+		map.put("act","");
+		HttpUtils.selectProjectList(map, new Consumer<ProjectEntity>() {
+			@Override
+			public void accept(ProjectEntity projectEntity) throws Exception {
+				if (page == 1) {
+					projectList.clear();
+				}
+				if (Constant.HTTP_SUCCESS_CODE.equals(projectEntity.getCode())) {
+					projectList.addAll(projectEntity.getData());
+
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectEntity.getCode())) {
+
+					Intent intent = new Intent(ProjectListActivity.this, LoginActivity.class);
+					startActivity(intent);
+					finish();
+				}
+				new Handler(){
+					@Override
+					public void handleMessage(Message msg) {
+
+						if (projectList != null && projectList.size() > 0) {
+
+						} else {
+
+						}
+					}
+				}.sendEmptyMessageDelayed(0,500);
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+				MyToastView.showToast("请求失败", ProjectListActivity.this);
+
+			}
+		});
+
+	}
+
+
+	//	刷新
 	@Override
 	public void onRefresh() {
 		page = 0;
-
+		initData();
 	}
 //	加载
 	@Override
 	public void onLoadMore() {
 		page++;
-
-
+		initData();
 	}
 }
