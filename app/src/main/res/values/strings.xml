@@ -58,5 +58,7 @@
 	<string name="cancle">取消</string>
 	<string name="sure">确定</string>
 	<string name="cash_out_content">您即将发起提现申请，现已把您提现金额冻结，客服会在9：00-21：00给您转账到支付宝，填写的提现金额要小于等于可提现金额，冻结金额不能购买商品、参与项目、不能再次提现。</string>
+	<string name="bind_account_content">您当前尚未绑定任何提现账号，请前往绑定</string>
+	<string name="bind_account_sure_content">一个支付宝账号只能被一个账号绑定确认绑定吗?</string>
 	<string name="invite_code_check">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
 </resources>

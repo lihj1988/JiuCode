@@ -28,59 +28,8 @@ public class NotificationReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		NotificationManager notificationManager = (NotificationManager) MyApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(1,createNotification(context,notificationManager));
-//		sendSimpleNotification(context,notificationManager);
-//		NotificationCompat.Builder builder = new NotificationCompat.Builder(MyApplication.getInstance());
-//		builder.setSmallIcon(R.mipmap.app_logo)//设置小图标
-//				.setTicker("2222222").setContentTitle("q111111").setContentText("通知标内容");
-//		Intent updateIntent = new Intent(MyApplication.getInstance().getApplicationContext(), MainActivity.class);
-//		PendingIntent pendingIntent = PendingIntent.getActivity(MyApplication.getInstance().getApplicationContext(), 0, updateIntent, 0);
-//		// 这里面的参数是通知栏view显示的内容
-//		builder.setContentIntent(pendingIntent);
-//		notificationManager.notify(1000, builder.build());
 
 	}
-	public void sendSimpleNotification(Context context,NotificationManager nm) {
-		Notification notification;
-		Notification.Builder builder;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			builder=new Notification.Builder(context,"low");
-		}else {
-			builder=new Notification.Builder(context);
-		}
-		//设置标题
-		builder.setContentTitle("设置标题");
-		//设置内容
-		builder.setContentText("内容是............");
-		//设置状态栏显示的图标，建议图标颜色透明
-		builder.setSmallIcon(R.mipmap.app_logo);
-		// 设置通知灯光（LIGHTS）、铃声（SOUND）、震动（VIBRATE）、（ALL 表示都设置）
-		builder.setDefaults(Notification.DEFAULT_ALL);
-		//灯光三个参数，颜色（argb）、亮时间（毫秒）、暗时间（毫秒）,灯光与设备有关
-		builder.setLights(Color.RED, 200, 200);
-		// 铃声,传入铃声的 Uri（可以本地或网上）我这没有铃声就不传了
-		builder.setSound(Uri.parse("")) ;
-		// 震动，传入一个 long 型数组，表示 停、震、停、震 ... （毫秒）
-		builder.setVibrate(new long[]{200, 200, 0, 0, 0, 0});
-		// 通知栏点击后自动消失
-		builder.setAutoCancel(true);
-		// 简单通知栏设置 Intent
-//		builder.setContentIntent(setPendingIntent("简单通知"));
-		builder.setPriority(Notification.PRIORITY_HIGH);
-
-		//设置下拉之后显示的图片
-		builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.app_logo));
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel channel = new NotificationChannel("my_channel_01", "我是渠道名字", NotificationManager.IMPORTANCE_DEFAULT);
-			channel.enableLights(true);//是否在桌面icon右上角展示小红点
-			channel.setLightColor(Color.GREEN);//小红点颜色
-			channel.setShowBadge(false); //是否在久按桌面图标时显示此渠道的通知
-			nm.createNotificationChannel(channel);
-		}
-		notification=builder.build();
-		nm.notify(11212,notification);
-
-	}
-
 
 	private  Notification createNotification(Context context, NotificationManager notificationManager) {
 		Notification notification;Notification.Builder builder;

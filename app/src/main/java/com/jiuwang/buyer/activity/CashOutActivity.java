@@ -65,37 +65,39 @@ public class CashOutActivity extends BaseActivity {
 		setContentView(R.layout.activity_cash_out);
 		ButterKnife.bind(this);
 		selectUser();
-		initView();
-
-
 	}
 
 	private void selectUser() {
-		final LoadingDialog loadingDialog = AppUtils.setDialog_wait(this, "1");
-		HashMap<String, String> map = new HashMap<>();
-		CommonHttpUtils.selectUserInfo(map, new CommonHttpUtils.UserCallBack() {
-			@Override
-			public void successBack(UserBean userBean) {
-				avail_amount = userBean.getAvail_amount();
-				etMoney.setHint("可提现金额" + avail_amount + "元");
-				account_name = userBean.getAccount_name();
-				account_no = userBean.getAccount_no();
-
-				loadingDialog.dismiss();
-			}
-
-			@Override
-			public void failBack() {
-				loadingDialog.dismiss();
-			}
-		});
+		Intent intent = getIntent();
+		 account_name = intent.getStringExtra("account_name");
+		 account_no = intent.getStringExtra("account_no");
+		 avail_amount = intent.getStringExtra("avail_amount");
+		initView();
+//		final LoadingDialog loadingDialog = AppUtils.setDialog_wait(this, "1");
+//		HashMap<String, String> map = new HashMap<>();
+//		CommonHttpUtils.selectUserInfo(map, new CommonHttpUtils.UserCallBack() {
+//			@Override
+//			public void successBack(UserBean userBean) {
+//				avail_amount = userBean.getAvail_amount();
+//				etMoney.setHint("可提现金额" + avail_amount + "元");
+//				account_name = userBean.getAccount_name();
+//				account_no = userBean.getAccount_no();
+//				initView();
+//				loadingDialog.dismiss();
+//			}
+//
+//			@Override
+//			public void failBack() {
+//				loadingDialog.dismiss();
+//			}
+//		});
 	}
 
 	private void initView() {
 		setTopView(topView);
 		actionbarText.setText("支付宝提现");
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
-
+		etMoney.setHint("可提现金额" + avail_amount + "元");
 		if (account_name==null||"".equals(account_name)) {
 			etName.setEnabled(true);
 		} else {

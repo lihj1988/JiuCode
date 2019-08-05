@@ -31,6 +31,10 @@ import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.widget.NoScrollViewPager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +89,7 @@ public class GoodsDetailsActivty extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_goods_details);
 		ButterKnife.bind(this);
+		EventBus.getDefault().register(this);
 		setTopView(topView);
 		Intent intent = getIntent();
 		goods = (GoodsBean) intent.getSerializableExtra("goods");
@@ -265,12 +270,19 @@ public class GoodsDetailsActivty extends BaseActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(myReceiver);
+		EventBus.getDefault().unregister(this);
 	}
 
 	class MyReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			finish();
+		}
+	}
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void handleData(String mMessageEvent) {
+		if(mMessageEvent.equals("resfreshCarCount")){
+			shopcarCount();
 		}
 	}
 }

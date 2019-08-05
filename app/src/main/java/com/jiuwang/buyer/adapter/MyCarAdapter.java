@@ -1,6 +1,7 @@
 package com.jiuwang.buyer.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -240,9 +243,10 @@ public class MyCarAdapter extends BaseAdapter {
 					list.remove(position);
 					notifyDataSetChanged();
 					itemCheckStatusChangeListener.checkStatusChange();
-//					Intent intent = new Intent();
-//					intent.setAction("refreshCar");
-//					context.sendBroadcast(intent);
+					Intent intent = new Intent();
+					intent.setAction("refreshCar");
+					context.sendBroadcast(intent);
+					EventBus.getDefault().post("resfreshCarCount");
 				}else {
 					notifyDataSetChanged();
 					itemCheckStatusChangeListener.checkStatusChange();

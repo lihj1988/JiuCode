@@ -10,10 +10,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
 
@@ -84,8 +86,8 @@ public class EditAccountActivity extends BaseActivity {
 				break;
 			case R.id.btnBind:
 				//绑定账号
-				String account = etAccount.getText().toString().trim();
-				String accountName = etAccountName.getText().toString().trim();
+				final String account = etAccount.getText().toString().trim();
+				final String accountName = etAccountName.getText().toString().trim();
 				if ("".equals(accountName)) {
 					MyToastView.showToast("请填写姓名", EditAccountActivity.this);
 					return;
@@ -95,7 +97,18 @@ public class EditAccountActivity extends BaseActivity {
 					return;
 				}
 				if (CommonUtil.getNetworkRequest(EditAccountActivity.this)) {
-					bind(account, accountName);
+					AppUtils.showDialog(EditAccountActivity.this, "提示", getResources().getString(R.string.bind_account_sure_content), new DialogClickInterface() {
+						@Override
+						public void onClick() {
+							bind(account, accountName);
+						}
+
+						@Override
+						public void nagtiveOnClick() {
+
+						}
+					});
+
 				}
 				break;
 		}

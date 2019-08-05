@@ -19,6 +19,8 @@ import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -173,6 +175,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 									Intent intent = new Intent();
 									intent.setAction("refreshProject");
 									context.sendBroadcast(intent);
+									EventBus.getDefault().post("isWinning");
 								}
 							}.sendEmptyMessageDelayed(0, 500);
 						}

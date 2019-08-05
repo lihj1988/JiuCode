@@ -26,6 +26,7 @@ import com.jiuwang.buyer.activity.AddressActivity;
 import com.jiuwang.buyer.activity.BalanceActivity;
 import com.jiuwang.buyer.activity.BindAccountActivity;
 import com.jiuwang.buyer.activity.CashOutActivity;
+import com.jiuwang.buyer.activity.EditAccountActivity;
 import com.jiuwang.buyer.activity.InviteCodeActivity;
 import com.jiuwang.buyer.activity.InviteCodeEditActivity;
 import com.jiuwang.buyer.activity.InviteManagerActivity;
@@ -33,6 +34,7 @@ import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.OrderActivity;
 import com.jiuwang.buyer.activity.RechargeActivity;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
@@ -40,7 +42,9 @@ import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.service.UpdateService;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -126,8 +130,12 @@ public class MineFragment extends Fragment {
 	LinearLayout llBalance;
 	@Bind(R.id.llAvailAmount)
 	LinearLayout llAvailAmount;
+	@Bind(R.id.llTrialAmount)
+	LinearLayout llTrialAmount;
 	@Bind(R.id.tvMyAccount)
 	TextView tvMyAccount;
+	@Bind(R.id.trialOrScore)
+	TextView trialOrScore;
 	private View view;
 	private MainActivity mActivity;
 	private String userCode;
@@ -141,6 +149,9 @@ public class MineFragment extends Fragment {
 	private UserBean userBean;
 	private MyReceiver myReceiver;
 	private String invite_code;
+	private String account_name;
+	private String account_no;
+	private String avail_amount;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -163,7 +174,7 @@ public class MineFragment extends Fragment {
 			map.put("", "");
 			HttpUtils.selectUserInfo(map, new Consumer<UserEntity>() {
 				@Override
-				public void accept(UserEntity userEntity) throws Exception {
+				public void accept(final UserEntity userEntity) throws Exception {
 
 					if (Constant.HTTP_SUCCESS_CODE.equals(userEntity.getCode())) {
 						userBean = userEntity.getData().get(0);
@@ -173,8 +184,18 @@ public class MineFragment extends Fragment {
 							public void handleMessage(Message msg) {
 								tvUserName.setText(userBean.getMobile_number());
 								invite_code = userBean.getInvite_code();
-								if ("".equals(userBean.getTrial_amount())) {
+								account_name = userBean.getAccount_name();
+								account_no = userBean.getAccount_no();
+								avail_amount = userBean.getAvail_amount();
+								if("".equals(account_no)){
+									tvMyAccount.setClickable(true);
+								}else {
+									tvMyAccount.setClickable(false);
+									tvMyAccount.setText("我的账号："+account_name+" "+account_no);
+								}
+								if ("".equals(userBean.getTrial_amount()) || "0".equals(userBean.getTrial_amount())) {
 									tvTrialAmount.setText("0.00");
+									llTrialAmount.setVisibility(View.INVISIBLE);
 								} else {
 									tvTrialAmount.setText("" + CommonUtil.decimalFormat(Double.parseDouble(userBean.getTrial_amount()), "0") + "");
 								}
@@ -374,12 +395,33 @@ public class MineFragment extends Fragment {
 				break;
 			case R.id.llAvailAmount:
 				//提现
-				Intent intentCashout = new Intent(getActivity(), CashOutActivity.class);
-				getActivity().startActivity(intentCashout);
+				if ("".equals(account_name)) {
+					AppUtils.showDialog(getActivity(), "提示", getResources().getString(R.string.bind_account_content), new DialogClickInterface() {
+						@Override
+						public void onClick() {
+
+							Intent intentAccount = new Intent(getActivity(), BindAccountActivity.class);
+							intentAccount.putExtra("data", userBean);
+							getActivity().startActivity(intentAccount);
+
+						}
+
+						@Override
+						public void nagtiveOnClick() {
+
+						}
+					});
+				} else {
+					Intent intentCashout = new Intent(getActivity(), CashOutActivity.class);
+					intentCashout.putExtra("account_name",account_name);
+					intentCashout.putExtra("account_no",account_no);
+					intentCashout.putExtra("avail_amount",avail_amount);
+					getActivity().startActivity(intentCashout);
+				}
 				break;
 			case R.id.tvBindInviteCode:
-				//提现
-				Intent intentBindInviteCode= new Intent(getActivity(), InviteCodeEditActivity.class);
+
+				Intent intentBindInviteCode = new Intent(getActivity(), InviteCodeEditActivity.class);
 				getActivity().startActivity(intentBindInviteCode);
 				break;
 		}

@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
@@ -173,7 +174,9 @@ public class BuySetup2Activity extends BaseActivity {
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_buy_setup2);
-//		EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+		if (Constant.IS_DEBUG) {
+			EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+		}
 		ButterKnife.bind(this);
 		requestPermission();
 		initView();
@@ -286,7 +289,7 @@ public class BuySetup2Activity extends BaseActivity {
 
 			@Override
 			public void onClick() {
-				startActivity(new Intent(BuySetup2Activity.this,OrderActivity.class));
+				startActivity(new Intent(BuySetup2Activity.this, OrderActivity.class));
 				mApplication.finishActivity(mActivity);
 			}
 		});
@@ -364,7 +367,7 @@ public class BuySetup2Activity extends BaseActivity {
 	}
 
 	private void payBalance() {
-		if(CommonUtil.getNetworkRequest(BuySetup2Activity.this)){
+		if (CommonUtil.getNetworkRequest(BuySetup2Activity.this)) {
 			HashMap<String, String> map = new HashMap<>();
 			map.put("act", "pay");
 			map.put("order_id", orderBean.getId());
@@ -392,6 +395,7 @@ public class BuySetup2Activity extends BaseActivity {
 			});
 		}
 	}
+
 	//获取用户数据
 	public void selectUser() {
 

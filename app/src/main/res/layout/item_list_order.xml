@@ -51,7 +51,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
 
-		<View style="@style/View.Line"/>
+		<!--<View style="@style/View.Line"/>-->
 
 		<TextView
 			android:id="@+id/infoTextView"

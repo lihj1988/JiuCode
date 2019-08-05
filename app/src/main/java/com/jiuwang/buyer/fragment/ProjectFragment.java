@@ -38,9 +38,14 @@ import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -70,6 +75,8 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	@Bind(R.id.xRecyclerView)
 	XRecyclerView projectListView;
 	private int page = 1;
+	private String is_part = "";
+	private String id = "";
 	private List<ProjectBean> projectList;
 	private ProjectListAdapter projectListAdapter;
 
@@ -83,6 +90,9 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 		rootView = View.inflate(getActivity(), R.layout.fragment_project_list, null);
 		ButterKnife.bind(this, rootView);
+		if(!EventBus.getDefault().isRegistered(this)){
+			EventBus.getDefault().register(this);
+		}
 		projectList = new ArrayList<>();
 		initView();
 		projectReceiver = new ProjectReceiver();
@@ -187,6 +197,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		super.onDestroyView();
 		ButterKnife.unbind(this);
 		getActivity().unregisterReceiver(projectReceiver);
+		EventBus.getDefault().unregister(this);
 	}
 
 	//	刷新
@@ -208,6 +219,13 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		HashMap<String, String> map = new HashMap<>();
 		map.put("currPage", String.valueOf(page));
 		map.put("pageSize", Constant.PAGESIZE);
+
+		if(!"".equals(is_part)){
+			map.put("is_part", is_part);
+		}
+		if(!"".equals(id)){
+			map.put("id", id);
+		}
 		HttpUtils.selectProjectList(map, new Consumer<ProjectEntity>() {
 			@Override
 			public void accept(ProjectEntity projectEntity) throws Exception {
@@ -268,6 +286,13 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		public void onReceive(Context context, Intent intent) {
 			onRefresh();
 		}
+	}
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void isWinning(Map<String,String> map){
+		is_part = map.get(is_part);
+		id = map.get(id);
+
+
 	}
 
 }
