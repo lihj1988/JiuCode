@@ -79,7 +79,7 @@ public class UpdateService extends Service {
 						break;
 					case DOWN_ERROR:
 						builder.setContentTitle(app_name).setContentText("下载失败");
-						builder.setContentIntent(pendingIntent);
+//						builder.setContentIntent(pendingIntent);
 						notificationManager.notify(notification_id, createNotification(MyApplication.getInstance().getApplicationContext(), notificationManager, "", "下载失败"));
 
 						break;
@@ -122,36 +122,10 @@ public class UpdateService extends Service {
 	//RemoteViews contentView;
 	public void createNotification() {
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        builder = new NotificationCompat.Builder(this);
-//        builder.setSmallIcon(R.mipmap.app_logo)//设置小图标
-//                .setTicker("开始下载").setContentTitle(app_name).setContentText("下载：0%");
         updateIntent = new Intent(this, MainActivity.class);
 		pendingIntent = PendingIntent.getActivity(this, 0, updateIntent, 0);
-//        // 这里面的参数是通知栏view显示的内容
-//        builder.setContentIntent(pendingIntent);
-//        notificationManager.notify(notification_id, builder.build());
 		notificationManager.notify(notification_id, createNotification(MyApplication.getInstance().getApplicationContext(), notificationManager, "开始下载", "下载：0%"));
 
-
-		/***
-		 * 在这里我们用自定的view来显示Notification
-		 */
-		/*contentView = new RemoteViews(getPackageName(),
-				R.layout.notification_item);
-		contentView.setTextViewText(R.id.notificationTitle, "正在下载");
-		contentView.setTextViewText(R.id.notificationPercent, "0%");
-		contentView.setProgressBar(R.id.notificationProgress, 100, 0, false);
-
-		notification.contentView = contentView;
-
-		updateIntent = new Intent(this, MainActivity.class);
-		updateIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		pendingIntent = PendingIntent.getActivity(this, 0, updateIntent, 0);
-
-		notification.contentIntent = pendingIntent;
-
-		notificationManager.notify(notification_id, notification);
-*/
 	}
 
 	private Notification createNotification(Context context, NotificationManager notificationManager, String ticker, String contentText) {
@@ -189,7 +163,7 @@ public class UpdateService extends Service {
 //            builder.setDefaults(Notification.DEFAULT_ALL);
 
 		}
-		builder.setContentIntent(pendingIntent);
+//		builder.setContentIntent(pendingIntent);
 		notification = builder.setSmallIcon(R.mipmap.app_logo)
 
 //                .setChannelId(CALENDAR_ID)
@@ -241,12 +215,7 @@ public class UpdateService extends Service {
 				// 改变通知栏
 				builder.setContentTitle("正在下载...").setContentText(updateCount
 						+ "%" + "");
-				builder.setContentIntent(pendingIntent);
-				/*contentView.setTextViewText(R.id.notificationPercent,
-						updateCount + "%");
-				contentView.setProgressBar(R.id.notificationProgress, 100,
-						updateCount, false);*/
-				// show_view
+//				builder.setContentIntent(pendingIntent);
 				notificationManager.notify(notification_id, createNotification(MyApplication.getInstance().getApplicationContext(), notificationManager, "正在下载...", updateCount + "%" + ""));
 
 			}

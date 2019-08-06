@@ -214,12 +214,6 @@ public class RegisterActivity extends BaseActivity {
 				finish();
 				break;
 			case tv_gainmessage:
-				tvGainmessage.setEnabled(false);
-				//获取验证码
-				tvGainmessage.setVisibility(View.VISIBLE);
-				tvGainmessage.setText("60秒后重新发送");
-//							tvVerify.setVisibility(View.INVISIBLE);
-				handler.post(runnable);
 
 				String phone = etPhone.getText().toString().trim();
 				if (!TextUtils.isEmpty(phone)) {
@@ -231,6 +225,15 @@ public class RegisterActivity extends BaseActivity {
 					MyToastView.showToast("请输入手机号", RegisterActivity.this);
 					return;
 				}
+
+				tvGainmessage.setEnabled(false);
+				//获取验证码
+				tvGainmessage.setVisibility(View.VISIBLE);
+				tvGainmessage.setText("60秒后重新发送");
+//							tvVerify.setVisibility(View.INVISIBLE);
+				handler.post(runnable);
+
+
 				//获取短信验证网络请求
 				HashMap<String, String> map = new HashMap<>();
 				map.put("linkman_mobile", phone);

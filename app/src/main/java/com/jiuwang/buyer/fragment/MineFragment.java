@@ -185,16 +185,17 @@ public class MineFragment extends Fragment {
 								account_name = userBean.getAccount_name();
 								account_no = userBean.getAccount_no();
 								avail_amount = userBean.getAvail_amount();
-								if("".equals(account_no)){
+								if ("".equals(account_no)) {
 									tvMyAccount.setClickable(true);
-								}else {
+								} else {
 									tvMyAccount.setClickable(false);
-									tvMyAccount.setText("我的账号："+account_name+" "+account_no);
+									tvMyAccount.setText("我的账号：" + account_name + " " + account_no);
 								}
-								if ("".equals(userBean.getTrial_amount()) || "0".equals(userBean.getTrial_amount())) {
+								if ("0".equals(userBean.getIs_trial()) || "".equals(userBean.getTrial_amount()) || "0".equals(userBean.getTrial_amount())) {
 									tvTrialAmount.setText("0.00");
 									llTrialAmount.setVisibility(View.INVISIBLE);
 								} else {
+									llTrialAmount.setVisibility(View.VISIBLE);
 									tvTrialAmount.setText("" + CommonUtil.decimalFormat(Double.parseDouble(userBean.getTrial_amount()), "0") + "");
 								}
 								String avail_amount = "";
@@ -216,17 +217,7 @@ public class MineFragment extends Fragment {
 										startActivity(new Intent(getActivity(), BalanceActivity.class));
 									}
 								});
-//								if ((!"".equals(userBean.getTrial_amount())&&!"".equals(userBean.getAccount_balance()))||
-//										(!"0".equals(userBean.getTrial_amount())&&!"0".equals(userBean.getAccount_balance()))||
-//										("".equals(userBean.getTrial_amount())&&!"".equals(userBean.getAccount_balance()))||
-//										("".equals(userBean.getTrial_amount())&&!"0".equals(userBean.getAccount_balance()))) {
-//
-//								}else if ((!"".equals(userBean.getTrial_amount())&&"".equals(userBean.getAccount_balance()))||
-//										(!"0".equals(userBean.getTrial_amount())&&"0".equals(userBean.getAccount_balance()))) {
-//									tvMoneyName.setText("体验金：");
-//									tvBalance.setText(userBean.getTrial_amount());
-//								}
-//
+
 							}
 						}.sendEmptyMessage(0);
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(userEntity.getCode())) {
@@ -250,7 +241,7 @@ public class MineFragment extends Fragment {
 		actionbarText.setText("我的");
 		onclickLayoutLeft.setVisibility(View.INVISIBLE);
 		onclick_layout_right.setVisibility(View.INVISIBLE);
-settingTextView.setText("版本号："+Constant.localVersion);
+		settingTextView.setText("版本号：" + Constant.localVersion);
 
 	}
 
@@ -412,9 +403,9 @@ settingTextView.setText("版本号："+Constant.localVersion);
 					});
 				} else {
 					Intent intentCashout = new Intent(getActivity(), CashOutActivity.class);
-					intentCashout.putExtra("account_name",account_name);
-					intentCashout.putExtra("account_no",account_no);
-					intentCashout.putExtra("avail_amount",avail_amount);
+					intentCashout.putExtra("account_name", account_name);
+					intentCashout.putExtra("account_no", account_no);
+					intentCashout.putExtra("avail_amount", avail_amount);
 					getActivity().startActivity(intentCashout);
 				}
 				break;

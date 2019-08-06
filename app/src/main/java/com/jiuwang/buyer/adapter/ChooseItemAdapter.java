@@ -45,9 +45,9 @@ public class ChooseItemAdapter extends RecyclerView.Adapter<ChooseItemAdapter.Vi
 		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+selectGoodsList.get(position).getPic_url(),holder.ivGoodsImg);
 		holder.tvGoodsName.setText(selectGoodsList.get(position).getGoods_name());
 		if(selectGoodsList.get(position).getPic_url().split(",").length>1){
-			CommonUtil.loadImage(context,selectGoodsList.get(position).getPic_url().split(",")[0],holder.ivGoodsImg);
+			CommonUtil.loadImage(context,NetURL.PIC_BASEURL+selectGoodsList.get(position).getPic_url().split(",")[0],holder.ivGoodsImg);
 		}else {
-			CommonUtil.loadImage(context,selectGoodsList.get(position).getPic_url(),holder.ivGoodsImg);
+			CommonUtil.loadImage(context,NetURL.PIC_BASEURL+selectGoodsList.get(position).getPic_url(),holder.ivGoodsImg);
 		}
 		holder.llItem.setOnClickListener(new View.OnClickListener() {
 			@Override

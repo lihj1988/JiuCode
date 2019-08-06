@@ -78,6 +78,7 @@ public class UserBean implements Serializable {
 	private String avail_amount;
 	private String account_no;
 	private String account_name;
+	private String is_trial;//是否是体验金账户
 	private int r;
 
 	public String getId() {
@@ -350,6 +351,14 @@ public class UserBean implements Serializable {
 
 	public void setAccount_name(String account_name) {
 		this.account_name = account_name;
+	}
+
+	public String getIs_trial() {
+		return is_trial;
+	}
+
+	public void setIs_trial(String is_trial) {
+		this.is_trial = is_trial;
 	}
 
 	public int getR() {
