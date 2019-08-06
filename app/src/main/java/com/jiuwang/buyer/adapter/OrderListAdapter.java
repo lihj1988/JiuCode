@@ -66,6 +66,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 		total += "，共 <font color='#FF5001'>￥ " + orderBean.getTotal_amount() + "</font> 元";
 
 		holder.infoTextView.setText(Html.fromHtml(total));
+		holder.rlDeal.setVisibility(View.GONE);
 
 		holder.optionTextView.setOnClickListener(null);
 		holder.operaTextView.setOnClickListener(null);
@@ -83,6 +84,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 				case Constant.ORDER_STATUS_UNPAY://未付款
 					holder.rlDeal.setVisibility(View.VISIBLE);
 					holder.optionTextView.setText("取消订单");
+					holder.optionTextView.setVisibility(View.INVISIBLE);
 					holder.operaTextView.setText("去支付");
 					holder.optionTextView.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -108,7 +110,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 					holder.rlDeal.setVisibility(View.VISIBLE);
 					holder.optionTextView.setVisibility(View.GONE);
 					holder.operaTextView.setText("退货/款");
-
+					holder.operaTextView.setVisibility(View.INVISIBLE);
 					holder.operaTextView.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {

@@ -128,6 +128,7 @@ public class OrderDetailedActivity extends BaseActivity {
 				case Constant.ORDER_STATUS_UNPAY://未付款
 					rlDeal.setVisibility(View.VISIBLE);
 					optionTextView.setText("取消订单");
+					optionTextView.setVisibility(View.GONE);
 					operaTextView.setText("去支付");
 					optionTextView.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -168,6 +169,7 @@ public class OrderDetailedActivity extends BaseActivity {
 				case Constant.ORDER_STATUS_PAYED://已付款
 					rlDeal.setVisibility(View.VISIBLE);
 					optionTextView.setVisibility(View.GONE);
+					operaTextView.setVisibility(View.GONE);
 					operaTextView.setText("退货/款");
 					operaTextView.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -204,6 +206,7 @@ public class OrderDetailedActivity extends BaseActivity {
 				case Constant.ORDER_STATUS_CANCLE:
 					rlDeal.setVisibility(View.VISIBLE);
 					optionTextView.setVisibility(View.GONE);
+					operaTextView.setVisibility(View.GONE);
 					operaTextView.setText("删除订单");
 					operaTextView.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -255,6 +258,7 @@ public class OrderDetailedActivity extends BaseActivity {
 				case Constant.ORDER_STATUS_SEND:
 					rlDeal.setVisibility(View.VISIBLE);
 					optionTextView.setVisibility(View.GONE);
+					operaTextView.setVisibility(View.GONE);
 					operaTextView.setText("确认收货");
 					operaTextView.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -293,10 +297,15 @@ public class OrderDetailedActivity extends BaseActivity {
 				case Constant.ORDER_STATUS_PAYED:
 					if ("".equals(orderBean.getConsignee_name())) {
 						addressRelativeLayout.setClickable(true);
+						optionTextView.setVisibility(View.GONE);
 						operaTextView.setText("保存地址");
 						operaTextView.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View view) {
+								if(null == consignee_name){
+									MyToastView.showToast("请填写收货地址",OrderDetailedActivity.this);
+									return;
+								}
 								//添加收货地址
 								HashMap<String, String> map = new HashMap<>();
 								map.put("consignee_name", consignee_name);
