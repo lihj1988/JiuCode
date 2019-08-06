@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -12,6 +13,7 @@ import android.net.NetworkInfo;
 import android.net.ParseException;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -35,6 +37,7 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.service.UpdateService;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -734,10 +737,11 @@ public class AppUtils {
 		if (!AppUtils.isNull(Constant.localVersion)
 				&& !AppUtils
 				.isNull(Constant.serverVersion)) {
-			if ((Constant.localVersion.compareTo(Constant.serverVersion) < 0)) {
+			if (!(Constant.localVersion.equals(Constant.serverVersion))) {
 				// 发现新版本，提示用户更新
 				final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
 				dialog.show();
+				dialog.setCanceledOnTouchOutside(false);
 				Window window = dialog.getWindow();
 				window.setContentView(R.layout.dialog_normal_one_button);
 				RelativeLayout relative_button2 = (RelativeLayout) window.findViewById(R.id.relative_button2);
@@ -760,10 +764,14 @@ public class AppUtils {
 				bt2.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						String[] permissions = new String[]{"android.permission.READ_EXTERNAL_STORAGE",
-								"android.permission.WRITE_EXTERNAL_STORAGE"};
-						PermissionsUtils.getInstance().chekPermissions(activity, permissions, permissionsResult);
+						if(getWriteAndReadPermission(activity)){
+							Intent updateIntent = new Intent(
+									activity, UpdateService.class);
+							activity.startService(updateIntent);
+
+						}
 						dialog.cancel();
+
 					}
 				});
 			} else {
@@ -774,7 +782,28 @@ public class AppUtils {
 		}
 	}
 
-
+	private static boolean getWriteAndReadPermission(Activity activity) {
+		String[] PERMISSIONS_STORAGE = {
+				"android.permission.READ_EXTERNAL_STORAGE",
+				"android.permission.WRITE_EXTERNAL_STORAGE"};
+		try {
+			//检测是否有写的权限
+			int permission = ActivityCompat.checkSelfPermission(activity,
+					"android.permission.WRITE_EXTERNAL_STORAGE");
+			if (permission != PackageManager.PERMISSION_GRANTED) {
+				// 没有写的权限，去申请写的权限，会弹出对话框
+				ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, Constant.REQUEST_WRITE_READ_PERMISSION);
+				AppUtils.showToast("请开通相关权限，否则无法正常使用本应用！", activity);
+				return false;
+			} else {
+				AppUtils.showToast("授权成功", activity);
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	public static void showDialog(final Activity activity, String titleText, String content, final DialogClickInterface dialogClickInterface) {
 
 		final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();

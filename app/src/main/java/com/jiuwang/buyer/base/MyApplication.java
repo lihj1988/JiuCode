@@ -38,7 +38,7 @@ public class MyApplication extends Application {
 
 	public List<Activity> activitys = null;
 	public Activity currActivity = null;
-	public String url_langde;//下载地址
+	public String url_langde = "apk/shop.apk";//下载地址
 	public String serverVersion;//版本号
 
 	public static final int CODE_REGISTER = 5;
@@ -117,7 +117,7 @@ public class MyApplication extends Application {
 			}
 		}
 	}
-	private void getLocalVersion() {
+	public void getLocalVersion() {
 		try {
 			PackageInfo packageInfo = getApplicationContext()
 					.getPackageManager().getPackageInfo(getPackageName(), 0);

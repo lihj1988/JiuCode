@@ -26,14 +26,12 @@ import com.jiuwang.buyer.activity.AddressActivity;
 import com.jiuwang.buyer.activity.BalanceActivity;
 import com.jiuwang.buyer.activity.BindAccountActivity;
 import com.jiuwang.buyer.activity.CashOutActivity;
-import com.jiuwang.buyer.activity.EditAccountActivity;
 import com.jiuwang.buyer.activity.InviteCodeActivity;
 import com.jiuwang.buyer.activity.InviteCodeEditActivity;
 import com.jiuwang.buyer.activity.InviteManagerActivity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.OrderActivity;
-import com.jiuwang.buyer.activity.RechargeActivity;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.UserBean;
@@ -44,8 +42,8 @@ import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.service.UpdateService;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PermissionsUtils;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -252,7 +250,7 @@ public class MineFragment extends Fragment {
 		actionbarText.setText("我的");
 		onclickLayoutLeft.setVisibility(View.INVISIBLE);
 		onclick_layout_right.setVisibility(View.INVISIBLE);
-
+settingTextView.setText("版本号："+Constant.localVersion);
 
 	}
 
@@ -345,6 +343,7 @@ public class MineFragment extends Fragment {
 				startActivity(intentAddress);
 				break;
 			case R.id.settingTextView:
+				AppUtils.getSystemVersion(getActivity(), permissionsResult, "1");
 				break;
 			case R.id.tv_exit:
 				PreforenceUtils.getSharedPreferences("loginInfo");
@@ -441,5 +440,19 @@ public class MineFragment extends Fragment {
 
 		}
 	}
+
+	PermissionsUtils.IPermissionsResult permissionsResult = new PermissionsUtils.IPermissionsResult() {
+		@Override
+		public void passPermissons() {
+			Intent updateIntent = new Intent(getActivity(), UpdateService.class);
+			getActivity().startService(updateIntent);
+		}
+
+		@Override
+		public void forbitPermissons() {
+			Toast.makeText(getActivity(), "权限不通过!", Toast.LENGTH_SHORT).show();
+		}
+	};
+
 
 }

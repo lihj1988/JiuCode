@@ -71,4 +71,5 @@ public class Constant {
 
 	public static String localVersion;// 本地安装版本
 	public static String serverVersion;// 服务器版本
+
 }

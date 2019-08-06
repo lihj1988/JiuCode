@@ -55,6 +55,9 @@ public class BalanceActivity extends BaseActivity {
 	private MyReceiver myReceiver;
 	private MyFinishReceiver myFinishReceiver;
 	private UserBean userBean;
+	private String account_name;
+	private String account_no;
+	private String avail_amount;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,9 @@ public class BalanceActivity extends BaseActivity {
 				break;
 			case R.id.llCashout:
 				Intent intentCashout = new Intent(BalanceActivity.this, CashOutActivity.class);
+				intentCashout.putExtra("account_name",account_name);
+				intentCashout.putExtra("account_no",account_no);
+				intentCashout.putExtra("avail_amount",avail_amount);
 				startActivity(intentCashout);
 				break;
 		}
@@ -116,7 +122,9 @@ public class BalanceActivity extends BaseActivity {
 
 							@Override
 							public void handleMessage(Message msg) {
-
+								account_name = userBean.getAccount_name();
+								account_no = userBean.getAccount_no();
+								avail_amount = userBean.getAvail_amount();
 								tvBalance.setText(CommonUtil.decimalFormat(Double.parseDouble(userBean.getAccount_balance()), "0"));
 
 							}
