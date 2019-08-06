@@ -230,6 +230,14 @@ public class MyCarAdapter extends BaseAdapter {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
 				MyToastView.showToast(baseResultEntity.getMsg(), context);
+				if(act.equals(Constant.ACTION_ACT_DELETE)){
+					Intent intent = new Intent();
+					intent.setAction("refreshCar");
+					context.sendBroadcast(intent);
+					intent.setAction("refresh_home");
+					context.sendBroadcast(intent);
+					EventBus.getDefault().post("refreshCarCount");
+				}
 //				Intent intent = new Intent();
 //				intent.setAction("refreshCar");
 //				context.sendBroadcast(intent);
