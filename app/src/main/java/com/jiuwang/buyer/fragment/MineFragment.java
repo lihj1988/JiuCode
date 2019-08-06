@@ -343,7 +343,7 @@ settingTextView.setText("版本号："+Constant.localVersion);
 				startActivity(intentAddress);
 				break;
 			case R.id.settingTextView:
-				AppUtils.getSystemVersion(getActivity(), permissionsResult, "1");
+				AppUtils.getSystemVersion(getActivity(), permissionsResult, "2");
 				break;
 			case R.id.tv_exit:
 				PreforenceUtils.getSharedPreferences("loginInfo");

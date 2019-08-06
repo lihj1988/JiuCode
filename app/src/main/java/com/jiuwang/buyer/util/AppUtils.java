@@ -745,16 +745,20 @@ public class AppUtils {
 				Window window = dialog.getWindow();
 				window.setContentView(R.layout.dialog_normal_one_button);
 				RelativeLayout relative_button2 = (RelativeLayout) window.findViewById(R.id.relative_button2);
+				RelativeLayout relative_button1 = (RelativeLayout) window.findViewById(R.id.relative_button1);
+				relative_button2.setVisibility(View.GONE);
+				relative_button1.setVisibility(View.VISIBLE);
 				Button bt1 = (Button) window.findViewById(R.id.bt1_quxiao);
 				Button bt2 = (Button) window.findViewById(R.id.bt2_queding);
+				Button button = (Button) window.findViewById(R.id.button);
 				TextView title = (TextView) window.findViewById(R.id.title);
 				title.setText("软件升级");
 				TextView tv_context = (TextView) window
 						.findViewById(R.id.tv_content);
 				tv_context.setText("发现新版本,建议立即更新使用.");
-				relative_button2.setVisibility(View.VISIBLE);
 				bt1.setText("取消");
 				bt2.setText("确定");
+				button.setText("确定");
 				bt1.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -762,6 +766,19 @@ public class AppUtils {
 					}
 				});
 				bt2.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if(getWriteAndReadPermission(activity)){
+							Intent updateIntent = new Intent(
+									activity, UpdateService.class);
+							activity.startService(updateIntent);
+
+						}
+						dialog.cancel();
+
+					}
+				});
+				button.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						if(getWriteAndReadPermission(activity)){
