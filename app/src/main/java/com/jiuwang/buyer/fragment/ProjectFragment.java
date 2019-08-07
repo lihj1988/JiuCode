@@ -29,6 +29,7 @@ import com.jiuwang.buyer.adapter.ProjectListAdapter;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.ProjectBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.ProjectDetailsEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
 import com.jiuwang.buyer.net.HttpUtils;
@@ -219,12 +220,12 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		map.put("currPage", String.valueOf(page));
 		map.put("pageSize", Constant.PAGESIZE);
 
-		if (!"".equals(is_part)) {
-			map.put("is_part", is_part);
-		}
-		if (!"".equals(id)) {
-			map.put("id", id);
-		}
+//		if (!"".equals(is_part)) {
+//			map.put("is_part", is_part);
+//		}
+//		if (!"".equals(id)) {
+//			map.put("id", id);
+//		}
 		HttpUtils.selectProjectList(map, new Consumer<ProjectEntity>() {
 			@Override
 			public void accept(ProjectEntity projectEntity) throws Exception {
@@ -285,39 +286,39 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	public void isWinning(HashMap<String, String> map) {
 		is_part = map.get("is_part");
 		map.put("act", "4");
-		Intent intent = new Intent();
-		intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
-		getActivity().sendBroadcast(intent);
+//		Intent intent = new Intent();
+//		intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
+//		getActivity().sendBroadcast(intent);
 		//如果当前项目已报名 查询是否中奖
 		///admin/project/aution_action.jsp?id=A2019080700002449&is_part=1&act=4
-//		if ("1".equals(is_part)) {
-//			HttpUtils.isWin(map, new Consumer<ProjectDetailsEntity>() {
-//				@Override
-//				public void accept(final ProjectDetailsEntity projectDetailsEntity) throws Exception {
-//
-//					new Handler() {
-//						@Override
-//						public void handleMessage(Message msg) {
-//							if (Constant.HTTP_SUCCESS_CODE.equals(projectDetailsEntity.getCode())) {
-//								if (Constant.ISWIN.equals(projectDetailsEntity.getData().get(0).getIs_win())) {
-//									Intent intent = new Intent();
-//									intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
-//									getActivity().sendBroadcast(intent);
-//								}
-//
-//							} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectDetailsEntity.getCode())) {
-//
-//							}
-//						}
-//					}.sendEmptyMessageDelayed(0, 1000);
-//				}
-//			}, new Consumer<Throwable>() {
-//				@Override
-//				public void accept(Throwable throwable) throws Exception {
-//
-//				}
-//			});
-//		}
+		if ("1".equals(is_part)) {
+			HttpUtils.isWin(map, new Consumer<ProjectDetailsEntity>() {
+				@Override
+				public void accept(final ProjectDetailsEntity projectDetailsEntity) throws Exception {
+
+					new Handler() {
+						@Override
+						public void handleMessage(Message msg) {
+							if (Constant.HTTP_SUCCESS_CODE.equals(projectDetailsEntity.getCode())) {
+								if (Constant.ISWIN.equals(projectDetailsEntity.getData().get(0).getIs_win())) {
+									Intent intent = new Intent();
+									intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
+									getActivity().sendBroadcast(intent);
+								}
+
+							} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectDetailsEntity.getCode())) {
+
+							}
+						}
+					}.sendEmptyMessageDelayed(0, 1000);
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+
+				}
+			});
+		}
 
 	}
 
