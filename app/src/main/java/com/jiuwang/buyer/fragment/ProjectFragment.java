@@ -285,7 +285,8 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void isWinning(HashMap<String, String> map) {
 		is_part = map.get("is_part");
-		map.put("act", "4");
+		map.put("act", "5");
+		map.put("aution_id",map.get("id"));
 //		Intent intent = new Intent();
 //		intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
 //		getActivity().sendBroadcast(intent);
