@@ -60,7 +60,8 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 //				projectItemOnClickListener.itemOnClick(position);
 			} else {
 				holder.tvReport.setText("已报名");
-				holder.tvReport.setTextColor(context.getColor(R.color.red));
+				holder.tvReport.setTextColor(context.getResources().getColor(R.color.red));
+//				holder.tvReport.setTextColor(context.getColor(R.color.red));
 			}
 			if ("2".equals(projectList.get(position).getStatus())) {
 				holder.llTime.setVisibility(View.INVISIBLE);
