@@ -163,7 +163,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:padding="@dimen/padding_size_5"
-						android:text="111111.00"
+						android:text="0.00"
 						android:textColor="@color/blue"/>
 
 					<TextView
@@ -191,7 +191,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:padding="@dimen/padding_size_5"
-						android:text="111111.00"
+						android:text="0.00"
 						android:textColor="@color/blue"/>
 
 					<TextView
@@ -351,20 +351,27 @@
 				style="@style/TextView.TitleLeft"
 				android:drawableLeft="@drawable/ic_user_address"
 				android:drawableStart="@drawable/ic_user_address"
-				android:text="收货地址"/>
+				android:drawableEnd="@drawable/right_img"
+				android:drawableRight="@drawable/right_img"
+				android:text="收货地址"
+				/>
 
 			<View style="@style/View.Line"/>
 
 			<TextView
-				android:drawableLeft="@drawable/ic_invite_code"
-				android:drawableStart="@drawable/ic_invite_code"
+				android:drawableEnd="@drawable/right_img"
+				android:drawableRight="@drawable/right_img"
 				android:id="@+id/tvMyInviteCode"
 				style="@style/TextView.TitleLeft"
+				android:drawableLeft="@drawable/ic_invite_code"
+				android:drawableStart="@drawable/ic_invite_code"
 				android:text="我的邀请码"/>
 
 			<View style="@style/View.Line"/>
 
 			<TextView
+				android:drawableEnd="@drawable/right_img"
+				android:drawableRight="@drawable/right_img"
 				android:drawableLeft="@drawable/bind_invite"
 				android:drawableStart="@drawable/bind_invite"
 				android:id="@+id/tvBindInviteCode"
@@ -374,6 +381,8 @@
 			<View style="@style/View.Line"/>
 
 			<TextView
+				android:drawableEnd="@drawable/right_img"
+				android:drawableRight="@drawable/right_img"
 				android:drawableLeft="@drawable/ic_account"
 				android:drawableStart="@drawable/ic_account"
 				android:id="@+id/tvMyAccount"
@@ -383,6 +392,8 @@
 			<View style="@style/View.Line"/>
 
 			<TextView
+				android:drawableEnd="@drawable/right_img"
+				android:drawableRight="@drawable/right_img"
 				android:drawableLeft="@drawable/ic_invite_manager"
 				android:drawableStart="@drawable/ic_invite_manager"
 				android:id="@+id/tvInviteManager"
@@ -392,10 +403,12 @@
 			<View style="@style/View.Line"/>
 
 			<TextView
+				android:drawableEnd="@drawable/right_img"
+				android:drawableRight="@drawable/right_img"
 				android:id="@+id/settingTextView"
 				style="@style/TextView.TitleLeft"
-				android:drawableLeft="@drawable/ic_user_setting"
-				android:drawableStart="@drawable/ic_user_setting"
+				android:drawableLeft="@drawable/ic_version"
+				android:drawableStart="@drawable/ic_version"
 				android:text="版本号"/>
 
 			<View

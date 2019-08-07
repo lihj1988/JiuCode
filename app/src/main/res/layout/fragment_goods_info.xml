@@ -61,7 +61,7 @@
 							android:layout_marginRight="22dp"
 							android:ellipsize="end"
 							android:maxLines="2"
-							android:text="Letv/乐视LETV体感-超级枪王 乐视TV超级电视产品玩具体感游戏枪 电玩道具黑色"
+							android:text=""
 							android:textColor="#222222"
 							android:textSize="15sp"/>
 
@@ -153,7 +153,7 @@
 							android:layout_marginLeft="10dp"
 							android:layout_marginRight="20dp"
 							android:layout_weight="1"
-							android:text="黑色, 1件"
+							android:text="1件"
 							android:textColor="#222222"
 							android:textSize="14sp"/>
 
