@@ -45,7 +45,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -90,7 +89,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 		rootView = View.inflate(getActivity(), R.layout.fragment_project_list, null);
 		ButterKnife.bind(this, rootView);
-		if(!EventBus.getDefault().isRegistered(this)){
+		if (!EventBus.getDefault().isRegistered(this)) {
 			EventBus.getDefault().register(this);
 		}
 		projectList = new ArrayList<>();
@@ -220,10 +219,10 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		map.put("currPage", String.valueOf(page));
 		map.put("pageSize", Constant.PAGESIZE);
 
-		if(!"".equals(is_part)){
+		if (!"".equals(is_part)) {
 			map.put("is_part", is_part);
 		}
-		if(!"".equals(id)){
+		if (!"".equals(id)) {
 			map.put("id", id);
 		}
 		HttpUtils.selectProjectList(map, new Consumer<ProjectEntity>() {
@@ -241,18 +240,12 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 					startActivity(intent);
 					getActivity().finish();
 				}
-				new Handler(){
+				new Handler() {
 					@Override
 					public void handleMessage(Message msg) {
 
 						if (projectList != null && projectList.size() > 0) {
 							stateTextView.setVisibility(View.GONE);
-//					if (page == 1 ) {
-//						projectListAdapter = null;
-//						setAdapter();
-//					}else {
-//						projectListAdapter.notifyDataSetChanged();
-//					}
 							if (projectListAdapter != null) {
 								projectListAdapter.notifyDataSetChanged();
 							} else {
@@ -268,7 +261,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 							stateTextView.setText(getActivity().getString(R.string.nothing));
 						}
 					}
-				}.sendEmptyMessageDelayed(0,500);
+				}.sendEmptyMessageDelayed(0, 500);
 			}
 		}, new Consumer<Throwable>() {
 			@Override
@@ -287,11 +280,44 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 			onRefresh();
 		}
 	}
-	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void isWinning(Map<String,String> map){
-		is_part = map.get(is_part);
-		id = map.get(id);
 
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void isWinning(HashMap<String, String> map) {
+		is_part = map.get("is_part");
+		map.put("act", "4");
+		Intent intent = new Intent();
+		intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
+		getActivity().sendBroadcast(intent);
+		//如果当前项目已报名 查询是否中奖
+		///admin/project/aution_action.jsp?id=A2019080700002449&is_part=1&act=4
+//		if ("1".equals(is_part)) {
+//			HttpUtils.isWin(map, new Consumer<ProjectDetailsEntity>() {
+//				@Override
+//				public void accept(final ProjectDetailsEntity projectDetailsEntity) throws Exception {
+//
+//					new Handler() {
+//						@Override
+//						public void handleMessage(Message msg) {
+//							if (Constant.HTTP_SUCCESS_CODE.equals(projectDetailsEntity.getCode())) {
+//								if (Constant.ISWIN.equals(projectDetailsEntity.getData().get(0).getIs_win())) {
+//									Intent intent = new Intent();
+//									intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
+//									getActivity().sendBroadcast(intent);
+//								}
+//
+//							} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectDetailsEntity.getCode())) {
+//
+//							}
+//						}
+//					}.sendEmptyMessageDelayed(0, 1000);
+//				}
+//			}, new Consumer<Throwable>() {
+//				@Override
+//				public void accept(Throwable throwable) throws Exception {
+//
+//				}
+//			});
+//		}
 
 	}
 

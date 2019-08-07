@@ -13,6 +13,7 @@ import com.jiuwang.buyer.entity.InviteEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
+import com.jiuwang.buyer.entity.ProjectDetailsEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
 import com.jiuwang.buyer.entity.UserEntity;
@@ -67,6 +68,11 @@ public interface QNewsService {
 	//抢购-报名
 	@POST("admin/project/aution_user_action.jsp")
 	Observable<BaseResultEntity> enroll(
+			@QueryMap HashMap<String, String> map
+	);
+	//抢购-报名
+	@POST("admin/project/aution_user_action.jsp")
+	Observable<ProjectDetailsEntity> isWin(
 			@QueryMap HashMap<String, String> map
 	);
 

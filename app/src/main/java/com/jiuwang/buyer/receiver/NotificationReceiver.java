@@ -7,9 +7,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 
 import com.jiuwang.buyer.R;
@@ -62,6 +60,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 			// 设置通知灯光（LIGHTS）、铃声（SOUND）、震动（VIBRATE）、（ALL 表示都设置）
 			builder.setDefaults(Notification.DEFAULT_ALL);
 		}
+		builder.setTicker("中奖啦").setContentTitle("中奖通知").setContentText("您抢购的商品已中奖，请前往订单中查看！");
 //		builder.setAutoCancel(true);
 //		builder = new Notification.Builder(context, CALENDAR_ID);
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 11,

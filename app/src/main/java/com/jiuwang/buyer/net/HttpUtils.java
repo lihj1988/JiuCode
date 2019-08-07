@@ -13,6 +13,7 @@ import com.jiuwang.buyer.entity.InviteEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
+import com.jiuwang.buyer.entity.ProjectDetailsEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
 import com.jiuwang.buyer.entity.UserEntity;
@@ -142,6 +143,21 @@ public class HttpUtils {
 
 	}
 
+	/**
+	 * 抢购-查询中奖
+	 *
+	 * @param map
+	 * @return
+	 */
+	public static void isWin(HashMap<String, String> map, Consumer<ProjectDetailsEntity> consumer, Consumer<Throwable> throwableConsumer) {
+
+		QClitent.getInstance()
+				.isWin(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+
+	}
 	/**
 	 * 添加购物车
 	 *

@@ -12,6 +12,7 @@ public class Constant {
 	public static final String HTTP_SUCCESS_CODE = "0";
 	public static final String HTTP_FAIL_CODE = "1";
 	public static final String HTTP_LOGINOUTTIME_CODE = "2";
+	public static final String ISWIN = "1";//已中奖
 	//查询商品详情 act赋值
 	public static final String GOODS_ACTION_DETAILS_ACT = "details";
 

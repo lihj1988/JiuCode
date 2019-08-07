@@ -245,7 +245,10 @@ public class GoodsDetailsActivty extends BaseActivity {
 					if (Constant.HTTP_SUCCESS_CODE.equals(myCarEntity.getCode())) {
 						if (myCarEntity.getData() != null && myCarEntity.getData().size() > 0) {
 							for (int i = 0; i < myCarEntity.getData().size(); i++) {
-								count += Integer.parseInt(myCarEntity.getData().get(i).getCount());
+//								count += Integer.parseInt(myCarEntity.getData().get(i).getCount());
+								for (int j = 0; j < myCarEntity.getData().get(i).getGoods_detail().size(); j++) {
+									count+=Integer.parseInt(myCarEntity.getData().get(i).getGoods_detail().get(j).getQuantity());
+								}
 							}
 						}
 						visible_dot.setText(count + "");

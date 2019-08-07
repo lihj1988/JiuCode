@@ -24,6 +24,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -177,7 +178,10 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 									Intent intent = new Intent();
 									intent.setAction("refreshProject");
 									context.sendBroadcast(intent);
-									EventBus.getDefault().post("isWinning");
+									HashMap<String, String> map = new HashMap<>();
+									map.put("id",projectList.get(position).getId());
+									map.put("is_part",projectList.get(position).getIs_part());
+									EventBus.getDefault().post(map);
 								}
 							}.sendEmptyMessageDelayed(0, 500);
 						}
