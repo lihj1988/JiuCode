@@ -299,12 +299,19 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 					new Handler() {
 						@Override
 						public void handleMessage(Message msg) {
+
 							if (Constant.HTTP_SUCCESS_CODE.equals(projectDetailsEntity.getCode())) {
-								if (Constant.ISWIN.equals(projectDetailsEntity.getData().get(0).getIs_win())) {
-									Intent intent = new Intent();
-									intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
-									getActivity().sendBroadcast(intent);
+								for (int i = 0; i < projectDetailsEntity.getData().size(); i++) {
+//									if(){
+//
+//									}
+									if (Constant.ISWIN.equals(projectDetailsEntity.getData().get(i).getIs_win())) {
+										Intent intent = new Intent();
+										intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
+										getActivity().sendBroadcast(intent);
+									}
 								}
+
 
 							} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectDetailsEntity.getCode())) {
 
