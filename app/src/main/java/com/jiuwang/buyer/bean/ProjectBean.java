@@ -44,6 +44,7 @@ public class ProjectBean implements Serializable {
 	private String grouping_cd;
 	private String create_user;
 	private String create_username;
+	private String is_win;
 	private String project_id;
 	private String create_time;
 	private String sale_price;//价格
@@ -211,5 +212,13 @@ public class ProjectBean implements Serializable {
 
 	public void setIs_part(String is_part) {
 		this.is_part = is_part;
+	}
+
+	public String getIs_win() {
+		return is_win;
+	}
+
+	public void setIs_win(String is_win) {
+		this.is_win = is_win;
 	}
 }

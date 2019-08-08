@@ -113,18 +113,19 @@ public class MyTabWidget extends LinearLayout {
 				@Override
 				public void onClick(View v) {
 					if (!Constant.IS_LOGIN) {
-						if (index != 0) {
+						if (index == 2||index == 3) {
 							if (!Constant.IS_LOGIN) {
 								Intent intentExit = new Intent(context, LoginActivity.class);
 								context.startActivity(intentExit);
 							}
 						}
-						if (index != 1) {
-							if (!Constant.IS_LOGIN) {
-								Intent intentExit = new Intent(context, LoginActivity.class);
-								context.startActivity(intentExit);
-							}
-						} else {
+//						if (index != 1) {
+//							if (!Constant.IS_LOGIN) {
+//								Intent intentExit = new Intent(context, LoginActivity.class);
+//								context.startActivity(intentExit);
+//							}
+//						}
+						else {
 							// 设置底部图片和文字的显示
 							setTabsDisplay(context, index);
 

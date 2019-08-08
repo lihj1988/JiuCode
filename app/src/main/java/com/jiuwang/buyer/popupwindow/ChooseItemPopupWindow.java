@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.ChooseItemAdapter;
+import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.bean.SelectGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
@@ -110,7 +111,7 @@ public class ChooseItemPopupWindow extends PopupWindow {
 					public void accept(BaseResultEntity baseResultEntity) throws Exception {
 						loadingDialog.dismiss();
 						if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
-
+							AppUtils.showDialog(MyApplication.currentActivity,"提示","报名成功");
 							Intent intent = new Intent();
 							intent.setAction("refreshProject");
 							context.sendBroadcast(intent);

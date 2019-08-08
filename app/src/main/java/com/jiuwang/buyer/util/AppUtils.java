@@ -854,6 +854,41 @@ public class AppUtils {
 		});
 	}
 
+	public static void showDialog(final Activity activity, String titleText, String content) {
+
+		final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
+		dialog.show();
+		Window window = dialog.getWindow();
+		window.setContentView(R.layout.dialog_normal_one_button);
+		RelativeLayout relative_button2 = (RelativeLayout) window.findViewById(R.id.relative_button2);
+		RelativeLayout relative_button1 = (RelativeLayout) window.findViewById(R.id.relative_button1);
+		Button button = (Button) window.findViewById(R.id.button);
+//		Button bt2 = (Button) window.findViewById(R.id.bt2_queding);
+		TextView title = (TextView) window.findViewById(R.id.title);
+		title.setText(titleText);
+		TextView tv_context = (TextView) window
+				.findViewById(R.id.tv_content);
+		tv_context.setText(content);
+		relative_button2.setVisibility(View.GONE);
+		relative_button1.setVisibility(View.VISIBLE);
+
+//		bt1.setText("取消");
+//		bt1.setVisibility(View.GONE);
+//		bt2.setText("确定");
+//		bt1.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				dialog.cancel();
+//			}
+//		});
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.cancel();
+			}
+		});
+	}
+
 	public static void showNormalDialog(final Activity activity, String titleText, String context, String negative, String positive, final DialogClickInterface dialogClickInterface) {
 
 		final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
