@@ -12,6 +12,7 @@ import android.os.Build;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.MainActivity;
+import com.jiuwang.buyer.activity.MyProjectActivity;
 import com.jiuwang.buyer.base.MyApplication;
 
 /**
@@ -64,7 +65,8 @@ public class NotificationReceiver extends BroadcastReceiver {
 //		builder.setAutoCancel(true);
 //		builder = new Notification.Builder(context, CALENDAR_ID);
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 11,
-				new Intent(context, MainActivity.class), 0);
+				new Intent(context, MyProjectActivity.class), 0);
+		builder.setContentIntent(pendingIntent);
 		notification = builder.setSmallIcon(R.mipmap.app_logo)
 
 //                .setChannelId(CALENDAR_ID)
