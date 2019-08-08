@@ -8,18 +8,19 @@
 
     <include
         android:id="@+id/title"
-        layout="@layout/include_seach" />
+        layout="@layout/include_title" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
-        <com.jiuwang.buyer.xlistview.XListView
-            android:id="@+id/xListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fadeScrollbars="true" />
-    </LinearLayout>
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/ivRedPackage"
+            android:layout_marginRight="@dimen/padding_size_10"
+            android:src="@drawable/red_pakage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
 </LinearLayout>

@@ -19,6 +19,7 @@ import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.fragment.GoodsFragment;
 import com.jiuwang.buyer.fragment.HomeFragment;
 import com.jiuwang.buyer.fragment.MineFragment;
 import com.jiuwang.buyer.fragment.ProjectFragment;
@@ -41,7 +42,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 
 	private FragmentManager mFragmentManager;
 	private MyTabWidget tbBottom;
-	private HomeFragment homeFragment;
+	private GoodsFragment goodsFragment;
 	private ProjectFragment projectFragment;
 	//	private CarFragment carFragment;
 	private MineFragment mineFragment;
@@ -49,6 +50,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 	private MyReceiver myReceiver;
 	private String invite;
 	private NotificationReceiver notificationReceiver;
+	private HomeFragment homeFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -129,13 +131,11 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		setTopView(topView);
 		if (backIndex == ConstantValues.HOME_FRAGMENT_INDEX) {//首页
 			myClick(backIndex);
+		} else if (backIndex == ConstantValues.GOODS_FRAGMENT_INDEX) {//商品进入
+			myClick(backIndex);
 		} else if (backIndex == ConstantValues.PROJECT_FRAGMENT_INDEX) {//抢购进入
 			myClick(backIndex);
-		}
-//		else if (backIndex == ConstantValues.CAR_FRAGMENT_INDEX) {//购物车进入
-//			myClick(backIndex);
-//		}
-		else if (backIndex == ConstantValues.MINE_FRAGMENT_INDEX) {//我的
+		} else if (backIndex == ConstantValues.MINE_FRAGMENT_INDEX) {//我的
 			myClick(backIndex);
 		}
 		tbBottom.setIndicateDisplay(this, 2, false);
@@ -155,12 +155,21 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 
 		switch (index) {
 			case ConstantValues.HOME_FRAGMENT_INDEX://首页
-				if (null == homeFragment) {
+				if (null == goodsFragment) {
 					homeFragment = new HomeFragment();
 					transaction.add(R.id.center_layout, homeFragment);
 				} else {
 					transaction.show(homeFragment);
 					homeFragment.intDatas();
+				}
+				break;
+			case ConstantValues.GOODS_FRAGMENT_INDEX://商品
+				if (null == goodsFragment) {
+					goodsFragment = new GoodsFragment();
+					transaction.add(R.id.center_layout, goodsFragment);
+				} else {
+					transaction.show(goodsFragment);
+					goodsFragment.intDatas();
 				}
 				break;
 			case ConstantValues.PROJECT_FRAGMENT_INDEX://抢购
@@ -176,15 +185,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 
 
 				break;
-//			case ConstantValues.CAR_FRAGMENT_INDEX://购物车
-//				if (null == carFragment) {
-//					carFragment = new CarFragment();
-//					transaction.add(R.id.center_layout, carFragment);
-//				} else {
-//					transaction.show(carFragment);
-////					carFragment.trackRefresh(1);
-//				}
-//				break;
+
 			case ConstantValues.MINE_FRAGMENT_INDEX://我的
 
 				if (null == mineFragment) {
@@ -212,6 +213,9 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 	private void hideFragments(FragmentTransaction transaction) {
 		if (null != homeFragment) {
 			transaction.hide(homeFragment);
+		}
+		if (null != goodsFragment) {
+			transaction.hide(goodsFragment);
 		}
 		if (null != projectFragment) {
 			transaction.hide(projectFragment);

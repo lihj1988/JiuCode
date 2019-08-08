@@ -220,12 +220,6 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 		map.put("currPage", String.valueOf(page));
 		map.put("pageSize", Constant.PAGESIZE);
 
-//		if (!"".equals(is_part)) {
-//			map.put("is_part", is_part);
-//		}
-//		if (!"".equals(id)) {
-//			map.put("id", id);
-//		}
 		HttpUtils.selectProjectList(map, new Consumer<ProjectEntity>() {
 			@Override
 			public void accept(ProjectEntity projectEntity) throws Exception {
@@ -310,6 +304,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 										Intent intent = new Intent();
 										intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
 										getActivity().sendBroadcast(intent);
+										break;
 									}
 								}
 

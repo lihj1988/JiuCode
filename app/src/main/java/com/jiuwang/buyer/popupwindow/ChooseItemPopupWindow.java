@@ -108,13 +108,14 @@ public class ChooseItemPopupWindow extends PopupWindow {
 				HttpUtils.enroll(hashMap, new Consumer<BaseResultEntity>() {
 					@Override
 					public void accept(BaseResultEntity baseResultEntity) throws Exception {
+						loadingDialog.dismiss();
 						if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
 
 							Intent intent = new Intent();
 							intent.setAction("refreshProject");
 							context.sendBroadcast(intent);
 						}
-						loadingDialog.dismiss();
+
 						ChooseItemPopupWindow.this.dismiss();
 						MyToastView.showToast(baseResultEntity.getMsg(), context);
 

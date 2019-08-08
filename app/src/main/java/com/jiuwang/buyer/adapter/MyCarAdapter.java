@@ -96,9 +96,9 @@ public class MyCarAdapter extends BaseAdapter {
 				} else {
 					data.setIscheck(true);
 					for (int i = 0; i < list.size(); i++) {
-						if(i==position){
+						if (i == position) {
 							list.get(i).setIscheck(true);
-						}else {
+						} else {
 							list.get(i).setIscheck(false);
 						}
 					}
@@ -230,24 +230,22 @@ public class MyCarAdapter extends BaseAdapter {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
 				MyToastView.showToast(baseResultEntity.getMsg(), context);
-				if(act.equals(Constant.ACTION_ACT_DELETE)){
-					Intent intent = new Intent();
-					intent.setAction("refreshCar");
-					context.sendBroadcast(intent);
-					intent.setAction("refresh_home");
-					context.sendBroadcast(intent);
-					EventBus.getDefault().post("refreshCarCount");
-				}
-//				Intent intent = new Intent();
-//				intent.setAction("refreshCar");
-//				context.sendBroadcast(intent);
+//				if(act.equals(Constant.ACTION_ACT_DELETE)){
+				Intent intentCast = new Intent();
+				intentCast.setAction("refreshCar");
+				context.sendBroadcast(intentCast);
+				intentCast.setAction("refresh_home");
+				context.sendBroadcast(intentCast);
+				EventBus.getDefault().post("refreshCarCount");
+//				}
+
 				loadingDialog.dismiss();
 				if (act.equals(Constant.ACTION_ACT_DELETE)) {
 					list.get(position).getGoods_detail().remove(childPosition);
 				} else {
 					list.get(position).getGoods_detail().get(childPosition).setQuantity(quantity);
 				}
-				if(list.get(position).getGoods_detail().size()==0){
+				if (list.get(position).getGoods_detail().size() == 0) {
 					list.remove(position);
 					notifyDataSetChanged();
 					itemCheckStatusChangeListener.checkStatusChange();
@@ -255,7 +253,7 @@ public class MyCarAdapter extends BaseAdapter {
 					intent.setAction("refreshCar");
 					context.sendBroadcast(intent);
 					EventBus.getDefault().post("resfreshCarCount");
-				}else {
+				} else {
 					notifyDataSetChanged();
 					itemCheckStatusChangeListener.checkStatusChange();
 				}

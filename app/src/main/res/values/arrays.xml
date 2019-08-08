@@ -3,6 +3,7 @@
     <!-- 首页导航 -->
     <string-array name="bottom_bar_labels">
         <item>@string/home</item>
+        <item>@string/goods</item>
         <item>@string/project</item>
         <item>@string/mine</item>
     </string-array>

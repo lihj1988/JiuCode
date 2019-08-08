@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class MyTabWidget extends LinearLayout {
 	private static final String TAG = "MyTabWidget";
-	private int[] mDrawableIds = new int[]{R.drawable.home_selector, R.drawable.project_selector,
+	private int[] mDrawableIds = new int[]{R.drawable.home_selector, R.drawable.goods_selector, R.drawable.project_selector,
 			R.drawable.mine_selector,};
 	// 存放底部菜单的各个文字CheckedTextView
 	private List<CheckedTextView> mCheckedList = new ArrayList<CheckedTextView>();
@@ -114,6 +114,12 @@ public class MyTabWidget extends LinearLayout {
 				public void onClick(View v) {
 					if (!Constant.IS_LOGIN) {
 						if (index != 0) {
+							if (!Constant.IS_LOGIN) {
+								Intent intentExit = new Intent(context, LoginActivity.class);
+								context.startActivity(intentExit);
+							}
+						}
+						if (index != 1) {
 							if (!Constant.IS_LOGIN) {
 								Intent intentExit = new Intent(context, LoginActivity.class);
 								context.startActivity(intentExit);
