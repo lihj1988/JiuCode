@@ -9,21 +9,16 @@ import java.io.Serializable;
 
 public class InviteBean implements Serializable {
 
+
 	/**
-	 * user_cd : coder
-	 * invite_user : buyer
-	 * create_user : sys
-	 * create_username : sys
-	 * create_time : 2019-07-22 20:13:53
-	 * r : 1
+	 * user_cd : 18500997554
+	 * total_count : 1
+	 * project_count :
 	 */
 
 	private String user_cd;
-	private String invite_user;
-	private String create_user;
-	private String create_username;
-	private String create_time;
-	private int r;
+	private String total_count;
+	private String project_count;
 
 	public String getUser_cd() {
 		return user_cd;
@@ -33,43 +28,19 @@ public class InviteBean implements Serializable {
 		this.user_cd = user_cd;
 	}
 
-	public String getInvite_user() {
-		return invite_user;
+	public String getTotal_count() {
+		return total_count;
 	}
 
-	public void setInvite_user(String invite_user) {
-		this.invite_user = invite_user;
+	public void setTotal_count(String total_count) {
+		this.total_count = total_count;
 	}
 
-	public String getCreate_user() {
-		return create_user;
+	public String getProject_count() {
+		return project_count;
 	}
 
-	public void setCreate_user(String create_user) {
-		this.create_user = create_user;
-	}
-
-	public String getCreate_username() {
-		return create_username;
-	}
-
-	public void setCreate_username(String create_username) {
-		this.create_username = create_username;
-	}
-
-	public String getCreate_time() {
-		return create_time;
-	}
-
-	public void setCreate_time(String create_time) {
-		this.create_time = create_time;
-	}
-
-	public int getR() {
-		return r;
-	}
-
-	public void setR(int r) {
-		this.r = r;
+	public void setProject_count(String project_count) {
+		this.project_count = project_count;
 	}
 }

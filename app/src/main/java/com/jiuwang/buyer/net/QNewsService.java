@@ -58,7 +58,6 @@ public interface QNewsService {
 	Observable<ProjectEntity> selectProjectList(
 			@QueryMap HashMap<String, String> map
 	);
-
 	//抢购-获取可选择的商品
 	@POST("admin/project/aution_user_action.jsp")
 	Observable<SelectGoodsEntity> selectChooseGoods(
@@ -207,5 +206,6 @@ public interface QNewsService {
 	Observable<BaseResultEntity> version(
 			@QueryMap HashMap<String, String> map
 	);
+
 
 }

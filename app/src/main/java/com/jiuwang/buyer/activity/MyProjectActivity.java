@@ -1,9 +1,9 @@
 package com.jiuwang.buyer.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -47,7 +47,7 @@ public class MyProjectActivity extends BaseActivity implements XRecyclerView.Loa
 	XRecyclerView projectListView;
 	@Bind(R.id.topView)
 	LinearLayout topView;
-	private int page = 0;
+	private int page = 1;
 	private List<ProjectBean> projectList;
 	private MyProjectListAdapter myProjectListAdapter;
 
@@ -56,7 +56,7 @@ public class MyProjectActivity extends BaseActivity implements XRecyclerView.Loa
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_project_list);
 		ButterKnife.bind(this);
-		AppUtils.initListView(MyProjectActivity.this, projectListView, true, true);
+
 		projectList = new ArrayList<>();
 		initView();
 		initData();
@@ -72,6 +72,10 @@ public class MyProjectActivity extends BaseActivity implements XRecyclerView.Loa
 		});
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
 		setTopView(topView);
+		AppUtils.initListView(MyProjectActivity.this, projectListView, true, true);
+		Drawable dividerDrawable = ContextCompat.getDrawable(this, R.drawable.divider_sample);
+		projectListView.addItemDecoration(projectListView.new DividerItemDecoration(dividerDrawable));
+		projectListView.setLoadingListener(this);
 	}
 
 	private void initData() {
@@ -79,8 +83,8 @@ public class MyProjectActivity extends BaseActivity implements XRecyclerView.Loa
 		HashMap<String, String> map = new HashMap<>();
 		map.put("currPage", String.valueOf(page));
 		map.put("pageSize", Constant.PAGESIZE);
-		map.put("is_part", "");
-		map.put("act", "");
+		map.put("is_part", "1");
+		map.put("status", "2");
 		HttpUtils.selectProjectList(map, new Consumer<ProjectEntity>() {
 			@Override
 			public void accept(ProjectEntity projectEntity) throws Exception {
@@ -97,11 +101,17 @@ public class MyProjectActivity extends BaseActivity implements XRecyclerView.Loa
 					finish();
 				}
 
-
 				if (projectList != null && projectList.size() > 0) {
-					setAdapter();
+					if (myProjectListAdapter != null) {
+						myProjectListAdapter.notifyDataSetChanged();
+					} else {
+						setAdapter();
+					}
+				}
+				if (page == 1) {
+					projectListView.refreshComplete();
 				} else {
-					myProjectListAdapter.notifyDataSetChanged();
+					projectListView.loadMoreComplete();
 				}
 			}
 		}, new Consumer<Throwable>() {
@@ -134,7 +144,7 @@ public class MyProjectActivity extends BaseActivity implements XRecyclerView.Loa
 	//	刷新
 	@Override
 	public void onRefresh() {
-		page = 0;
+		page = 1;
 		initData();
 	}
 

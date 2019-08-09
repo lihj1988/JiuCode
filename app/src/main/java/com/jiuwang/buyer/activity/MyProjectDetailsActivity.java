@@ -2,8 +2,6 @@ package com.jiuwang.buyer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -48,6 +46,12 @@ public class MyProjectDetailsActivity extends BaseActivity {
 	XRecyclerView projectListView;
 	@Bind(R.id.topView)
 	LinearLayout topView;
+	@Bind(R.id.tvProjectName)
+	TextView tvProjectName;
+	@Bind(R.id.tvReport)
+	TextView tvReport;
+	@Bind(R.id.tvSalePeice)
+	TextView tvSalePeice;
 
 
 	private List<ProjectDetailBean> projectList;
@@ -68,6 +72,7 @@ public class MyProjectDetailsActivity extends BaseActivity {
 		id = projectBean.getId();
 		initView();
 		initData();
+
 	}
 
 	private void initView() {
@@ -80,6 +85,14 @@ public class MyProjectDetailsActivity extends BaseActivity {
 			}
 		});
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
+		tvProjectName.setText(projectBean.getProject_name());
+		if(Constant.ISWIN.equals(projectBean.getIs_win())){
+			tvReport.setText("已中奖");
+			tvReport.setTextColor(getResources().getColor(R.color.red));
+		}else {
+			tvReport.setText("未中奖");
+		}
+		tvSalePeice.setText(projectBean.getSale_price());
 	}
 
 	private void initData() {
@@ -103,10 +116,7 @@ public class MyProjectDetailsActivity extends BaseActivity {
 					finish();
 				}
 
-
 				if (projectList != null && projectList.size() > 0) {
-					projectDetailsAdapter.notifyDataSetChanged();
-				} else {
 					setAdapter();
 				}
 

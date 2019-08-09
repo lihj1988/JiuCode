@@ -279,8 +279,9 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void isWinning(HashMap<String, String> map) {
 		is_part = map.get("is_part");
+		final String projectName = map.get("project_name");
 		map.put("act", "5");
-		map.put("aution_id",map.get("id"));
+		map.put("aution_id", map.get("id"));
 //		Intent intent = new Intent();
 //		intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
 //		getActivity().sendBroadcast(intent);
@@ -296,17 +297,26 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 						public void handleMessage(Message msg) {
 
 							if (Constant.HTTP_SUCCESS_CODE.equals(projectDetailsEntity.getCode())) {
-								for (int i = 0; i < projectDetailsEntity.getData().size(); i++) {
+//								for (int i = 0; i < projectDetailsEntity.getData().size(); i++) {
 //									if(){
 //
 //									}
-									if (Constant.ISWIN.equals(projectDetailsEntity.getData().get(i).getIs_win())) {
-										Intent intent = new Intent();
-										intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
-										getActivity().sendBroadcast(intent);
-										break;
-									}
+								Intent intent = new Intent();
+								if (Constant.ISWIN.equals(projectDetailsEntity.getData().get(0).getIs_win())) {
+
+									intent.putExtra("ticker","");
+									intent.putExtra("title","通知");
+									intent.putExtra("contentText","您参与的"+projectName+"已结束,已中奖!");
+
+//										break;
+								}else {
+									intent.putExtra("ticker","");
+									intent.putExtra("title","通知");
+									intent.putExtra("contentText","您参与的"+projectName+"已结束,未中奖!");
 								}
+								intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
+								getActivity().sendBroadcast(intent);
+//								}
 
 
 							} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectDetailsEntity.getCode())) {

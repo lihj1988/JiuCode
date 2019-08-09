@@ -180,6 +180,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 									context.sendBroadcast(intent);
 									HashMap<String, String> map = new HashMap<>();
 									map.put("id",projectList.get(position).getId());
+									map.put("project_name",projectList.get(position).getProject_name());
 									map.put("is_part",projectList.get(position).getIs_part());
 									EventBus.getDefault().post(map);
 								}
@@ -245,6 +246,5 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 	}
 	public interface ProjectItemOnClickListener {
 		abstract void itemOnClick(int position);
-
 	}
 }

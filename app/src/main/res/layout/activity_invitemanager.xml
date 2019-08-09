@@ -24,12 +24,12 @@
 				android:layout_height="wrap_content">
 
 				<TextView
-					android:id="@+id/textView2"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="邀请总人数："/>
 
 				<TextView
+					android:id="@+id/tvTotalCount"
 					android:textColor="@color/black"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -37,25 +37,6 @@
 			</LinearLayout>
 
 		</LinearLayout>
-
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/padding_size_5">
-
-			<TextView
-				android:id="@+id/textView4"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="周参与项目（次）："/>
-
-			<TextView
-				android:textColor="@color/black"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="23"/>
-		</LinearLayout>
-
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -67,10 +48,33 @@
 				android:text="总参与项目（次）："/>
 
 			<TextView
+				android:id="@+id/tvProjectCount"
 				android:textColor="@color/black"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="2"/>
 		</LinearLayout>
+		<LinearLayout
+			android:visibility="invisible"
+
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/padding_size_5">
+
+			<TextView
+
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="周参与项目（次）："/>
+
+			<TextView
+
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="23"
+				android:textColor="@color/black"/>
+		</LinearLayout>
+
+
 	</LinearLayout>
 </LinearLayout>

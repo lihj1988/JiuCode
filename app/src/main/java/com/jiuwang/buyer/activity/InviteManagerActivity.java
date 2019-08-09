@@ -30,7 +30,7 @@ import io.reactivex.functions.Consumer;
  * desc:邀请人管理
  */
 
-public class InviteManagerActivity extends BaseActivity  {
+public class InviteManagerActivity extends BaseActivity {
 	@Bind(R.id.topView)
 	LinearLayout topView;
 	@Bind(R.id.actionbar_text)
@@ -39,12 +39,18 @@ public class InviteManagerActivity extends BaseActivity  {
 	RelativeLayout onclickLayoutLeft;
 	@Bind(R.id.onclick_layout_right)
 	Button onclickLayoutRight;
-//	@Bind(R.id.listView)
+
+	@Bind(R.id.tvTotalCount)
+	TextView tvTotalCount;
+	@Bind(R.id.tvProjectCount)
+	TextView tvProjectCount;
+	//	@Bind(R.id.listView)
 //	XRecyclerView listView;
 	private int page = 1;
 	private List<InviteBean> inviteBeanList;
 	private InviteManagerAdapter inviteManagerAdapter;
 	private HashMap<String, String> hashMap;
+	private InviteBean inviteBean;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,36 +59,23 @@ public class InviteManagerActivity extends BaseActivity  {
 		ButterKnife.bind(this);
 		inviteBeanList = new ArrayList<>();
 		hashMap = new HashMap<>();
-//		hashMap.put("currPage", String.valueOf(page));
-//		hashMap.put("pageSize", Constant.PAGESIZE);
 		initView();
 		initData();
 
 	}
 
 	private void initData() {
-		if (CommonUtil.getNetworkRequest(InviteManagerActivity.this)){
-
+		if (CommonUtil.getNetworkRequest(InviteManagerActivity.this)) {
+			hashMap.put("act","total");
 			HttpUtils.invite(hashMap, new Consumer<InviteEntity>() {
 				@Override
 				public void accept(InviteEntity inviteEntity) throws Exception {
-					if(Constant.HTTP_SUCCESS_CODE.equals(inviteEntity.getCode())){
-						if(page==1){
-							inviteBeanList.clear();
-						}
-//						inviteBeanList.addAll(inviteEntity.getData());
-//						if(inviteManagerAdapter!=null){
-//							inviteManagerAdapter.notifyDataSetChanged();
-//						}else {
-//							setAdapter();
-//						}
-//						if(page==1){
-//							listView.refreshComplete();
-//						}else {
-//							listView.loadMoreComplete();
-//						}
+					if (Constant.HTTP_SUCCESS_CODE.equals(inviteEntity.getCode())) {
+						inviteBean = inviteEntity.getData().get(0);
+						tvTotalCount.setText(inviteBean.getTotal_count());
+						tvProjectCount.setText(inviteBean.getProject_count());
 
-					}else if(Constant.HTTP_LOGINOUTTIME_CODE.equals(inviteEntity.getCode())){
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(inviteEntity.getCode())) {
 						startActivity(new Intent(InviteManagerActivity.this, LoginActivity.class));
 						finish();
 					}
@@ -95,19 +88,17 @@ public class InviteManagerActivity extends BaseActivity  {
 			});
 		}
 	}
-	private void setAdapter(){
-		inviteManagerAdapter = new InviteManagerAdapter(InviteManagerActivity.this,inviteBeanList);
+
+	private void setAdapter() {
+		inviteManagerAdapter = new InviteManagerAdapter(InviteManagerActivity.this, inviteBeanList);
 //		listView.setAdapter(inviteManagerAdapter);
 	}
+
 	private void initView() {
 		setTopView(topView);
 		actionbarText.setText("邀请人管理");
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
-//		AppUtils.initListView(InviteManagerActivity.this,listView,true,true);
-//		Drawable dividerDrawable = ContextCompat.getDrawable(InviteManagerActivity.this, R.drawable.divider_sample_low);
-//		listView.addItemDecoration(listView.new DividerItemDecoration(dividerDrawable));
-//		listView.setLoadingListener(this);
-//		listView.refresh();
+
 		onclickLayoutLeft.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -116,15 +107,4 @@ public class InviteManagerActivity extends BaseActivity  {
 		});
 	}
 
-//	@Override
-//	public void onRefresh() {
-//		page = 1;
-//		initData();
-//	}
-//
-//	@Override
-//	public void onLoadMore() {
-//		page++;
-//		initData();
-//	}
 }

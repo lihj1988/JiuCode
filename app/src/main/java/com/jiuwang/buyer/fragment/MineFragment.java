@@ -31,6 +31,7 @@ import com.jiuwang.buyer.activity.InviteCodeEditActivity;
 import com.jiuwang.buyer.activity.InviteManagerActivity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.MainActivity;
+import com.jiuwang.buyer.activity.MyProjectActivity;
 import com.jiuwang.buyer.activity.OrderActivity;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.MyApplication;
@@ -127,11 +128,14 @@ public class MineFragment extends Fragment {
 	@Bind(R.id.llBalance)
 	LinearLayout llBalance;
 	@Bind(R.id.llAvailAmount)
-	LinearLayout llAvailAmount;
+	LinearLayout llAvailAmount;@Bind(R.id.llBind)
+	LinearLayout llBind;
 	@Bind(R.id.llTrialAmount)
 	LinearLayout llTrialAmount;
 	@Bind(R.id.tvMyAccount)
 	TextView tvMyAccount;
+	@Bind(R.id.peojectTextView)
+	TextView peojectTextView;
 	@Bind(R.id.trialOrScore)
 	TextView trialOrScore;
 	private View view;
@@ -217,6 +221,11 @@ public class MineFragment extends Fragment {
 										startActivity(new Intent(getActivity(), BalanceActivity.class));
 									}
 								});
+								if("1".equals(userBean.getIs_invited())){
+									llBind.setVisibility(View.GONE);
+								}else {
+									llBind.setVisibility(View.INVISIBLE);
+								}
 
 							}
 						}.sendEmptyMessage(0);
@@ -242,6 +251,7 @@ public class MineFragment extends Fragment {
 		onclickLayoutLeft.setVisibility(View.INVISIBLE);
 		onclick_layout_right.setVisibility(View.INVISIBLE);
 		settingTextView.setText("版本号：" + Constant.localVersion);
+
 
 	}
 
@@ -297,7 +307,8 @@ public class MineFragment extends Fragment {
 
 	@OnClick({R.id.orderTextView, R.id.waitPaymentRelativeLayout, R.id.waitDeliverRelativeLayout, R.id.waitReceiptRelativeLayout,
 			R.id.waitEvaluateRelativeLayout, R.id.waitRefundRelativeLayout, R.id.addressTextView, R.id.settingTextView,
-			R.id.tv_exit, R.id.civAuther, R.id.tvMyInviteCode, R.id.tvMyAccount, R.id.tvInviteManager, R.id.llBalance, R.id.llAvailAmount, R.id.tvBindInviteCode})
+			R.id.tv_exit, R.id.civAuther, R.id.tvMyInviteCode, R.id.tvMyAccount, R.id.tvInviteManager, R.id.llBalance,
+			R.id.llAvailAmount, R.id.tvBindInviteCode, R.id.peojectTextView})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.orderTextView:
@@ -413,6 +424,11 @@ public class MineFragment extends Fragment {
 
 				Intent intentBindInviteCode = new Intent(getActivity(), InviteCodeEditActivity.class);
 				getActivity().startActivity(intentBindInviteCode);
+				break;
+			case R.id.peojectTextView:
+
+				Intent intentMyProject = new Intent(getActivity(), MyProjectActivity.class);
+				getActivity().startActivity(intentMyProject);
 				break;
 		}
 	}

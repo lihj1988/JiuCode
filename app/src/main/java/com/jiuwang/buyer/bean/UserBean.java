@@ -78,6 +78,7 @@ public class UserBean implements Serializable {
 	private String avail_amount;
 	private String account_no;
 	private String account_name;
+	private String is_invited;//是否被邀请
 	private String is_trial;//是否是体验金账户
 	private int r;
 
@@ -359,6 +360,14 @@ public class UserBean implements Serializable {
 
 	public void setIs_trial(String is_trial) {
 		this.is_trial = is_trial;
+	}
+
+	public String getIs_invited() {
+		return is_invited;
+	}
+
+	public void setIs_invited(String is_invited) {
+		this.is_invited = is_invited;
 	}
 
 	public int getR() {

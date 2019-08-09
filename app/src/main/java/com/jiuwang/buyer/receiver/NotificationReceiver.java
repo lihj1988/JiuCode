@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.os.Build;
 
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.activity.MyProjectActivity;
 import com.jiuwang.buyer.base.MyApplication;
 
@@ -23,8 +22,14 @@ import com.jiuwang.buyer.base.MyApplication;
 
 public class NotificationReceiver extends BroadcastReceiver {
 	public  String CALENDAR_ID = "channel_01";
+	String ticker = "";
+	String title = "";
+	String contentText = "";
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		ticker = intent.getStringExtra("ticker");
+		title = intent.getStringExtra("title");
+		contentText = intent.getStringExtra("contentText");
 		NotificationManager notificationManager = (NotificationManager) MyApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(1,createNotification(context,notificationManager));
 
@@ -61,7 +66,8 @@ public class NotificationReceiver extends BroadcastReceiver {
 			// 设置通知灯光（LIGHTS）、铃声（SOUND）、震动（VIBRATE）、（ALL 表示都设置）
 			builder.setDefaults(Notification.DEFAULT_ALL);
 		}
-		builder.setTicker("中奖啦").setContentTitle("中奖通知").setContentText("您抢购的商品已中奖，请前往订单中查看！");
+//		builder.setTicker("中奖啦").setContentTitle("中奖通知").setContentText("您抢购的商品已中奖，请前往订单中查看！");
+		builder.setTicker(ticker).setContentTitle(title).setContentText(contentText);
 //		builder.setAutoCancel(true);
 //		builder = new Notification.Builder(context, CALENDAR_ID);
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 11,
