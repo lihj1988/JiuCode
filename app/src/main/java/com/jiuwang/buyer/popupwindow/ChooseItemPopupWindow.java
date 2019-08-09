@@ -110,15 +110,18 @@ public class ChooseItemPopupWindow extends PopupWindow {
 					@Override
 					public void accept(BaseResultEntity baseResultEntity) throws Exception {
 						loadingDialog.dismiss();
+						ChooseItemPopupWindow.this.dismiss();
 						if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
 							AppUtils.showDialog(MyApplication.currentActivity,"提示","报名成功");
 							Intent intent = new Intent();
 							intent.setAction("refreshProject");
 							context.sendBroadcast(intent);
+						}else {
+							AppUtils.showDialog(MyApplication.currentActivity,"提示",baseResultEntity.getMsg());
 						}
 
-						ChooseItemPopupWindow.this.dismiss();
-						MyToastView.showToast(baseResultEntity.getMsg(), context);
+
+//						MyToastView.showToast(baseResultEntity.getMsg(), context);
 
 					}
 				}, new Consumer<Throwable>() {

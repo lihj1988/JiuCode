@@ -224,7 +224,7 @@ public class MineFragment extends Fragment {
 								if("1".equals(userBean.getIs_invited())){
 									llBind.setVisibility(View.GONE);
 								}else {
-									llBind.setVisibility(View.INVISIBLE);
+									llBind.setVisibility(View.VISIBLE);
 								}
 
 							}

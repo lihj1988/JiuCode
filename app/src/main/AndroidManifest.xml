@@ -144,6 +144,21 @@
 
                 android:resource="@xml/file_paths"/>
         </provider>
+
+        <!-- 声明service组件 -->
+
+
+        <!--<service-->
+            <!--android:name="com.baidu.location.f"-->
+            <!--android:enabled="true"-->
+            <!--android:process=":remote"></service>-->
+
+        <!--&lt;!&ndash; AK鉴权 &ndash;&gt;-->
+
+        <!--&lt;!&ndash; meta-data需要写在application中 &ndash;&gt;-->
+        <!--<meta-data-->
+            <!--android:name="com.baidu.lbsapi.API_KEY"-->
+            <!--android:value="UW7Wk6Wp7mB0CTOKjOSvfExAYWrm7X96"/>-->
     </application>
 
 </manifest>

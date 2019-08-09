@@ -66,15 +66,19 @@ public class InviteManagerActivity extends BaseActivity {
 
 	private void initData() {
 		if (CommonUtil.getNetworkRequest(InviteManagerActivity.this)) {
-			hashMap.put("act","total");
+			hashMap.put("act", "total");
 			HttpUtils.invite(hashMap, new Consumer<InviteEntity>() {
 				@Override
 				public void accept(InviteEntity inviteEntity) throws Exception {
 					if (Constant.HTTP_SUCCESS_CODE.equals(inviteEntity.getCode())) {
-						inviteBean = inviteEntity.getData().get(0);
-						tvTotalCount.setText(inviteBean.getTotal_count());
-						tvProjectCount.setText(inviteBean.getProject_count());
-
+						if (inviteEntity.getData().size() > 0) {
+							inviteBean = inviteEntity.getData().get(0);
+							tvTotalCount.setText(inviteBean.getTotal_count());
+							tvProjectCount.setText(inviteBean.getProject_count());
+						} else {
+							tvTotalCount.setText("");
+							tvProjectCount.setText("");
+						}
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(inviteEntity.getCode())) {
 						startActivity(new Intent(InviteManagerActivity.this, LoginActivity.class));
 						finish();
@@ -83,7 +87,8 @@ public class InviteManagerActivity extends BaseActivity {
 			}, new Consumer<Throwable>() {
 				@Override
 				public void accept(Throwable throwable) throws Exception {
-
+					tvTotalCount.setText("");
+					tvProjectCount.setText("");
 				}
 			});
 		}

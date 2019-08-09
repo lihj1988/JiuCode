@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.webkit.WebView;
 
+
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.util.ToastUtil;
@@ -92,6 +93,8 @@ public class MyApplication extends Application {
 				.connectTimeout(10000L, TimeUnit.MILLISECONDS)
 				.readTimeout(10000L, TimeUnit.MILLISECONDS).build();
 		OkHttpUtils.initClient(okHttpClient);
+//		locationService = new LocationService(getApplicationContext());
+//		SDKInitializer.initialize(getApplicationContext());
 //		regToQq();
 //		regToWx();
 //		JPushInterface.setDebugMode(true);
