@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,12 +34,12 @@ import butterknife.OnClick;
 public class OrderDetailedActivity extends BaseActivity {
 	@Bind(R.id.topView)
 	LinearLayout topView;
-	@Bind(R.id.backImageView)
-	ImageView backImageView;
-	@Bind(R.id.titleTextView)
-	TextView titleTextView;
-	@Bind(R.id.moreImageView)
-	ImageView moreImageView;
+	//	@Bind(R.id.backImageView)
+//	ImageView backImageView;
+//	@Bind(R.id.titleTextView)
+//	TextView titleTextView;
+//	@Bind(R.id.moreImageView)
+//	ImageView moreImageView;
 	@Bind(R.id.addressTitleTextView)
 	TextView addressTitleTextView;
 	@Bind(R.id.nameTextView)
@@ -66,6 +66,12 @@ public class OrderDetailedActivity extends BaseActivity {
 	TextView tvState;
 	@Bind(R.id.rlDeal)
 	LinearLayout rlDeal;
+	@Bind(R.id.actionbar_text)
+	TextView actionbarText;
+	@Bind(R.id.onclick_layout_left)
+	RelativeLayout onclickLayoutLeft;
+	@Bind(R.id.onclick_layout_right)
+	Button onclickLayoutRight;
 
 	private MyApplication mApplication;
 	private String address_id;
@@ -117,7 +123,8 @@ public class OrderDetailedActivity extends BaseActivity {
 
 	private void initView() {
 		setTopView(topView);
-		titleTextView.setText("订单详情");
+		onclickLayoutRight.setVisibility(View.INVISIBLE);
+		actionbarText.setText("订单详情");
 		tvState.setText(orderBean.getStatus_name());
 		nameTextView.setText(orderBean.getConsignee_name());
 		phoneTextView.setText(orderBean.getConsignee_telephone());
@@ -302,8 +309,8 @@ public class OrderDetailedActivity extends BaseActivity {
 						operaTextView.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View view) {
-								if(null == consignee_name){
-									MyToastView.showToast("请填写收货地址",OrderDetailedActivity.this);
+								if (null == consignee_name) {
+									MyToastView.showToast("请填写收货地址", OrderDetailedActivity.this);
 									return;
 								}
 								//添加收货地址
@@ -384,10 +391,10 @@ public class OrderDetailedActivity extends BaseActivity {
 
 	}
 
-	@OnClick({R.id.backImageView, R.id.addressRelativeLayout})
+	@OnClick({R.id.onclick_layout_left, R.id.addressRelativeLayout})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
-			case R.id.backImageView:
+			case R.id.onclick_layout_left:
 				finish();
 				break;
 			case R.id.addressRelativeLayout:

@@ -10,21 +10,23 @@
 		android:id="@+id/title"
 		layout="@layout/include_title"/>
 
-	<include layout="@layout/recyclerview_home_header"></include>
+
 
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
-
-		<LinearLayout
+		<com.jiuwang.buyer.view.ImageCycleView
+			android:id="@+id/icView"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent">
-
+			android:layout_height="180dp"></com.jiuwang.buyer.view.ImageCycleView>
 			<com.jiuwang.buyer.view.AutoScrollRecyclerView
 				android:id="@+id/am_rv"
 				android:layout_width="match_parent"
-				android:layout_height="200dp"/>
-		</LinearLayout>
+				android:layout_height="200dp"
+				android:layout_below="@+id/icView"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentStart="true"/>
+
 
 		<ImageView
 			android:id="@+id/ivRedPackage"
