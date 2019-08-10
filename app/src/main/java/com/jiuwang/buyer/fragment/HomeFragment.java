@@ -16,6 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.bean.AnnouncementBean;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.AnnouncementEntity;
+import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.redpakge.CustomDialog;
 import com.jiuwang.buyer.redpakge.OnRedPacketDialogClickListener;
 import com.jiuwang.buyer.redpakge.RedPacketEntity;
@@ -24,12 +28,14 @@ import com.jiuwang.buyer.view.AutoScrollRecyclerView;
 import com.jiuwang.buyer.view.NoticeRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * author：lihj
@@ -53,6 +59,9 @@ public class HomeFragment extends Fragment {
 	private View mRedPacketDialogView;
 	private RedPacketViewHolder mRedPacketViewHolder;
 	private CustomDialog mRedPacketDialog;
+	private List<AnnouncementBean> announcementList;
+	private NoticeRecyclerViewAdapter adapter;
+	private List<String> data;
 
 	@Nullable
 	@Override
@@ -65,21 +74,27 @@ public class HomeFragment extends Fragment {
 	}
 
 	private void initData() {
-		List<String> data = new ArrayList<>();
+		announcementList = new ArrayList<>();
+		data = new ArrayList<>();
+//
+//		data.add("恭喜15******891参与抢购项目中的茅台 立省260元");
+//		data.add("恭喜15******871提现100元");
+//		data.add("恭喜13******891参与抢购项目中的茅台 立省260元");
+//		data.add("恭喜18******841提现100元");
+//		data.add("恭喜15******865参与抢购项目中的茅台 立省260元");
+//		data.add("恭喜15******451提现100元");
+//		data.add("恭喜15******878参与抢购项目中的茅台 立省260元");
+//		data.add("恭喜15******236提现200元");
+//		data.add("恭喜15******896提现100元");
+//		data.add("恭喜15******675提现1136元");
 
-		data.add("恭喜15******891参与抢购项目中的茅台 立省260元");
-		data.add("恭喜15******871提现100元");
-		data.add("恭喜13******891参与抢购项目中的茅台 立省260元");
-		data.add("恭喜18******841提现100元");
-		data.add("恭喜15******865参与抢购项目中的茅台 立省260元");
-		data.add("恭喜15******451提现100元");
-		data.add("恭喜15******878参与抢购项目中的茅台 立省260元");
-		data.add("恭喜15******236提现200元");
-		data.add("恭喜15******896提现100元");
-		data.add("恭喜15******675提现1136元");
+		intDatas();
 
 
-		NoticeRecyclerViewAdapter adapter = new NoticeRecyclerViewAdapter(data);
+	}
+
+	private void setAdapter() {
+		adapter = new NoticeRecyclerViewAdapter(data);
 		amRv.setLayoutManager(new LinearLayoutManager(getActivity()));
 		amRv.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 		amRv.setAdapter(adapter);
@@ -110,6 +125,39 @@ public class HomeFragment extends Fragment {
 	}
 
 	public void intDatas() {
+
+		HashMap<String, String> hashMap = new HashMap<>();
+		HttpUtils.selectAnnouncement(hashMap, new Consumer<AnnouncementEntity>() {
+			@Override
+			public void accept(AnnouncementEntity announcementEntity) throws Exception {
+				if (Constant.HTTP_SUCCESS_CODE.equals(announcementEntity.getCode())) {
+					if (announcementEntity.getData().size() > 0) {
+						announcementList.addAll(announcementEntity.getData());
+					}
+					String value = "";
+					for (int i = 0; i < announcementList.size(); i++) {
+						if ("2".equals(announcementList.get(i).getAnnounce_type())) {
+							value = "恭喜<font color='#FF5001'>" + "" + announcementList.get(i).getUser_cd() + "" + "</font>在抢购项目中奖";
+
+						} else {
+							value ="恭喜<font color='#FF5001'>" + "" + announcementList.get(i).getUser_cd() + "提现" + announcementList.get(i).getAmount() + "</font> 元";
+						}
+						data.add(value);
+					}
+					if (adapter != null) {
+						adapter.notifyDataSetChanged();
+					} else {
+						setAdapter();
+					}
+
+				}
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+
+			}
+		});
 	}
 
 	@Override

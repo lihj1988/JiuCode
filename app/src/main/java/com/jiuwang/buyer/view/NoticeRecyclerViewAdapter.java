@@ -13,17 +13,13 @@ import java.util.List;
  * date       : 2018/10/18
  * function  : 垂直滚动的RecyclerView的adapter
  */
-public class NoticeRecyclerViewAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+public class NoticeRecyclerViewAdapter extends BaseQuickAdapter<String, MyBaseViewHolder> {
 
 
     public NoticeRecyclerViewAdapter(@Nullable List<String> data) {
         super(R.layout.item_txt, data);
     }
 
-    @Override
-    protected void convert(BaseViewHolder helper, String item) {
-        helper.setText(R.id.it_tv, item);
-    }
 
     @Nullable
     @Override
@@ -41,6 +37,11 @@ public class NoticeRecyclerViewAdapter extends BaseQuickAdapter<String, BaseView
         }
         int newPosition = position % count;
         return super.getItemViewType(newPosition);
+    }
+
+    @Override
+    protected void convert(MyBaseViewHolder helper, String item) {
+        helper.setText(R.id.it_tv, item);
     }
 
     @Override

@@ -4,6 +4,7 @@ package com.jiuwang.buyer.net;
 import com.jiuwang.buyer.bean.MoneyNumberBean;
 import com.jiuwang.buyer.bean.SuccessBean;
 import com.jiuwang.buyer.entity.AddressEntity;
+import com.jiuwang.buyer.entity.AnnouncementEntity;
 import com.jiuwang.buyer.entity.BalanceEntity;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
@@ -206,6 +207,13 @@ public interface QNewsService {
 	Observable<BaseResultEntity> version(
 			@QueryMap HashMap<String, String> map
 	);
+
+	//获取首页滚动数据
+	@POST("admin/announce/announce_action.jsp")
+	Observable<AnnouncementEntity> selectAnnouncement(
+			@QueryMap HashMap<String, String> map
+	);
+
 
 
 }

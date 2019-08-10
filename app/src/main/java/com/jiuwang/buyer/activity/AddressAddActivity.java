@@ -38,6 +38,7 @@ import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.TextUtil;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class AddressAddActivity extends BaseActivity {
 	private String address;
 	private String phone;
 	private String name;
-	private String is_default;
+	private String is_default = "1";
 	private Thread thread;
 	private String provcode;
 	private String citycode;
@@ -131,6 +132,7 @@ public class AddressAddActivity extends BaseActivity {
 		}
 	};
 	private String mode;
+	private String type;
 	private Intent intent;
 	private LoadingDialog loadingDialog;
 
@@ -150,6 +152,12 @@ public class AddressAddActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		intent = getIntent();
 		mode = intent.getStringExtra("mode");
+		type = intent.getStringExtra("type");
+		if (type != null) {
+			if ("1".equals(type)) {
+				defaultCheckBox.setChecked(true);
+			}
+		}
 		initView();
 		initData();
 		initEven();
@@ -208,7 +216,32 @@ public class AddressAddActivity extends BaseActivity {
 				if (isChecked) {
 					is_default = "1";
 				} else {
+
 					is_default = "0";
+				}
+			}
+		});
+		defaultCheckBox.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (!defaultCheckBox.isChecked()) {
+					if (type != null) {
+						if ("1".equals(type)) {
+							AppUtils.showDialog(AddressAddActivity.this, "提示", "取消默认地址设置将不能参见抢购项目，确认取消吗？", new DialogClickInterface() {
+								@Override
+								public void nagtiveOnClick() {
+									defaultCheckBox.setChecked(true);
+									is_default = "1";
+								}
+
+								@Override
+								public void onClick() {
+									is_default = "0";
+									defaultCheckBox.setChecked(false);
+								}
+							});
+						}
+					}
 				}
 			}
 		});
@@ -246,6 +279,30 @@ public class AddressAddActivity extends BaseActivity {
 			btSubmit.setEnabled(true);
 			return;
 		}
+		if (type != null) {
+			if ("1".equals(type)) {
+				AppUtils.showDialog(AddressAddActivity.this, "提示", "抢购项目中奖后会以默认地址发货", new DialogClickInterface() {
+					@Override
+					public void nagtiveOnClick() {
+						btSubmit.setEnabled(true);
+
+						return;
+					}
+
+					@Override
+					public void onClick() {
+						submitAddress();
+					}
+				});
+			}
+		} else {
+			submitAddress();
+		}
+
+
+	}
+
+	private void submitAddress() {
 		loadingDialog = new LoadingDialog(AddressAddActivity.this);
 		loadingDialog.show();
 		//添加/修改地址
@@ -262,20 +319,28 @@ public class AddressAddActivity extends BaseActivity {
 			hashMap.put("prov_code", provcode);
 			hashMap.put("city_code", citycode);
 			hashMap.put("area_code", areacode);
-			hashMap.put("consignee_address",  address);
+			hashMap.put("consignee_address", address);
 			hashMap.put("destination", proEditText.getText().toString() + address);
-			hashMap.put("is_default",is_default);
+			hashMap.put("is_default", is_default);
 			HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {
 				@Override
 				public void accept(BaseResultEntity baseResultEntity) throws Exception {
 					loadingDialog.dismiss();
 					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+						if (type != null) {
+							if ("1".equals(type)) {
+								EventBus.getDefault().post("addressFinish");
+//								finish();
+							}
+						}
 						Intent intent = new Intent();
 						intent.setAction("refreshAddress");
 						sendBroadcast(intent);
 						finish();
+
+
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
-						MyToastView.showToast(baseResultEntity.getMsg(),AddressAddActivity.this);
+						MyToastView.showToast(baseResultEntity.getMsg(), AddressAddActivity.this);
 						Intent intent = new Intent(AddressAddActivity.this, LoginActivity.class);
 						startActivity(intent);
 						finish();
@@ -293,7 +358,6 @@ public class AddressAddActivity extends BaseActivity {
 				}
 			});
 		}
-
 	}
 
 	//返回&销毁Activity

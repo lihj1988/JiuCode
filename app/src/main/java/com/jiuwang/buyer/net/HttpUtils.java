@@ -4,6 +4,7 @@ package com.jiuwang.buyer.net;
 import com.jiuwang.buyer.bean.MoneyNumberBean;
 import com.jiuwang.buyer.bean.SuccessBean;
 import com.jiuwang.buyer.entity.AddressEntity;
+import com.jiuwang.buyer.entity.AnnouncementEntity;
 import com.jiuwang.buyer.entity.BalanceEntity;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
@@ -467,6 +468,19 @@ public class HttpUtils {
 	public static void version(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
 		QClitent.getInstance()
 				.version(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}/**
+	 * 获取首页滚动数据
+	 *
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void selectAnnouncement(HashMap<String, String> map, Consumer<AnnouncementEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.selectAnnouncement(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);

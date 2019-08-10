@@ -1,5 +1,7 @@
 package com.jiuwang.buyer.adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,11 +14,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.AddressAddActivity;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AddressBean;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.MyToastView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +40,13 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 	private onItemClickListener itemClickListener;
 	private onItemLongClickListener itemLongClickListener;
 	private List<AddressBean> mArrayList;
+	private String type;
+	private Activity activity;
 
-	public AddressListAdapter(List<AddressBean> arrayList) {
+	public AddressListAdapter(Activity activity, List<AddressBean> arrayList, String type) {
 		this.mArrayList = arrayList;
+		this.type = type;
+		this.activity = activity;
 		this.itemClickListener = null;
 	}
 
@@ -52,14 +63,14 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 		holder.nameTextView.setText(addressBean.getConsignee_name());
 
 //		if (TextUtil.isEmpty(addressBean.getConsignee_telephone())) {
-			holder.phoneTextView.setText(addressBean.getConsignee_telephone());
+		holder.phoneTextView.setText(addressBean.getConsignee_telephone());
 //		} else {
 //			holder.phoneTextView.setText(hashMap.get("tel_phone"));
 //		}
 
 //		if (hashMap.get("is_default").equals("1")) {
 //			holder.addressTextView.setText("[默认] ");
-			holder.addressTextView.setText(addressBean.getDestination());
+		holder.addressTextView.setText(addressBean.getDestination());
 //		} else {
 //			holder.addressTextView.setText(hashMap.get("area_info"));
 //		}
@@ -84,37 +95,82 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 				return false;
 			}
 		});
-		if("0".equals(mArrayList.get(position).getIs_default())){
+		if ("0".equals(mArrayList.get(position).getIs_default())) {
 			holder.is_default.setChecked(false);
-		}else if("1".equals(mArrayList.get(position).getIs_default())){
+		} else if ("1".equals(mArrayList.get(position).getIs_default())) {
 			holder.is_default.setChecked(true);
 		}
 		holder.is_default.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-				if(b){
-					for (int i = 0; i < mArrayList.size(); i++) {
-						if(i==position){
-							mArrayList.get(i).setIs_default("1");
-						}else {
-							mArrayList.get(i).setIs_default("0");
+				if (b) {
+					if (type == null) {
+						for (int i = 0; i < mArrayList.size(); i++) {
+							if (i == position) {
+								mArrayList.get(i).setIs_default("1");
+							} else {
+								mArrayList.get(i).setIs_default("0");
+							}
 						}
-					}
-					HashMap<String, String> hashMap = new HashMap<>();
-					hashMap.put("id",mArrayList.get(position).getId());
-					hashMap.put("act","4");
-					setAddress(hashMap);
+						HashMap<String, String> hashMap = new HashMap<>();
+						hashMap.put("id", mArrayList.get(position).getId());
+						hashMap.put("act", "4");
+						setAddress(hashMap);
 
-					new Handler().post(new Runnable() {
-						@Override
-						public void run() {
-							// 刷新操作
-							notifyDataSetChanged();
-						}
-					});
+						new Handler().post(new Runnable() {
+							@Override
+							public void run() {
+								// 刷新操作
+								notifyDataSetChanged();
+							}
+						});
+					}
+
 
 //					notifyDataSetChanged();
+				}
+			}
+		});
+		holder.is_default.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (holder.is_default.isChecked()) {
+					if (type != null) {
+						if ("1".equals(type)) {
+							AppUtils.showDialog(activity, "提示", "抢购项目中奖后会以默认地址发货", new DialogClickInterface() {
+								@Override
+								public void nagtiveOnClick() {
+									holder.is_default.setChecked(false);
+								}
+
+								@Override
+								public void onClick() {
+									holder.is_default.setChecked(true);
+									for (int i = 0; i < mArrayList.size(); i++) {
+										if (i == position) {
+											mArrayList.get(i).setIs_default("1");
+										} else {
+											mArrayList.get(i).setIs_default("0");
+										}
+									}
+									HashMap<String, String> hashMap = new HashMap<>();
+									hashMap.put("id", mArrayList.get(position).getId());
+									hashMap.put("act", "4");
+									setAddress(hashMap);
+
+									new Handler().post(new Runnable() {
+										@Override
+										public void run() {
+											// 刷新操作
+											notifyDataSetChanged();
+										}
+									});
+
+								}
+							});
+						}
+					}
 				}
 			}
 		});
@@ -177,11 +233,18 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 		void onItemLongClick(int position);
 	}
 
-	public void setAddress(HashMap<String,String> map){
+	public void setAddress(HashMap<String, String> map) {
 		HttpUtils.addressInfo(map, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
-				MyToastView.showToast(baseResultEntity.getMsg(), MyApplication.getInstance());
+				if (type != null) {
+					if ("1".equals(type)) {
+						EventBus.getDefault().post("addressFinish");
+					}
+				}else {
+					MyToastView.showToast(baseResultEntity.getMsg(), MyApplication.getInstance());
+
+				}
 			}
 		}, new Consumer<Throwable>() {
 			@Override

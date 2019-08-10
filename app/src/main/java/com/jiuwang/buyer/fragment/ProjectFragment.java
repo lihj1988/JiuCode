@@ -24,16 +24,22 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.AddressActivity;
+import com.jiuwang.buyer.activity.BuySetup1Activity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.adapter.ProjectListAdapter;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.bean.AddressBean;
 import com.jiuwang.buyer.bean.ProjectBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.AddressEntity;
 import com.jiuwang.buyer.entity.ProjectDetailsEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.popupwindow.ChooseItemPopupWindow;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.LogUtils;
@@ -84,6 +90,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	private ProjectReceiver projectReceiver;
 	private ChooseItemPopupWindow chooseItemPopupWindow;
 	private LoadingDialog loadingDialog;
+	private List<AddressBean> mArrayList;
 
 	@Nullable
 	@Override
@@ -147,44 +154,8 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 			public void itemOnClick(final int position) {
 				LogUtils.e(TAG, "点击了第" + (position + 1) + "条");
 				if (CommonUtil.getNetworkRequest(getActivity())) {
-					if (chooseItemPopupWindow != null) {
-						chooseItemPopupWindow.dismiss();
-					}
-					loadingDialog.show();
-					HashMap<String, String> hashMap = new HashMap<>();
-					hashMap.put("project_id", projectList.get(position).getProject_id());
-					HttpUtils.selectChooseGoods(hashMap, new Consumer<SelectGoodsEntity>() {
+					selectAddress(position);
 
-						@Override
-						public void accept(SelectGoodsEntity selectGoodsEntity) throws Exception {
-							loadingDialog.dismiss();
-							if (Constant.HTTP_SUCCESS_CODE.equals(selectGoodsEntity.getCode())) {
-								if (selectGoodsEntity.getData() != null && selectGoodsEntity.getData().size() > 0) {
-
-									chooseItemPopupWindow = new ChooseItemPopupWindow(MyApplication.currentActivity, projectList.get(position).getId(), selectGoodsEntity.getData());
-									// 显示窗口
-									chooseItemPopupWindow.showAtLocation(rootView, Gravity.BOTTOM
-											| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
-								} else {
-									MyToastView.showToast("没有可选择的商品", getActivity());
-								}
-							} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(selectGoodsEntity.getCode())) {
-								MyToastView.showToast(selectGoodsEntity.getMsg(), getActivity());
-								Intent intent = new Intent(getActivity(), LoginActivity.class);
-								startActivity(intent);
-								getActivity().finish();
-							} else {
-								MyToastView.showToast(selectGoodsEntity.getMsg(), getActivity());
-							}
-
-						}
-					}, new Consumer<Throwable>() {
-						@Override
-						public void accept(Throwable throwable) throws Exception {
-							loadingDialog.dismiss();
-							MyToastView.showToast(getActivity().getString(R.string.msg_error), getActivity());
-						}
-					});
 				}
 			}
 		});
@@ -216,6 +187,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	}
 
 	public void initData() {
+		mArrayList = new ArrayList<>();
 		HashMap<String, String> map = new HashMap<>();
 		map.put("currPage", String.valueOf(page));
 		map.put("pageSize", Constant.PAGESIZE);
@@ -304,15 +276,15 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 								Intent intent = new Intent();
 								if (Constant.ISWIN.equals(projectDetailsEntity.getData().get(0).getIs_win())) {
 
-									intent.putExtra("ticker","");
-									intent.putExtra("title","通知");
-									intent.putExtra("contentText","您参与的"+projectName+"已结束,已中奖!");
-
+									intent.putExtra("ticker", "");
+									intent.putExtra("title", "通知");
+//									intent.putExtra("contentText", "您参与的" + projectName + "已结束,已中奖!");
+									intent.putExtra("contentText", "您参与的" + projectName + "已结束,抢购成功！");
 //										break;
-								}else {
-									intent.putExtra("ticker","");
-									intent.putExtra("title","通知");
-									intent.putExtra("contentText","您参与的"+projectName+"已结束,未中奖!");
+								} else {
+									intent.putExtra("ticker", "");
+									intent.putExtra("title", "通知");
+									intent.putExtra("contentText", "您参与的本次抢购项目未成功！");
 								}
 								intent.setAction("com.jiuwang.buyer.receiver.NotificationReceiver");
 								getActivity().sendBroadcast(intent);
@@ -333,6 +305,98 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 			});
 		}
 
+	}
+
+	//初始化数据
+	private void selectAddress(final int position) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("act", "");
+		map.put("is_default", "1");
+		HttpUtils.selectAddressList(map, new Consumer<AddressEntity>() {
+			@Override
+			public void accept(AddressEntity addressEntity) throws Exception {
+
+				if (Constant.HTTP_SUCCESS_CODE.equals(addressEntity.getCode())) {
+					if (addressEntity.getData().size() > 0) {
+						mArrayList.addAll(addressEntity.getData());
+					} else {
+						mArrayList = new ArrayList<AddressBean>();
+					}
+					boolean isHaveDefault = false;
+					for (int i = 0; i < mArrayList.size(); i++) {
+						if (Constant.IS_DEFAULT.equals(mArrayList.get(i).getIs_default())) {
+							isHaveDefault = true;
+						}
+
+					}
+					if (isHaveDefault) {
+						if (chooseItemPopupWindow != null) {
+							chooseItemPopupWindow.dismiss();
+						}
+						loadingDialog.show();
+						HashMap<String, String> hashMap = new HashMap<>();
+						hashMap.put("project_id", projectList.get(position).getProject_id());
+						HttpUtils.selectChooseGoods(hashMap, new Consumer<SelectGoodsEntity>() {
+
+							@Override
+							public void accept(SelectGoodsEntity selectGoodsEntity) throws Exception {
+								loadingDialog.dismiss();
+								if (Constant.HTTP_SUCCESS_CODE.equals(selectGoodsEntity.getCode())) {
+									if (selectGoodsEntity.getData() != null && selectGoodsEntity.getData().size() > 0) {
+
+										chooseItemPopupWindow = new ChooseItemPopupWindow(MyApplication.currentActivity, projectList.get(position).getId(), selectGoodsEntity.getData());
+										// 显示窗口
+										chooseItemPopupWindow.showAtLocation(rootView, Gravity.BOTTOM
+												| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
+									} else {
+										MyToastView.showToast("没有可选择的商品", getActivity());
+									}
+								} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(selectGoodsEntity.getCode())) {
+									MyToastView.showToast(selectGoodsEntity.getMsg(), getActivity());
+									Intent intent = new Intent(getActivity(), LoginActivity.class);
+									startActivity(intent);
+									getActivity().finish();
+								} else {
+									MyToastView.showToast(selectGoodsEntity.getMsg(), getActivity());
+								}
+
+							}
+						}, new Consumer<Throwable>() {
+							@Override
+							public void accept(Throwable throwable) throws Exception {
+								loadingDialog.dismiss();
+								MyToastView.showToast(getActivity().getString(R.string.msg_error), getActivity());
+							}
+						});
+					} else {
+						AppUtils.showDialog(getActivity(), "提示", "您当前还没有设置默认地址，不能参加抢购项目", new DialogClickInterface() {
+							@Override
+							public void nagtiveOnClick() {
+
+							}
+
+							@Override
+							public void onClick() {
+								Intent intent = new Intent();
+								intent.setClass(getActivity(), AddressActivity.class);
+								intent.putExtra("type", "1");
+								getActivity().startActivity(intent);
+							}
+						});
+					}
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(addressEntity.getCode())) {
+					MyToastView.showToast(addressEntity.getMsg(), getActivity());
+					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					startActivity(intent);
+					getActivity().finish();
+				}
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+
+			}
+		});
 	}
 
 }

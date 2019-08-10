@@ -31,6 +31,10 @@ import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +77,8 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 	private AddressListAdapter addressListAdapter;
 	private int page = 1;
 	private AddressBroadCast addressBroadCast;
+	private FinishBroadCast finishBroadCast;
+	private String type;
 
 	@Override
 	protected void onActivityResult(int req, int res, Intent data) {
@@ -103,12 +109,19 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 		super.onCreate(bundle);
 		setContentView(R.layout.activity_address);
 		ButterKnife.bind(this);
+		EventBus.getDefault().register(this);
 		initView();
 		initData();
 		addressBroadCast = new AddressBroadCast();
+
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("refreshAddress");
 		registerReceiver(addressBroadCast, filter);
+
+		finishBroadCast = new FinishBroadCast();
+		IntentFilter filterFinish = new IntentFilter();
+		filterFinish.addAction("addressFinish");
+		registerReceiver(finishBroadCast, filter);
 	}
 
 	private void initView() {
@@ -117,6 +130,7 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 		mApplication = (MyApplication) getApplication();
 
 		modelString = mActivity.getIntent().getStringExtra("model");
+		type = mActivity.getIntent().getStringExtra("type");
 
 		actionbarText.setText("收货地址");
 		onclickLayoutRight.setText("添加地址");
@@ -169,7 +183,7 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 
 	public void setAdapter() {
 
-		addressListAdapter = new AddressListAdapter(mArrayList);
+		addressListAdapter = new AddressListAdapter(AddressActivity.this,mArrayList,type);
 		addressListView.setAdapter(addressListAdapter);
 		addressListAdapter.setOnItemClickListener(new AddressListAdapter.onItemClickListener() {
 			@Override
@@ -272,14 +286,19 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 
 	}
 
-	@OnClick({R.id.onclick_layout_left,R.id.onclick_layout_right})
+	@OnClick({R.id.onclick_layout_left, R.id.onclick_layout_right})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.onclick_layout_left:
 				returnActivity();
 				break;
 			case R.id.onclick_layout_right:
-				startActivity(new Intent(AddressActivity.this, AddressAddActivity.class).putExtra("mode", "add"));
+				Intent intent = new Intent(AddressActivity.this, AddressAddActivity.class);
+				intent.putExtra("mode", "add");
+				if (type != null) {
+					intent.putExtra("type", type);
+				}
+				startActivity(intent);
 				break;
 		}
 	}
@@ -294,6 +313,8 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 	protected void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(addressBroadCast);
+		unregisterReceiver(finishBroadCast);
+		EventBus.getDefault().unregister(this);
 	}
 
 	@Override
@@ -307,6 +328,21 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			initData();
+		}
+	}
+
+	class FinishBroadCast extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			AddressActivity.this.finish();
+		}
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void  exit(String order){
+		if("addressFinish".equals(order)){
+			AddressActivity.this.finish();
 		}
 	}
 }

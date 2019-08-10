@@ -842,6 +842,7 @@ public class AppUtils {
 			@Override
 			public void onClick(View v) {
 				dialog.cancel();
+				dialogClickInterface.nagtiveOnClick();
 			}
 		});
 		bt2.setOnClickListener(new View.OnClickListener() {
