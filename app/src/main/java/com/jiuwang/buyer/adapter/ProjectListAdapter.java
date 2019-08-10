@@ -58,6 +58,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 		try {
 			if (Constant.PROJECTIS_NOT_PART.equals(projectList.get(position).getIs_part())) {
 				holder.tvReport.setText("未报名");
+				holder.tvReport.setTextColor(context.getResources().getColor(R.color.brown));
 //				projectItemOnClickListener.itemOnClick(position);
 			} else {
 				holder.tvReport.setText("已报名");

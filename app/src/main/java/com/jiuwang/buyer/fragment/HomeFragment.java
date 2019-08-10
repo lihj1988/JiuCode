@@ -30,10 +30,13 @@ import com.jiuwang.buyer.view.NoticeRecyclerViewAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
@@ -112,11 +115,18 @@ public class HomeFragment extends Fragment {
 			// 这个问题后续可通过重写另外一个方法来进行控制，暂时就先这样了
 			@Override
 			protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-				return 3f / displayMetrics.density;
+				return 3 / displayMetrics.density;
 			}
+//			@Override protected int calculateTimeForDeceleration(int dex){
+//
+//				return  1;
+//			}
+
 		};
-		amRv.start();
+		startAuto();
+//		amRv.start();
 	}
+
 
 	public void initView() {
 		actionbarText.setText("首页");
@@ -135,12 +145,16 @@ public class HomeFragment extends Fragment {
 						announcementList.addAll(announcementEntity.getData());
 					}
 					String value = "";
+
 					for (int i = 0; i < announcementList.size(); i++) {
-						if ("2".equals(announcementList.get(i).getAnnounce_type())) {
-							value = "恭喜<font color='#FF5001'>" + "" + announcementList.get(i).getUser_cd() + "" + "</font>在抢购项目中奖";
+						String replace = announcementList.get(i).getUser_cd().substring(3, 9);
+						String newStr = announcementList.get(i).getUser_cd().replace(replace, "******");
+						if ("1".equals(announcementList.get(i).getAnnounce_type())) {
+							value = "恭喜<font color=#FF5001 size=18px >" + "" + newStr+ "" + "</font>在抢购项目中奖";
+//							value = "<font color=#ff6600 size=20px>积分:</font>";
 
 						} else {
-							value ="恭喜<font color='#FF5001'>" + "" + announcementList.get(i).getUser_cd() + "提现" + announcementList.get(i).getAmount() + "</font> 元";
+							value ="恭喜<font color='#FF5001'>" + "" + newStr + "</font> 提现" + "<font color='#FF5001'>"+announcementList.get(i).getAmount() + "</font> 元";
 						}
 						data.add(value);
 					}
@@ -200,6 +214,27 @@ public class HomeFragment extends Fragment {
 		});
 
 		mRedPacketDialog.show();
+	}
+	//item滚动步骤2：设置定时器自动滚动
+	public void startAuto() {
+		if (mAutoTask!= null && !mAutoTask.isDisposed()) {
+			mAutoTask.dispose();
+		}
+		mAutoTask = Observable.interval(1, 2, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>() {
+			@Override
+			public void accept(Long aLong) throws Exception {
+				//滚动到指定item
+				mScroller.setTargetPosition(aLong.intValue());
+				amRv.getLayoutManager().startSmoothScroll(mScroller);
+			}
+		});
+	}
+
+	private void stopAuto() {
+		if (mAutoTask!= null && !mAutoTask.isDisposed()) {
+			mAutoTask.dispose();
+			mAutoTask = null;
+		}
 	}
 
 }

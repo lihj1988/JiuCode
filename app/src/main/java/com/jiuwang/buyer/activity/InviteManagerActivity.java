@@ -8,12 +8,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.InviteManagerAdapter;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.InviteBean;
+import com.jiuwang.buyer.bean.InviteUserBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.InviteEntity;
+import com.jiuwang.buyer.entity.InviteUserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 
@@ -44,10 +47,11 @@ public class InviteManagerActivity extends BaseActivity {
 	TextView tvTotalCount;
 	@Bind(R.id.tvProjectCount)
 	TextView tvProjectCount;
-	//	@Bind(R.id.listView)
-//	XRecyclerView listView;
+	@Bind(R.id.listView)
+	XRecyclerView listView;
 	private int page = 1;
 	private List<InviteBean> inviteBeanList;
+	private List<InviteUserBean> inviteUserBeanList;
 	private InviteManagerAdapter inviteManagerAdapter;
 	private HashMap<String, String> hashMap;
 	private InviteBean inviteBean;
@@ -59,8 +63,10 @@ public class InviteManagerActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		inviteBeanList = new ArrayList<>();
 		hashMap = new HashMap<>();
+		inviteUserBeanList = new ArrayList<>();
 		initView();
 		initData();
+		initInviteData();
 
 	}
 
@@ -76,8 +82,8 @@ public class InviteManagerActivity extends BaseActivity {
 							tvTotalCount.setText(inviteBean.getTotal_count());
 							tvProjectCount.setText(inviteBean.getProject_count());
 						} else {
-							tvTotalCount.setText("");
-							tvProjectCount.setText("");
+							tvTotalCount.setText("0");
+							tvProjectCount.setText("0");
 						}
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(inviteEntity.getCode())) {
 						startActivity(new Intent(InviteManagerActivity.this, LoginActivity.class));
@@ -87,16 +93,41 @@ public class InviteManagerActivity extends BaseActivity {
 			}, new Consumer<Throwable>() {
 				@Override
 				public void accept(Throwable throwable) throws Exception {
-					tvTotalCount.setText("");
-					tvProjectCount.setText("");
+					tvTotalCount.setText("0");
+					tvProjectCount.setText("0");
+				}
+			});
+		}
+	}
+
+	private void initInviteData() {
+		if (CommonUtil.getNetworkRequest(InviteManagerActivity.this)) {
+//			hashMap.put("act", "total");
+			HttpUtils.inviteUser(new HashMap<String, String>(), new Consumer<InviteUserEntity>() {
+				@Override
+				public void accept(InviteUserEntity inviteEntity) throws Exception {
+					if (Constant.HTTP_SUCCESS_CODE.equals(inviteEntity.getCode())) {
+						if (inviteEntity.getData().size() > 0) {
+							inviteUserBeanList.addAll(inviteEntity.getData());
+						}
+						setAdapter();
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(inviteEntity.getCode())) {
+						startActivity(new Intent(InviteManagerActivity.this, LoginActivity.class));
+						finish();
+					}
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+
 				}
 			});
 		}
 	}
 
 	private void setAdapter() {
-		inviteManagerAdapter = new InviteManagerAdapter(InviteManagerActivity.this, inviteBeanList);
-//		listView.setAdapter(inviteManagerAdapter);
+		inviteManagerAdapter = new InviteManagerAdapter(InviteManagerActivity.this, inviteUserBeanList);
+		listView.setAdapter(inviteManagerAdapter);
 	}
 
 	private void initView() {

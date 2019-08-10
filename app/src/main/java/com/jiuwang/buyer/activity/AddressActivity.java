@@ -121,7 +121,7 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 		finishBroadCast = new FinishBroadCast();
 		IntentFilter filterFinish = new IntentFilter();
 		filterFinish.addAction("addressFinish");
-		registerReceiver(finishBroadCast, filter);
+		registerReceiver(finishBroadCast, filterFinish);
 	}
 
 	private void initView() {
@@ -223,7 +223,9 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 						HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {
 							@Override
 							public void accept(BaseResultEntity baseResultEntity) throws Exception {
-
+								if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
+									initData();
+								}
 							}
 						}, new Consumer<Throwable>() {
 							@Override

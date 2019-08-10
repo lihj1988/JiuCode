@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.bean.InviteBean;
+import com.jiuwang.buyer.bean.InviteUserBean;
 import com.jiuwang.buyer.bean.UserBean;
 
 import java.util.List;
@@ -22,9 +23,9 @@ import java.util.List;
 
 public class InviteManagerAdapter extends RecyclerView.Adapter<InviteManagerAdapter.ViewHolder>{
 	private Context context;
-	private List<InviteBean> inviteBeanList;
+	private List<InviteUserBean> inviteBeanList;
 
-	public InviteManagerAdapter(Context context, List<InviteBean> inviteBeanList) {
+	public InviteManagerAdapter(Context context, List<InviteUserBean> inviteBeanList) {
 		this.context = context;
 		this.inviteBeanList = inviteBeanList;
 	}
@@ -38,6 +39,7 @@ public class InviteManagerAdapter extends RecyclerView.Adapter<InviteManagerAdap
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
 		holder.tvUserName.setText(inviteBeanList.get(position).getUser_cd());
+		holder.tvTime.setText(inviteBeanList.get(position).getCreate_time());
 	}
 
 	@Override
@@ -48,10 +50,12 @@ public class InviteManagerAdapter extends RecyclerView.Adapter<InviteManagerAdap
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 
 		public TextView tvUserName;
+		public TextView tvTime;
 
 		public ViewHolder(View view) {
 			super(view);
 			tvUserName = (TextView) view.findViewById(R.id.tvUserName);
+			tvTime = (TextView) view.findViewById(R.id.tvTime);
 		}
 	}
 }

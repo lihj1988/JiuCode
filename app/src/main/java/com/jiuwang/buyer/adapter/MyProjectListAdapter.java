@@ -55,11 +55,11 @@ public class MyProjectListAdapter extends RecyclerView.Adapter<MyProjectListAdap
 	@Override
 	public void onBindViewHolder(final MyProjectListAdapter.ViewHolder holder, final int position) {
 
-		if (Constant.ISWIN.equals(projectList.get(position).getIs_part())) {
-			holder.tvReport.setText("已报名");
+		if (Constant.ISWIN.equals(projectList.get(position).getIs_win())) {
+			holder.tvReport.setText("已中奖");
 			holder.tvReport.setTextColor(context.getResources().getColor(R.color.red));
 		} else {
-			holder.tvReport.setText("未报名");
+			holder.tvReport.setText("未中奖");
 		}
 
 		holder.tvProjectName.setText(projectList.get(position).getProject_name());

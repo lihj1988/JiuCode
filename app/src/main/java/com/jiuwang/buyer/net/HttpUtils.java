@@ -11,6 +11,7 @@ import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.GoodsDetailsEntity;
 import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.entity.InviteEntity;
+import com.jiuwang.buyer.entity.InviteUserEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
@@ -442,6 +443,21 @@ public class HttpUtils {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
 	}
+	/**
+	 * 被邀请人查询
+	 *
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void inviteUser(HashMap<String, String> map, Consumer<InviteUserEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.inviteUser(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}
+
 
 	/**
 	 * 提现

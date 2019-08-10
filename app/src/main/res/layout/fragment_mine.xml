@@ -350,9 +350,9 @@
 				android:id="@+id/peojectTextView"
 				style="@style/TextView.TitleLeft"
 				android:drawableEnd="@drawable/right_img"
-				android:drawableLeft="@drawable/ic_user_address"
+				android:drawableLeft="@drawable/project_selected"
 				android:drawableRight="@drawable/right_img"
-				android:drawableStart="@drawable/ic_user_address"
+				android:drawableStart="@drawable/project_selected"
 				android:text="我的抢购"
 				/>
 
