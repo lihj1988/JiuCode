@@ -32,6 +32,8 @@ public class MyTabWidget extends LinearLayout {
 	private static final String TAG = "MyTabWidget";
 	private int[] mDrawableIds = new int[]{R.drawable.home_selector, R.drawable.goods_selector, R.drawable.project_selector,
 			R.drawable.mine_selector,};
+//	private int[] mDrawableIds = new int[]{R.drawable.goods_selector, R.drawable.project_selector,
+//			R.drawable.mine_selector,};
 	// 存放底部菜单的各个文字CheckedTextView
 	private List<CheckedTextView> mCheckedList = new ArrayList<CheckedTextView>();
 	// 存放底部菜单每项View

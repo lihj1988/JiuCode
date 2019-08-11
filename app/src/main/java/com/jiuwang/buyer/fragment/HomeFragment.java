@@ -1,6 +1,7 @@
 package com.jiuwang.buyer.fragment;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.holder.Holder;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.bean.AnnouncementBean;
 import com.jiuwang.buyer.constant.Constant;
@@ -24,9 +28,11 @@ import com.jiuwang.buyer.redpakge.CustomDialog;
 import com.jiuwang.buyer.redpakge.OnRedPacketDialogClickListener;
 import com.jiuwang.buyer.redpakge.RedPacketEntity;
 import com.jiuwang.buyer.redpakge.RedPacketViewHolder;
+import com.jiuwang.buyer.view.ADInfo;
 import com.jiuwang.buyer.view.AutoScrollRecyclerView;
 import com.jiuwang.buyer.view.NoticeRecyclerViewAdapter;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +71,10 @@ public class HomeFragment extends Fragment {
 	private List<AnnouncementBean> announcementList;
 	private NoticeRecyclerViewAdapter adapter;
 	private List<String> data;
-
+	int[] imageUrls_local = { R.drawable.play1,
+			R.drawable.play2};
+	private ArrayList<ADInfo> infos = new ArrayList<>();
+	private ArrayList<Integer> localImages = new ArrayList<Integer>();
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -73,6 +82,41 @@ public class HomeFragment extends Fragment {
 		ButterKnife.bind(this, view);
 		initView();
 		initData();
+		for (int i = 0; i < imageUrls_local.length; i++) {
+			ADInfo info = new ADInfo();
+			//info.setUrl(imageUrls[i]);
+			info.setId(imageUrls_local[i]);
+			info.setContent("top-->" + i);
+			infos.add(info);
+		}
+		ConvenientBanner imageCycleView = view.findViewById(R.id.icView);
+//		imageCycleView.setImageResources(infos, mAdCycleViewListener);
+//		imageCycleView.startImageCycle();
+
+
+		//获取本地的图片
+		for (int position = 0; position < 3; position++) {
+			localImages.add(getResId("play" + (position+1), R.drawable.class));
+		}
+
+		//开始自动翻页
+		imageCycleView.setPages(new CBViewHolderCreator() {
+			@Override
+			public Object createHolder() {
+				return new LocalImageHolderView();
+			}
+		},localImages)
+				//设置指示器是否可见
+				.setPointViewVisible(true)
+				//设置自动切换（同时设置了切换时间间隔）
+				.startTurning(2000)
+				//设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
+				.setPageIndicator(new int[]{R.drawable.play_white, R.drawable.play_red})
+				//设置指示器的方向（左、中、右）
+				.setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL)
+				//设置手动影响（设置了该项无法手动切换）
+				.setManualPageable(true);
+
 		return view;
 	}
 
@@ -227,5 +271,41 @@ public class HomeFragment extends Fragment {
 			mAutoTask = null;
 		}
 	}
+
+	//为了方便改写，来实现复杂布局的切换
+	private class LocalImageHolderView implements Holder<Integer> {
+		private ImageView imageView;
+
+		@Override
+		public View createView(Context context) {
+			//你可以通过layout文件来创建，不一定是Image，任何控件都可以进行翻页
+			imageView = new ImageView(context);
+			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+			return imageView;
+		}
+
+		@Override
+		public void UpdateUI(Context context, int position, Integer data) {
+			imageView.setImageResource(data);
+		}
+	}
+
+	/**
+	 * 通过文件名获取资源id 例子：getResId("icon", R.drawable.class);
+	 *
+	 * @param variableName
+	 * @param c
+	 * @return
+	 */
+	public static int getResId(String variableName, Class<?> c) {
+		try {
+			Field idField = c.getDeclaredField(variableName);
+			return idField.getInt(idField);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
 
 }

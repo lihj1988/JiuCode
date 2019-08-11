@@ -200,7 +200,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-//		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+projectList.get(position).getPic_url(),holder.ivPic);
+		CommonUtil.loadImage(context,R.drawable.ic_project,holder.ivPic);
 
 	}
 

@@ -930,6 +930,15 @@ public class CommonUtil {
 				.diskCacheStrategy(DiskCacheStrategy.SOURCE)
 				.into(ivPic);
 	}
+	public static void loadImage(Context context, int url, ImageView ivPic) {
+		Glide.with(context)
+				.load(url).error(R.drawable.test)
+//				.load(R.drawable.test)
+				.error(R.drawable.test)
+				.skipMemoryCache(false)
+				.diskCacheStrategy(DiskCacheStrategy.SOURCE)
+				.into(ivPic);
+	}
 
 
 	public static BaseEntity<LoginEntity> loginEntity;
