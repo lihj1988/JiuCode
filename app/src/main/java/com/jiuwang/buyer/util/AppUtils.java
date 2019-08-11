@@ -742,6 +742,7 @@ public class AppUtils {
 				final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
 				dialog.show();
 				dialog.setCanceledOnTouchOutside(false);
+				dialog.setCancelable(false);
 				Window window = dialog.getWindow();
 				window.setContentView(R.layout.dialog_normal_one_button);
 				RelativeLayout relative_button2 = (RelativeLayout) window.findViewById(R.id.relative_button2);
