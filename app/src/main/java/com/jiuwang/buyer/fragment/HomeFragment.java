@@ -79,18 +79,6 @@ public class HomeFragment extends Fragment {
 	private void initData() {
 		announcementList = new ArrayList<>();
 		data = new ArrayList<>();
-//
-//		data.add("恭喜15******891参与抢购项目中的茅台 立省260元");
-//		data.add("恭喜15******871提现100元");
-//		data.add("恭喜13******891参与抢购项目中的茅台 立省260元");
-//		data.add("恭喜18******841提现100元");
-//		data.add("恭喜15******865参与抢购项目中的茅台 立省260元");
-//		data.add("恭喜15******451提现100元");
-//		data.add("恭喜15******878参与抢购项目中的茅台 立省260元");
-//		data.add("恭喜15******236提现200元");
-//		data.add("恭喜15******896提现100元");
-//		data.add("恭喜15******675提现1136元");
-
 		intDatas();
 
 
@@ -117,10 +105,7 @@ public class HomeFragment extends Fragment {
 			protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
 				return 3 / displayMetrics.density;
 			}
-//			@Override protected int calculateTimeForDeceleration(int dex){
-//
-//				return  1;
-//			}
+
 
 		};
 		startAuto();
@@ -147,8 +132,14 @@ public class HomeFragment extends Fragment {
 					String value = "";
 
 					for (int i = 0; i < announcementList.size(); i++) {
-						String replace = announcementList.get(i).getUser_cd().substring(3, 9);
-						String newStr = announcementList.get(i).getUser_cd().replace(replace, "******");
+						String newStr=  "";
+						if(announcementList.get(i).getUser_cd().length()==11){
+							String replace = announcementList.get(i).getUser_cd().substring(3, 9);
+							newStr= announcementList.get(i).getUser_cd().replace(replace, "******");
+						}else {
+							newStr = announcementList.get(i).getUser_cd();
+						}
+
 						if ("1".equals(announcementList.get(i).getAnnounce_type())) {
 							value = "恭喜<font color=#FF5001 size=18px >" + "" + newStr+ "" + "</font>在抢购项目中奖";
 //							value = "<font color=#ff6600 size=20px>积分:</font>";

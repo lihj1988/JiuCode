@@ -33,7 +33,7 @@ public class InviteManagerAdapter extends RecyclerView.Adapter<InviteManagerAdap
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_invitemanager, parent, false);
-		return new InviteManagerAdapter.ViewHolder(view);
+		return new ViewHolder(view);
 	}
 
 	@Override

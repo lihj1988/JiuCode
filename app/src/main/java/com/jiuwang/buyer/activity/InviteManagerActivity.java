@@ -2,15 +2,19 @@ package com.jiuwang.buyer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.InviteManagerAdapter;
+import com.jiuwang.buyer.adapter.InviteUserAdapter;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.InviteBean;
 import com.jiuwang.buyer.bean.InviteUserBean;
@@ -18,6 +22,7 @@ import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.InviteEntity;
 import com.jiuwang.buyer.entity.InviteUserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 
 import java.util.ArrayList;
@@ -110,7 +115,12 @@ public class InviteManagerActivity extends BaseActivity {
 						if (inviteEntity.getData().size() > 0) {
 							inviteUserBeanList.addAll(inviteEntity.getData());
 						}
-						setAdapter();
+						new Handler(){
+							@Override
+							public void handleMessage(Message msg) {
+								setAdapter();
+							}
+						}.sendEmptyMessageDelayed(0,500);
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(inviteEntity.getCode())) {
 						startActivity(new Intent(InviteManagerActivity.this, LoginActivity.class));
 						finish();
@@ -127,6 +137,7 @@ public class InviteManagerActivity extends BaseActivity {
 
 	private void setAdapter() {
 		inviteManagerAdapter = new InviteManagerAdapter(InviteManagerActivity.this, inviteUserBeanList);
+//		InviteUserAdapter inviteUserAdapter = new InviteUserAdapter(InviteManagerActivity.this,inviteUserBeanList);
 		listView.setAdapter(inviteManagerAdapter);
 	}
 
@@ -134,7 +145,7 @@ public class InviteManagerActivity extends BaseActivity {
 		setTopView(topView);
 		actionbarText.setText("邀请人管理");
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
-
+		AppUtils.initListView(InviteManagerActivity.this,listView,false,false);
 		onclickLayoutLeft.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
