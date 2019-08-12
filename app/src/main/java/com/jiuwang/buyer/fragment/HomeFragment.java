@@ -215,7 +215,7 @@ public class HomeFragment extends Fragment {
 					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
 						@Override
 						public void callBack(BaseEntity<LoginEntity> loginEntity) {
-							intDatas();
+//							intDatas();
 						}
 
 						@Override
@@ -249,7 +249,7 @@ public class HomeFragment extends Fragment {
 
 
 	public void showDialog() {
-		RedPacketEntity entity = new RedPacketEntity("剩余抽奖次数：10次", "http://upload.51qianmai.com/20171205180511192.png", "");
+		RedPacketEntity entity = new RedPacketEntity("活动即将开始！", "http://upload.51qianmai.com/20171205180511192.png", "");
 		showRedPacketDialog(entity);
 	}
 

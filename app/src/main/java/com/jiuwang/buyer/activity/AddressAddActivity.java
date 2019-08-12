@@ -155,14 +155,16 @@ public class AddressAddActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		intent = getIntent();
 		mode = intent.getStringExtra("mode");
+		initView();
+		initData();
 		type = intent.getStringExtra("type");
 		if (type != null) {
 			if ("1".equals(type)) {
 				defaultCheckBox.setChecked(true);
+				is_default = "1";
+
 			}
 		}
-		initView();
-		initData();
 		initEven();
 		mHandler.sendEmptyMessage(MSG_LOAD_DATA);
 	}

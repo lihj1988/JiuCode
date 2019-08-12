@@ -41,7 +41,7 @@
 			android:textColor="@color/black"
 			android:id="@+id/tvNotice"
 			android:background="@drawable/notice_content"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_below="@+id/ivNotice"
 			android:padding="5dp"/>
@@ -59,11 +59,11 @@
 			android:id="@+id/ivRedPackage"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignParentEnd="true"
-			android:layout_alignParentRight="true"
-			android:layout_centerVertical="true"
-			android:layout_marginRight="@dimen/padding_size_10"
 			android:src="@drawable/red_pakage"
-			android:visibility="invisible"/>
+			android:visibility="visible"
+			android:layout_above="@+id/am_rv"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_marginBottom="155dp"/>
 	</RelativeLayout>
 </LinearLayout>
