@@ -25,7 +25,6 @@ import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.AddressActivity;
-import com.jiuwang.buyer.activity.BuySetup1Activity;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.adapter.ProjectListAdapter;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
@@ -34,6 +33,8 @@ import com.jiuwang.buyer.bean.AddressBean;
 import com.jiuwang.buyer.bean.ProjectBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.AddressEntity;
+import com.jiuwang.buyer.entity.BaseEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.ProjectDetailsEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
@@ -44,6 +45,7 @@ import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -203,9 +205,17 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectEntity.getCode())) {
 
-					Intent intent = new Intent(getActivity(), LoginActivity.class);
-					startActivity(intent);
-					getActivity().finish();
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							initData();
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
 				}
 				new Handler() {
 					@Override

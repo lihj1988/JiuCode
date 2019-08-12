@@ -1,29 +1,29 @@
 package com.jiuwang.buyer.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.adapter.InviteManagerAdapter;
-import com.jiuwang.buyer.adapter.InviteUserAdapter;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.InviteBean;
 import com.jiuwang.buyer.bean.InviteUserBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.InviteEntity;
 import com.jiuwang.buyer.entity.InviteUserEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,8 +91,17 @@ public class InviteManagerActivity extends BaseActivity {
 							tvProjectCount.setText("0");
 						}
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(inviteEntity.getCode())) {
-						startActivity(new Intent(InviteManagerActivity.this, LoginActivity.class));
-						finish();
+						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+							@Override
+							public void callBack(BaseEntity<LoginEntity> loginEntity) {
+								initData();
+							}
+
+							@Override
+							public void failCallBack(Throwable throwable) {
+
+							}
+						});
 					}
 				}
 			}, new Consumer<Throwable>() {
@@ -122,8 +131,17 @@ public class InviteManagerActivity extends BaseActivity {
 							}
 						}.sendEmptyMessageDelayed(0,500);
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(inviteEntity.getCode())) {
-						startActivity(new Intent(InviteManagerActivity.this, LoginActivity.class));
-						finish();
+						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+							@Override
+							public void callBack(BaseEntity<LoginEntity> loginEntity) {
+								initInviteData();
+							}
+
+							@Override
+							public void failCallBack(Throwable throwable) {
+
+							}
+						});
 					}
 				}
 			}, new Consumer<Throwable>() {

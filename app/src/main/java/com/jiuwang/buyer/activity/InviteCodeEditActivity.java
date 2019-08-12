@@ -12,10 +12,14 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.CommonHttpUtils;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.util.HashMap;
 
@@ -62,48 +66,65 @@ public class InviteCodeEditActivity extends BaseActivity {
 				break;
 			case R.id.btnNext:
 				String trim = etInviteCode.getText().toString().trim();
-				if("".equals(trim)){
-					MyToastView.showToast("请填写邀请码",InviteCodeEditActivity.this);
+				if ("".equals(trim)) {
+					MyToastView.showToast("请填写邀请码", InviteCodeEditActivity.this);
 					return;
 				}
-				if(trim.contains(" ")){
-					MyToastView.showToast("填写邀请码不能有空格",InviteCodeEditActivity.this);
+				if (trim.contains(" ")) {
+					MyToastView.showToast("填写邀请码不能有空格", InviteCodeEditActivity.this);
 					return;
 				}
 				//绑定邀请码
 				if (Constant.IS_LOGIN) {
 					final LoadingDialog loadingDialog = new LoadingDialog(InviteCodeEditActivity.this);
 					loadingDialog.show();
-					HashMap<String, String> map = new HashMap<>();
-					map.put("act", "invite");
-					map.put("from", trim);
-					CommonHttpUtils.ref_action(map, new CommonHttpUtils.CallingBack() {
-						@Override
-						public void successBack(BaseResultEntity baseResultEntity) {
-							loadingDialog.dismiss();
-
-							MyToastView.showToast(baseResultEntity.getMsg(), InviteCodeEditActivity.this);
-							if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
-								startActivity(new Intent(InviteCodeEditActivity.this, LoginActivity.class));
-								finish();
-							}else if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
-								Intent intent = new Intent();
-								intent.setAction("minerefresh");
-								sendBroadcast(intent);
-								finish();
-							}
-
-						}
-
-						@Override
-						public void failBack() {
-							loadingDialog.dismiss();
-							MyToastView.showToast(getResources().getString(R.string.msg_error_operation), InviteCodeEditActivity.this);
-						}
-					});
+					bindCode(trim, loadingDialog);
 				}
 				break;
 		}
+	}
+
+	private void bindCode(final String trim, final LoadingDialog loadingDialog) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("act", "invite");
+		map.put("from", trim);
+		CommonHttpUtils.ref_action(map, new CommonHttpUtils.CallingBack() {
+			@Override
+			public void successBack(BaseResultEntity baseResultEntity) {
+
+
+				if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							bindCode(trim, loadingDialog);
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
+				} else if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+					Intent intent = new Intent();
+					intent.setAction("minerefresh");
+					sendBroadcast(intent);
+					loadingDialog.dismiss();
+					MyToastView.showToast(baseResultEntity.getMsg(), InviteCodeEditActivity.this);
+					finish();
+				} else {
+					MyToastView.showToast(baseResultEntity.getMsg(), InviteCodeEditActivity.this);
+					loadingDialog.dismiss();
+				}
+
+			}
+
+			@Override
+			public void failBack() {
+				loadingDialog.dismiss();
+				MyToastView.showToast(getResources().getString(R.string.msg_error_operation), InviteCodeEditActivity.this);
+			}
+		});
 	}
 
 

@@ -17,11 +17,14 @@ import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -140,7 +143,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 		}
 	}
 
-	public void addCar(String goods_id) {
+	public void addCar(final String goods_id) {
 
 		HashMap<String, String> map = new HashMap<>();
 		map.put("act", Constant.ACTION_ACT_ADD);
@@ -155,11 +158,23 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 					Intent intent = new Intent();
 					intent.setAction("refreshCar");
 					context.sendBroadcast(intent);
+					MyToastView.showToast(baseResultEntity.getMsg(), context);
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							addCar(goods_id);
+						}
 
-				} else {
+						@Override
+						public void failCallBack(Throwable throwable) {
 
+						}
+					});
+				}else {
+					MyToastView.showToast(baseResultEntity.getMsg(), context);
 				}
-				MyToastView.showToast(baseResultEntity.getMsg(), context);
+
 			}
 		}, new Consumer<Throwable>() {
 			@Override

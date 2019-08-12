@@ -1,18 +1,26 @@
 package com.jiuwang.buyer.activity;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gxz.PagerSlidingTabStrip;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.bean.GoodsDetailsBean;
@@ -25,6 +33,7 @@ import com.jiuwang.buyer.goods.fragment.GoodsCommentFragment;
 import com.jiuwang.buyer.goods.fragment.GoodsDetailFragment;
 import com.jiuwang.buyer.goods.fragment.GoodsInfoFragment;
 import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
@@ -43,6 +52,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
+
+import static com.jiuwang.buyer.constant.Constant.REQUEST_CALL_PERMISSION;
 
 /**
  * author：lihj
@@ -158,7 +169,19 @@ public class GoodsDetailsActivty extends BaseActivity {
 				finish();
 				break;
 			case R.id.tvKefu:
-				MyToastView.showToast("开发中", GoodsDetailsActivty.this);
+				//打电话
+				AppUtils.showDialog(GoodsDetailsActivty.this, "拨打电话", "客服电话：" + getResources().getString(R.string.phone), "1", new DialogClickInterface() {
+					@Override
+					public void nagtiveOnClick() {
+
+					}
+
+					@Override
+					public void onClick() {
+						call(getResources().getString(R.string.phone));
+					}
+				});
+
 				break;
 			case R.id.tvShop:
 				MyToastView.showToast("开发中", GoodsDetailsActivty.this);
@@ -275,7 +298,47 @@ public class GoodsDetailsActivty extends BaseActivity {
 		unregisterReceiver(myReceiver);
 		EventBus.getDefault().unregister(this);
 	}
+	/**
+	 * 检查权限后的回调
+	 * @param requestCode 请求码
+	 * @param permissions  权限
+	 * @param grantResults 结果
+	 */
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		switch (requestCode) {
+			case REQUEST_CALL_PERMISSION: //拨打电话
+				if (permissions.length != 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {//失败
+					Toast.makeText(this,"请允许拨号权限后再试",Toast.LENGTH_SHORT).show();
+				} else {//成功
+					call(getResources().getString(R.string.phone));
+				}
+				break;
+		}
+	}
 
+	public void call(String telPhone){
+		if(checkReadPermission(Manifest.permission.CALL_PHONE,REQUEST_CALL_PERMISSION)){
+			Intent dialIntent =  new Intent(Intent.ACTION_DIAL,Uri.parse("tel:" + telPhone));//跳转到拨号界面，同时传递电话号码
+			startActivity(dialIntent);
+		}
+	}
+
+	/**
+	 * 判断是否有某项权限
+	 * @param string_permission 权限
+	 * @param request_code 请求码
+	 * @return
+	 */
+	public boolean checkReadPermission(String string_permission,int request_code) {
+		boolean flag = false;
+		if (ContextCompat.checkSelfPermission(this, string_permission) == PackageManager.PERMISSION_GRANTED) {//已有权限
+			flag = true;
+		} else {//申请权限
+			ActivityCompat.requestPermissions(this, new String[]{string_permission}, request_code);
+		}
+		return flag;
+	}
 	class MyReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {

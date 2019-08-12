@@ -19,13 +19,16 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.CarBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyList;
 import com.jiuwang.buyer.util.MyToastView;
-import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -256,7 +259,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.ViewHo
 						viewHolder.red = (ImageView) child.findViewById(R.id.tv_reduce);// 减号减少
 
 						view.setTag(viewHolder);
-					}else {
+					} else {
 						viewHolder = (ViewHolder) view.getTag();
 					}
 					viewHolder.add.setOnClickListener(new View.OnClickListener() {
@@ -488,12 +491,32 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.ViewHo
 		HttpUtils.cartInfo(hashMap, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
-				MyToastView.showToast(baseResultEntity.getMsg(), context);
-				Intent intent = new Intent();
-				intent.setAction("refreshCar");
-				context.sendBroadcast(intent);
+
+
+				if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
+				} else if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+					MyToastView.showToast(baseResultEntity.getMsg(), context);
+					Intent intent = new Intent();
+
+					intent.setAction("refreshCar");
+					context.sendBroadcast(intent);
 //				notifyDataSetChanged();
-				DialogUtil.cancel();
+					DialogUtil.cancel();
+				} else {
+					MyToastView.showToast(baseResultEntity.getMsg(), context);
+					DialogUtil.cancel();
+				}
 			}
 		}, new Consumer<Throwable>() {
 			@Override

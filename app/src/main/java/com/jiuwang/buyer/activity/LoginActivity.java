@@ -95,6 +95,7 @@ public class LoginActivity extends BaseActivity {
 						intent.putExtra("from", invite);
 					}
 					startActivity(intent);
+					finish();
 				} else {
 					MyToastView.showToast(loginEntity.getMsg(), LoginActivity.this);
 				}

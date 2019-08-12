@@ -1,5 +1,6 @@
 package com.jiuwang.buyer.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -7,10 +8,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +42,8 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.entity.BaseEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.service.UpdateService;
@@ -58,6 +64,8 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.functions.Consumer;
 import okhttp3.Call;
+
+import static com.jiuwang.buyer.constant.Constant.REQUEST_CALL_PERMISSION;
 
 
 public class MineFragment extends Fragment {
@@ -128,7 +136,8 @@ public class MineFragment extends Fragment {
 	@Bind(R.id.llBalance)
 	LinearLayout llBalance;
 	@Bind(R.id.llAvailAmount)
-	LinearLayout llAvailAmount;@Bind(R.id.llBind)
+	LinearLayout llAvailAmount;
+	@Bind(R.id.llBind)
 	LinearLayout llBind;
 	@Bind(R.id.llTrialAmount)
 	LinearLayout llTrialAmount;
@@ -136,6 +145,8 @@ public class MineFragment extends Fragment {
 	TextView tvMyAccount;
 	@Bind(R.id.peojectTextView)
 	TextView peojectTextView;
+	@Bind(R.id.link)
+	TextView link;
 	@Bind(R.id.trialOrScore)
 	TextView trialOrScore;
 	private View view;
@@ -221,17 +232,26 @@ public class MineFragment extends Fragment {
 										startActivity(new Intent(getActivity(), BalanceActivity.class));
 									}
 								});
-								if("1".equals(userBean.getIs_invited())){
+								if ("1".equals(userBean.getIs_invited())) {
 									llBind.setVisibility(View.GONE);
-								}else {
+								} else {
 									llBind.setVisibility(View.VISIBLE);
 								}
 
 							}
 						}.sendEmptyMessage(0);
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(userEntity.getCode())) {
-						startActivity(new Intent(getActivity(), LoginActivity.class));
-						getActivity().finish();
+						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+							@Override
+							public void callBack(BaseEntity<LoginEntity> loginEntity) {
+								initData();
+							}
+
+							@Override
+							public void failCallBack(Throwable throwable) {
+
+							}
+						});
 					} else {
 
 					}
@@ -308,7 +328,7 @@ public class MineFragment extends Fragment {
 	@OnClick({R.id.orderTextView, R.id.waitPaymentRelativeLayout, R.id.waitDeliverRelativeLayout, R.id.waitReceiptRelativeLayout,
 			R.id.waitEvaluateRelativeLayout, R.id.waitRefundRelativeLayout, R.id.addressTextView, R.id.settingTextView,
 			R.id.tv_exit, R.id.civAuther, R.id.tvMyInviteCode, R.id.tvMyAccount, R.id.tvInviteManager, R.id.llBalance,
-			R.id.llAvailAmount, R.id.tvBindInviteCode, R.id.peojectTextView})
+			R.id.llAvailAmount, R.id.tvBindInviteCode, R.id.peojectTextView, R.id.link})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.orderTextView:
@@ -430,6 +450,21 @@ public class MineFragment extends Fragment {
 				Intent intentMyProject = new Intent(getActivity(), MyProjectActivity.class);
 				getActivity().startActivity(intentMyProject);
 				break;
+			case R.id.link:
+//打电话
+				AppUtils.showDialog(getActivity(), "拨打电话","客服电话：" + getResources().getString(R.string.phone), "1", new DialogClickInterface() {
+					@Override
+					public void nagtiveOnClick() {
+
+					}
+
+					@Override
+					public void onClick() {
+						runPermission(getResources().getString(R.string.phone));
+					}
+				});
+
+				break;
 		}
 	}
 
@@ -460,6 +495,39 @@ public class MineFragment extends Fragment {
 			Toast.makeText(getActivity(), "权限不通过!", Toast.LENGTH_SHORT).show();
 		}
 	};
+	/**
+	 * 检查权限后的回调
+	 * @param requestCode 请求码
+	 * @param permissions  权限
+	 * @param grantResults 结果
+	 */
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		switch (requestCode) {
+			case REQUEST_CALL_PERMISSION: //拨打电话
+				if (permissions.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//失败
+//					runPermission(getResources().getString(R.string.phone));
+					Intent dialIntent =  new Intent(Intent.ACTION_DIAL,Uri.parse("tel:" + getResources().getString(R.string.phone)));//跳转到拨号界面，同时传递电话号码
+					startActivity(dialIntent);
+				} else {
+					Toast.makeText(getActivity(),"请允许拨号权限后再试",Toast.LENGTH_SHORT).show();
+				}
+				break;
 
+		}
+	}
+
+
+
+	private void runPermission(String telPhone) {
+		if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE)
+				!= PackageManager.PERMISSION_GRANTED) {
+			requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, Constant.REQUEST_CALL_PERMISSION);
+		} else {
+			Intent dialIntent =  new Intent(Intent.ACTION_DIAL,Uri.parse("tel:" + telPhone));//跳转到拨号界面，同时传递电话号码
+			startActivity(dialIntent);
+		}
+	}
 
 }

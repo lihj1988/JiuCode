@@ -7,7 +7,7 @@ package com.jiuwang.buyer.constant;
 
 public class Constant {
 	public static  boolean IS_LOGIN = false;
-	public static  boolean IS_DEBUG = true;//是否是调试
+	public static  boolean IS_DEBUG = false;//是否是调试
 	public static final String PAGESIZE = "10";
 	public static final String HTTP_SUCCESS_CODE = "0";
 	public static final String HTTP_FAIL_CODE = "1";
@@ -22,8 +22,8 @@ public class Constant {
 	public static final String ACTION_ACT_DELETE = "3";
 	public static final String ACTION_ACT_CANCLE = "3";
 	//支付宝AppID
-	public static final String ALIPAY_APPID = "2016101000655785";
-//	public static final String ALIPAY_APPID = "2019072165954132";//生产环境
+//	public static final String ALIPAY_APPID = "2016101000655785";
+	public static final String ALIPAY_APPID = "2019072165954132";//生产环境
 	public static final String ALIPAY_METHOD ="alipay.trade.app.pay";
 	public static final String ALIPAY_RESULTSTATUS = "9000";
 	public static final String CHARSET = "UTF-8";
@@ -97,5 +97,4 @@ public class Constant {
 	public static float[] EARTH_WEIGHT = {0.1f,0.2f,0.4f,0.6f,0.8f}; // 推算计算权重_地球
 	//public static float[] MOON_WEIGHT = {0.0167f,0.033f,0.067f,0.1f,0.133f};
 	//public static float[] MARS_WEIGHT = {0.034f,0.068f,0.152f,0.228f,0.304f};
-
 }

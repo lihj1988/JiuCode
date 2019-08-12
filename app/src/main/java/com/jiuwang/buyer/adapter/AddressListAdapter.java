@@ -1,7 +1,6 @@
 package com.jiuwang.buyer.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,14 +13,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.activity.AddressAddActivity;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AddressBean;
+import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -233,17 +236,30 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 		void onItemLongClick(int position);
 	}
 
-	public void setAddress(HashMap<String, String> map) {
+	public void setAddress(final HashMap<String, String> map) {
 		HttpUtils.addressInfo(map, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
-				if (type != null) {
-					if ("1".equals(type)) {
-						EventBus.getDefault().post("addressFinish");
+				if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
+					if (type != null) {
+						if ("1".equals(type)) {
+							EventBus.getDefault().post("addressFinish");
+						}
+					} else {
+						MyToastView.showToast(baseResultEntity.getMsg(), MyApplication.getInstance());
 					}
-				}else {
-					MyToastView.showToast(baseResultEntity.getMsg(), MyApplication.getInstance());
+				}else if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							setAddress(map);
+						}
 
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
 				}
 			}
 		}, new Consumer<Throwable>() {

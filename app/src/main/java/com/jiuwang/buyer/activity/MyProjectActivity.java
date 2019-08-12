@@ -16,10 +16,14 @@ import com.jiuwang.buyer.adapter.MyProjectListAdapter;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.ProjectBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,9 +100,17 @@ public class MyProjectActivity extends BaseActivity implements XRecyclerView.Loa
 
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectEntity.getCode())) {
 
-					Intent intent = new Intent(MyProjectActivity.this, LoginActivity.class);
-					startActivity(intent);
-					finish();
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							initData();
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
 				}
 
 				if (projectList != null && projectList.size() > 0) {

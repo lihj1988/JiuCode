@@ -21,10 +21,13 @@ import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.CarBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
@@ -137,10 +140,17 @@ public class CarActivity extends BaseActivity {
 					setAdapter();
 //					}
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(myCarEntity.getCode())) {
-					MyToastView.showToast(myCarEntity.getMsg(), CarActivity.this);
-					Intent intent = new Intent(CarActivity.this, LoginActivity.class);
-					startActivity(intent);
-					finish();
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							initData();
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
 				}
 			}
 		}, new Consumer<Throwable>() {

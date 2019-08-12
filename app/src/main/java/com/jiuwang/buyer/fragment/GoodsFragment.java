@@ -38,8 +38,10 @@ import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.camera.zxing.activity.CaptureActivity;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.HomeResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.net.CommonHttpUtils;
 import com.jiuwang.buyer.net.HttpUtils;
@@ -249,10 +251,17 @@ public class GoodsFragment extends Fragment implements XRecyclerView.LoadingList
 						setAdapter();
 					}
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(homeResultEntity.getCode())) {
-					MyToastView.showToast(homeResultEntity.getMsg(), getActivity());
-					Intent intent = new Intent(getActivity(), LoginActivity.class);
-					startActivity(intent);
-					getActivity().finish();
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							intDatas();
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
 				} else {
 					MyToastView.showToast(homeResultEntity.getMsg(), getActivity());
 				}
@@ -352,31 +361,7 @@ public class GoodsFragment extends Fragment implements XRecyclerView.LoadingList
 			if (Constant.IS_LOGIN) {
 				final LoadingDialog loadingDialog = new LoadingDialog(getActivity());
 				loadingDialog.show();
-				if ("inviteCode".equals(type)) {
-					HashMap<String, String> map = new HashMap<>();
-					map.put("act", "invite");
-					map.put("from", inviteCode);
-					CommonHttpUtils.ref_action(map, new CommonHttpUtils.CallingBack() {
-						@Override
-						public void successBack(BaseResultEntity baseResultEntity) {
-							loadingDialog.dismiss();
-							MyToastView.showToast(baseResultEntity.getMsg(), getActivity());
-							if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
-								startActivity(new Intent(getActivity(), LoginActivity.class));
-								getActivity().finish();
-							}
-						}
-
-						@Override
-						public void failBack() {
-							loadingDialog.dismiss();
-							MyToastView.showToast(getActivity().getResources().getString(R.string.msg_error_operation), getActivity());
-						}
-
-					});
-				}else {
-
-				}
+				bindCode(inviteCode, type, loadingDialog);
 			} else {
 
 				AppUtils.showNormalDialog(getActivity(), "提示", "你当前处于未登录状态，请选择登录或注册", "去注册", "去登陆", new DialogClickInterface() {
@@ -402,6 +387,48 @@ public class GoodsFragment extends Fragment implements XRecyclerView.LoadingList
 				});
 
 			}
+
+		}
+	}
+
+	private void bindCode(final String inviteCode, final String type, final LoadingDialog loadingDialog) {
+		if ("inviteCode".equals(type)) {
+			HashMap<String, String> map = new HashMap<>();
+			map.put("act", "invite");
+			map.put("from", inviteCode);
+			CommonHttpUtils.ref_action(map, new CommonHttpUtils.CallingBack() {
+				@Override
+				public void successBack(BaseResultEntity baseResultEntity) {
+
+
+					if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+							@Override
+							public void callBack(BaseEntity<LoginEntity> loginEntity) {
+								bindCode(inviteCode, type, loadingDialog);
+							}
+
+							@Override
+							public void failCallBack(Throwable throwable) {
+
+							}
+						});
+					}else if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
+						MyToastView.showToast(baseResultEntity.getMsg(),getActivity());
+						loadingDialog.dismiss();
+					}else {
+						MyToastView.showToast(baseResultEntity.getMsg(),getActivity());
+						loadingDialog.dismiss();
+					}
+				}
+				@Override
+				public void failBack() {
+					loadingDialog.dismiss();
+					MyToastView.showToast(getActivity().getResources().getString(R.string.msg_error_operation), getActivity());
+				}
+
+			});
+		}else {
 
 		}
 	}

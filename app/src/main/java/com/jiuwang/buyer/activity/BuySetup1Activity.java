@@ -25,12 +25,15 @@ import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.AddressEntity;
+import com.jiuwang.buyer.entity.BaseEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.util.TextUtil;
 
 import org.json.JSONException;
@@ -351,10 +354,17 @@ public class BuySetup1Activity extends BaseActivity {
 							startActivity(intentBuy2);
 							finish();
 						} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
-							MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
-							Intent intent = new Intent(BuySetup1Activity.this, LoginActivity.class);
-							startActivity(intent);
-							finish();
+							CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+								@Override
+								public void callBack(BaseEntity<LoginEntity> loginEntity) {
+									confirmOrderInfo();
+								}
+
+								@Override
+								public void failCallBack(Throwable throwable) {
+
+								}
+							});
 						} else {
 							MyToastView.showToast(baseResultEntity.getMsg(), BuySetup1Activity.this);
 						}
@@ -427,10 +437,17 @@ public class BuySetup1Activity extends BaseActivity {
 
 					}
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(addressEntity.getCode())) {
-					MyToastView.showToast(addressEntity.getMsg(), BuySetup1Activity.this);
-					Intent intent = new Intent(BuySetup1Activity.this, LoginActivity.class);
-					startActivity(intent);
-					finish();
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							selectAddress();
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
 				}
 			}
 		}, new Consumer<Throwable>() {

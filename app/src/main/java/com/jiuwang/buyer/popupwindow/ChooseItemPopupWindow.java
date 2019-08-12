@@ -18,12 +18,16 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.GoodsBean;
 import com.jiuwang.buyer.bean.SelectGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,35 +106,7 @@ public class ChooseItemPopupWindow extends PopupWindow {
 				LogUtils.e(TAG, "点击了第" + (position + 1) + "条");
 				//报名
 				loadingDialog.show();
-				HashMap<String, String> hashMap = new HashMap<>();
-				hashMap.put("act", Constant.ACTION_ACT_ADD);
-				hashMap.put("aution_id", project_id);
-				hashMap.put("goods_id", selectGoodsList.get(position).getGoods_id());
-				HttpUtils.enroll(hashMap, new Consumer<BaseResultEntity>() {
-					@Override
-					public void accept(BaseResultEntity baseResultEntity) throws Exception {
-						loadingDialog.dismiss();
-						ChooseItemPopupWindow.this.dismiss();
-						if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
-							AppUtils.showDialog(MyApplication.currentActivity,"提示","报名成功");
-							Intent intent = new Intent();
-							intent.setAction("refreshProject");
-							context.sendBroadcast(intent);
-						}else {
-							AppUtils.showDialog(MyApplication.currentActivity,"提示",baseResultEntity.getMsg());
-						}
-
-
-//						MyToastView.showToast(baseResultEntity.getMsg(), context);
-
-					}
-				}, new Consumer<Throwable>() {
-					@Override
-					public void accept(Throwable throwable) throws Exception {
-						loadingDialog.dismiss();
-						MyToastView.showToast(context.getString(R.string.msg_error_operation), context);
-					}
-				});
+				report(position);
 			}
 		});
 		itemRecyclerView.setAdapter(chooseItemAdapter);
@@ -140,6 +116,49 @@ public class ChooseItemPopupWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				dismiss();
+			}
+		});
+	}
+
+	private void report(final int position) {
+		HashMap<String, String> hashMap = new HashMap<>();
+		hashMap.put("act", Constant.ACTION_ACT_ADD);
+		hashMap.put("aution_id", project_id);
+		hashMap.put("goods_id", selectGoodsList.get(position).getGoods_id());
+		HttpUtils.enroll(hashMap, new Consumer<BaseResultEntity>() {
+			@Override
+			public void accept(BaseResultEntity baseResultEntity) throws Exception {
+				loadingDialog.dismiss();
+				ChooseItemPopupWindow.this.dismiss();
+				if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+					AppUtils.showDialog(MyApplication.currentActivity, "提示", "报名成功");
+					Intent intent = new Intent();
+					intent.setAction("refreshProject");
+					context.sendBroadcast(intent);
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							report(position);
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
+
+
+				} else {
+
+					AppUtils.showDialog(MyApplication.currentActivity, "提示", baseResultEntity.getMsg());
+				}
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+				loadingDialog.dismiss();
+				MyToastView.showToast(context.getString(R.string.msg_error_operation), context);
 			}
 		});
 	}

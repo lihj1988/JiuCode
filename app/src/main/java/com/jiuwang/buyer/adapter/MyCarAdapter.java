@@ -18,11 +18,14 @@ import com.jiuwang.buyer.bean.CarBean;
 import com.jiuwang.buyer.bean.CarGoodsBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -229,33 +232,52 @@ public class MyCarAdapter extends BaseAdapter {
 		HttpUtils.cartInfo(hashMap, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
-				MyToastView.showToast(baseResultEntity.getMsg(), context);
+
+
+				if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							cartInfo(act, position, childPosition, quantity);
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
+				} else if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+					MyToastView.showToast(baseResultEntity.getMsg(), context);
 //				if(act.equals(Constant.ACTION_ACT_DELETE)){
-				Intent intentCast = new Intent();
-				intentCast.setAction("refreshCar");
-				context.sendBroadcast(intentCast);
-				intentCast.setAction("refresh_home");
-				context.sendBroadcast(intentCast);
-				EventBus.getDefault().post("refreshCarCount");
+					Intent intentCast = new Intent();
+					intentCast.setAction("refreshCar");
+					context.sendBroadcast(intentCast);
+					intentCast.setAction("refresh_home");
+					context.sendBroadcast(intentCast);
+					EventBus.getDefault().post("refreshCarCount");
 //				}
 
-				loadingDialog.dismiss();
-				if (act.equals(Constant.ACTION_ACT_DELETE)) {
-					list.get(position).getGoods_detail().remove(childPosition);
+					loadingDialog.dismiss();
+					if (act.equals(Constant.ACTION_ACT_DELETE)) {
+						list.get(position).getGoods_detail().remove(childPosition);
+					} else {
+						list.get(position).getGoods_detail().get(childPosition).setQuantity(quantity);
+					}
+					if (list.get(position).getGoods_detail().size() == 0) {
+						list.remove(position);
+						notifyDataSetChanged();
+						itemCheckStatusChangeListener.checkStatusChange();
+						Intent intent = new Intent();
+						intent.setAction("refreshCar");
+						context.sendBroadcast(intent);
+						EventBus.getDefault().post("resfreshCarCount");
+					} else {
+						notifyDataSetChanged();
+						itemCheckStatusChangeListener.checkStatusChange();
+					}
 				} else {
-					list.get(position).getGoods_detail().get(childPosition).setQuantity(quantity);
-				}
-				if (list.get(position).getGoods_detail().size() == 0) {
-					list.remove(position);
-					notifyDataSetChanged();
-					itemCheckStatusChangeListener.checkStatusChange();
-					Intent intent = new Intent();
-					intent.setAction("refreshCar");
-					context.sendBroadcast(intent);
-					EventBus.getDefault().post("resfreshCarCount");
-				} else {
-					notifyDataSetChanged();
-					itemCheckStatusChangeListener.checkStatusChange();
+					MyToastView.showToast(baseResultEntity.getMsg(), context);
+					loadingDialog.dismiss();
 				}
 
 			}

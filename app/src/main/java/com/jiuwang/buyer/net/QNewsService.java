@@ -73,7 +73,7 @@ public interface QNewsService {
 			@QueryMap HashMap<String, String> map
 	);
 
-	//抢购-报名
+	//抢购-是否中奖
 	@POST("/admin/project/aution_action.jsp")
 	Observable<ProjectDetailsEntity> isWin(
 			@QueryMap HashMap<String, String> map

@@ -14,15 +14,18 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.BuySetup2Activity;
-import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.OrderDetailedActivity;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.CommonHttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -169,7 +172,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 
 	}
 
-	private void orderInfo(OrderBean orderBean,String act) {
+	private void orderInfo(final OrderBean orderBean, final String act) {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("id", orderBean.getId());
 		map.put("act", act);
@@ -182,9 +185,17 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
 					context.sendBroadcast(intent);
 
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
-					MyToastView.showToast(baseResultEntity.getMsg(),context);
-					context.startActivity(new Intent(context,LoginActivity.class));
-					MyApplication.currentActivity.finish();
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							orderInfo(orderBean,act);
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
 				}else {
 					MyToastView.showToast(baseResultEntity.getMsg(),context);
 				}

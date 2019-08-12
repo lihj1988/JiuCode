@@ -12,15 +12,16 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
-import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
-import com.jiuwang.buyer.net.CommonHttpUtils;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.util.HashMap;
 
@@ -182,8 +183,17 @@ public class CashOutActivity extends BaseActivity {
 						sendBroadcast(intent);
 						finish();
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
-						startActivity(new Intent(CashOutActivity.this, LoginActivity.class));
-						finish();
+						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+							@Override
+							public void callBack(BaseEntity<LoginEntity> loginEntity) {
+								cashOut();
+							}
+
+							@Override
+							public void failCallBack(Throwable throwable) {
+
+							}
+						});
 					}
 					MyToastView.showToast(baseResultEntity.getMsg(), CashOutActivity.this);
 				}

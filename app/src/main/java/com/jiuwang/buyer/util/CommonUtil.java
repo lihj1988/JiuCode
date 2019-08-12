@@ -969,6 +969,32 @@ public class CommonUtil {
 		});
 	}
 
+
+	public static void reLogin(final String userId, final String password, final LoginCallBack loginCallBack) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("userID", userId);
+		map.put("password", password);
+		HttpUtils.login(map, new Consumer<BaseEntity<LoginEntity>>() {
+			@Override
+			public void accept(BaseEntity<LoginEntity> loginEntityBaseEntity) throws Exception {
+				loginEntity = loginEntityBaseEntity;
+				if ("0".equals(loginEntityBaseEntity.getCode())) {
+					PreforenceUtils.getSharedPreferences("loginInfo");
+					PreforenceUtils.setData("userID", userId);
+					PreforenceUtils.setData("password", password);
+					PreforenceUtils.setData("isLogin", true);
+				}
+
+				loginCallBack.callBack(loginEntity);
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+				loginCallBack.failCallBack(throwable);
+			}
+		});
+	}
+
 	public interface LoginCallBack {
 		abstract void callBack(BaseEntity<LoginEntity> loginEntity);
 

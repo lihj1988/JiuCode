@@ -23,11 +23,15 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.bean.AnnouncementBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.AnnouncementEntity;
+import com.jiuwang.buyer.entity.BaseEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.redpakge.CustomDialog;
 import com.jiuwang.buyer.redpakge.OnRedPacketDialogClickListener;
 import com.jiuwang.buyer.redpakge.RedPacketEntity;
 import com.jiuwang.buyer.redpakge.RedPacketViewHolder;
+import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.view.ADInfo;
 import com.jiuwang.buyer.view.AutoScrollRecyclerView;
 import com.jiuwang.buyer.view.NoticeRecyclerViewAdapter;
@@ -55,6 +59,8 @@ import io.reactivex.functions.Consumer;
 public class HomeFragment extends Fragment {
 	@Bind(R.id.actionbar_text)
 	TextView actionbarText;
+	@Bind(R.id.tvNotice)
+	TextView tvNotice;
 	@Bind(R.id.onclick_layout_left)
 	RelativeLayout onclickLayoutLeft;
 	@Bind(R.id.onclick_layout_right)
@@ -71,10 +77,11 @@ public class HomeFragment extends Fragment {
 	private List<AnnouncementBean> announcementList;
 	private NoticeRecyclerViewAdapter adapter;
 	private List<String> data;
-	int[] imageUrls_local = { R.drawable.play1,
+	int[] imageUrls_local = {R.drawable.play1,
 			R.drawable.play2};
 	private ArrayList<ADInfo> infos = new ArrayList<>();
 	private ArrayList<Integer> localImages = new ArrayList<Integer>();
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -96,7 +103,7 @@ public class HomeFragment extends Fragment {
 
 		//获取本地的图片
 		for (int position = 0; position < 3; position++) {
-			localImages.add(getResId("play" + (position+1), R.drawable.class));
+			localImages.add(getResId("play" + (position + 1), R.drawable.class));
 		}
 
 		//开始自动翻页
@@ -105,7 +112,7 @@ public class HomeFragment extends Fragment {
 			public Object createHolder() {
 				return new LocalImageHolderView();
 			}
-		},localImages)
+		}, localImages)
 				//设置指示器是否可见
 				.setPointViewVisible(true)
 				//设置自动切换（同时设置了切换时间间隔）
@@ -152,7 +159,10 @@ public class HomeFragment extends Fragment {
 
 
 		};
-		startAuto();
+		if (data != null) {
+			startAuto();
+		}
+
 //		amRv.start();
 	}
 
@@ -161,6 +171,7 @@ public class HomeFragment extends Fragment {
 		actionbarText.setText("首页");
 		onclickLayoutLeft.setVisibility(View.INVISIBLE);
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
+//		tvNotice.setText("    " + getActivity().getResources().getString(R.string.notice));
 	}
 
 	public void intDatas() {
@@ -176,20 +187,20 @@ public class HomeFragment extends Fragment {
 					String value = "";
 
 					for (int i = 0; i < announcementList.size(); i++) {
-						String newStr=  "";
-						if(announcementList.get(i).getUser_cd().length()==11){
+						String newStr = "";
+						if (announcementList.get(i).getUser_cd().length() == 11) {
 							String replace = announcementList.get(i).getUser_cd().substring(3, 9);
-							newStr= announcementList.get(i).getUser_cd().replace(replace, "******");
-						}else {
+							newStr = announcementList.get(i).getUser_cd().replace(replace, "******");
+						} else {
 							newStr = announcementList.get(i).getUser_cd();
 						}
 
 						if ("1".equals(announcementList.get(i).getAnnounce_type())) {
-							value = "恭喜<font color=#FF5001 size=18px >" + "" + newStr+ "" + "</font>在抢购项目中奖";
+							value = "恭喜<font color=#FF5001 size=18px >" + "" + newStr + "" + "</font>在"+announcementList.get(i).getProject_name()+"中抢购成功";
 //							value = "<font color=#ff6600 size=20px>积分:</font>";
 
 						} else {
-							value ="恭喜<font color='#FF5001'>" + "" + newStr + "</font> 提现" + "<font color='#FF5001'>"+announcementList.get(i).getAmount() + "</font> 元";
+							value = "恭喜<font color='#FF5001'>" + "" + newStr + "</font> 提现" + "<font color='#FF5001'>" + announcementList.get(i).getAmount() + "</font> 元";
 						}
 						data.add(value);
 					}
@@ -198,6 +209,20 @@ public class HomeFragment extends Fragment {
 					} else {
 						setAdapter();
 					}
+
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(announcementEntity.getCode())) {
+
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							intDatas();
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
 
 				}
 			}
@@ -213,6 +238,8 @@ public class HomeFragment extends Fragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		ButterKnife.unbind(this);
+		stopAuto();
+
 	}
 
 	@OnClick(R.id.ivRedPackage)
@@ -250,9 +277,10 @@ public class HomeFragment extends Fragment {
 
 		mRedPacketDialog.show();
 	}
+
 	//item滚动步骤2：设置定时器自动滚动
 	public void startAuto() {
-		if (mAutoTask!= null && !mAutoTask.isDisposed()) {
+		if (mAutoTask != null && !mAutoTask.isDisposed()) {
 			mAutoTask.dispose();
 		}
 		mAutoTask = Observable.interval(1, 2, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>() {
@@ -266,7 +294,7 @@ public class HomeFragment extends Fragment {
 	}
 
 	private void stopAuto() {
-		if (mAutoTask!= null && !mAutoTask.isDisposed()) {
+		if (mAutoTask != null && !mAutoTask.isDisposed()) {
 			mAutoTask.dispose();
 			mAutoTask = null;
 		}

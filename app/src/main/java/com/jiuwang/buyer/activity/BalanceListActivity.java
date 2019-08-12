@@ -99,10 +99,10 @@ public class BalanceListActivity extends BaseActivity implements XRecyclerView.L
 
 					}
 					if (Constant.HTTP_LOGINOUTTIME_CODE.equals(balanceEntity.getCode())) {
-						CommonUtil.login(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
 							@Override
 							public void callBack(BaseEntity<LoginEntity> loginEntity) {
-
+								initData();
 							}
 
 							@Override
@@ -128,10 +128,10 @@ public class BalanceListActivity extends BaseActivity implements XRecyclerView.L
 		balanceListAdapter = new BalanceListAdapter(BalanceListActivity.this, balanceList, new BalanceListAdapter.ItemOnClickListener() {
 			@Override
 			public void itemOnClick(int position) {
-				LogUtils.e(TAG,position+"");
+				LogUtils.e(TAG, position + "");
 				Intent intent = new Intent();
-				intent.setClass(BalanceListActivity.this,BalanceDetailsActivity.class);
-				intent.putExtra("data",balanceList.get(position));
+				intent.setClass(BalanceListActivity.this, BalanceDetailsActivity.class);
+				intent.putExtra("data", balanceList.get(position));
 				startActivity(intent);
 			}
 		});

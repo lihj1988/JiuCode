@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.ParseException;
@@ -35,7 +36,9 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.service.UpdateService;
 
@@ -718,8 +721,18 @@ public class AppUtils {
 //								Constant.serverVersion = homeEntity.getVersion_android();
 						Constant.serverVersion = baseResultEntity.getVersion_no();
 						checkVersion(activity, permissionsResult, come_from);
-					} else {
-//								AppUtils.showToast(baseEntity.getMsg(), activity);
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
+						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+							@Override
+							public void callBack(BaseEntity<LoginEntity> loginEntity) {
+								getSystemVersion(activity, permissionsResult, come_from);
+							}
+
+							@Override
+							public void failCallBack(Throwable throwable) {
+
+							}
+						});
 					}
 					mLoadingDialog.dismiss();
 				}
@@ -769,7 +782,7 @@ public class AppUtils {
 				bt2.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(getWriteAndReadPermission(activity)){
+						if (getWriteAndReadPermission(activity)) {
 							Intent updateIntent = new Intent(
 									activity, UpdateService.class);
 							activity.startService(updateIntent);
@@ -782,7 +795,7 @@ public class AppUtils {
 				button.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(getWriteAndReadPermission(activity)){
+						if (getWriteAndReadPermission(activity)) {
 							Intent updateIntent = new Intent(
 									activity, UpdateService.class);
 							activity.startService(updateIntent);
@@ -822,6 +835,7 @@ public class AppUtils {
 		}
 		return false;
 	}
+
 	public static void showDialog(final Activity activity, String titleText, String content, final DialogClickInterface dialogClickInterface) {
 
 		final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
@@ -836,6 +850,42 @@ public class AppUtils {
 		TextView tv_context = (TextView) window
 				.findViewById(R.id.tv_content);
 		tv_context.setText(content);
+		relative_button2.setVisibility(View.VISIBLE);
+		bt1.setText("取消");
+		bt2.setText("确定");
+		bt1.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.cancel();
+				dialogClickInterface.nagtiveOnClick();
+			}
+		});
+		bt2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.cancel();
+				dialogClickInterface.onClick();
+
+			}
+		});
+	}
+	public static void showDialog(final Activity activity, String titleText, String content,String color, final DialogClickInterface dialogClickInterface) {
+
+		final AlertDialog dialog = new AlertDialog.Builder(activity, R.style.styletest).create();
+		dialog.show();
+		Window window = dialog.getWindow();
+		window.setContentView(R.layout.dialog_normal_one_button);
+		RelativeLayout relative_button2 = (RelativeLayout) window.findViewById(R.id.relative_button2);
+		Button bt1 = (Button) window.findViewById(R.id.bt1_quxiao);
+		Button bt2 = (Button) window.findViewById(R.id.bt2_queding);
+		TextView title = (TextView) window.findViewById(R.id.title);
+		title.setText(titleText);
+		TextView tv_context = (TextView) window
+				.findViewById(R.id.tv_content);
+		tv_context.setText(content);
+		if("1".equals(color)){
+			tv_context.setTextColor(Color.parseColor("#000000"));
+		}
 		relative_button2.setVisibility(View.VISIBLE);
 		bt1.setText("取消");
 		bt2.setText("确定");

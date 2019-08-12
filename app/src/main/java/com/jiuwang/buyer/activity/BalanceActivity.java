@@ -18,9 +18,12 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.util.HashMap;
 
@@ -98,9 +101,9 @@ public class BalanceActivity extends BaseActivity {
 				break;
 			case R.id.llCashout:
 				Intent intentCashout = new Intent(BalanceActivity.this, CashOutActivity.class);
-				intentCashout.putExtra("account_name",account_name);
-				intentCashout.putExtra("account_no",account_no);
-				intentCashout.putExtra("avail_amount",avail_amount);
+				intentCashout.putExtra("account_name", account_name);
+				intentCashout.putExtra("account_no", account_no);
+				intentCashout.putExtra("avail_amount", avail_amount);
 				startActivity(intentCashout);
 				break;
 		}
@@ -130,8 +133,17 @@ public class BalanceActivity extends BaseActivity {
 							}
 						}.sendEmptyMessage(0);
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(userEntity.getCode())) {
-						startActivity(new Intent(BalanceActivity.this, LoginActivity.class));
-						finish();
+						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+							@Override
+							public void callBack(BaseEntity<LoginEntity> loginEntity) {
+								initData();
+							}
+
+							@Override
+							public void failCallBack(Throwable throwable) {
+
+							}
+						});
 					} else {
 
 					}
@@ -164,6 +176,7 @@ public class BalanceActivity extends BaseActivity {
 			}.sendEmptyMessageDelayed(0, 1500);
 		}
 	}
+
 	class MyFinishReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {

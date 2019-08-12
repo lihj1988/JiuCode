@@ -19,17 +19,19 @@ import android.widget.TextView;
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.activity.OrderPayCompleteActivity;
 import com.jiuwang.buyer.bean.AuthResult;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.bean.PayResult;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
 
 import org.json.JSONException;
@@ -170,64 +172,7 @@ public class RechargePopupWindow extends PopupWindow {
 				loadingDialog.show();
 				if(orderBean!=null){
 					if(CommonUtil.getNetworkRequest(context)){
-						HashMap<String, String> map = new HashMap<>();
-						map.put("act","1");
-						map.put("amount",orderBean.getTotal_amount());
-						HttpUtils.recharge(map, new Consumer<BaseResultEntity>() {
-							@Override
-							public void accept(BaseResultEntity baseResultEntity) throws Exception {
-								loadingDialog.dismiss();
-								if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
-									JSONObject object = new JSONObject();
-									try {
-										object.put("product_code",orderBean.getProduct_code());
-										object.put("total_amount",orderBean.getTotal_amount());
-										object.put("subject",orderBean.getSubject());
-										object.put("out_trade_no",baseResultEntity.getMsg());
-										object.put("passback_params",Constant.BUSINESSTYPE_RECHARGE);
-									} catch (JSONException e) {
-										e.printStackTrace();
-									}
-
-									Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID,object.toString(), Constant.RSA2);
-									String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
-									String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
-									final String orderInfo = orderParam + "&" + sign;
-
-									final Runnable payRunnable = new Runnable() {
-
-										@Override
-										public void run() {
-											PayTask alipay = new PayTask(context);
-											Map<String, String> result = alipay.payV2(orderInfo, true);
-											Log.i("msp", result.toString());
-
-											Message msg = new Message();
-											msg.what = SDK_PAY_FLAG;
-											msg.obj = result;
-											mHandler.sendMessage(msg);
-										}
-									};
-
-									// 必须异步调用
-									Thread payThread = new Thread(payRunnable);
-									payThread.start();
-
-								}else if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
-									MyToastView.showToast(baseResultEntity.getMsg(),context);
-									context.startActivity(new Intent(context, LoginActivity.class));
-									context.finish();
-								}else {
-									MyToastView.showToast(baseResultEntity.getMsg(),context);
-								}
-							}
-						}, new Consumer<Throwable>() {
-							@Override
-							public void accept(Throwable throwable) throws Exception {
-								MyToastView.showToast("充值失败",context);
-								loadingDialog.dismiss();
-							}
-						});
+						recharge();
 					}
 //						orderBean.setTimeout_express(baseResultEntity.getDate().get(0).getTimeout_express());
 
@@ -246,6 +191,75 @@ public class RechargePopupWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				dismiss();
+			}
+		});
+	}
+
+	private void recharge() {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("act","1");
+		map.put("amount",orderBean.getTotal_amount());
+		HttpUtils.recharge(map, new Consumer<BaseResultEntity>() {
+			@Override
+			public void accept(BaseResultEntity baseResultEntity) throws Exception {
+				loadingDialog.dismiss();
+				if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
+					JSONObject object = new JSONObject();
+					try {
+						object.put("product_code",orderBean.getProduct_code());
+						object.put("total_amount",orderBean.getTotal_amount());
+						object.put("subject",orderBean.getSubject());
+						object.put("out_trade_no",baseResultEntity.getMsg());
+						object.put("passback_params",Constant.BUSINESSTYPE_RECHARGE);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+
+					Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID,object.toString(), Constant.RSA2);
+					String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
+					String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
+					final String orderInfo = orderParam + "&" + sign;
+
+					final Runnable payRunnable = new Runnable() {
+
+						@Override
+						public void run() {
+							PayTask alipay = new PayTask(context);
+							Map<String, String> result = alipay.payV2(orderInfo, true);
+							Log.i("msp", result.toString());
+
+							Message msg = new Message();
+							msg.what = SDK_PAY_FLAG;
+							msg.obj = result;
+							mHandler.sendMessage(msg);
+						}
+					};
+
+					// 必须异步调用
+					Thread payThread = new Thread(payRunnable);
+					payThread.start();
+
+				}else if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							recharge();
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
+				}else {
+					MyToastView.showToast(baseResultEntity.getMsg(),context);
+				}
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
+				MyToastView.showToast("充值失败",context);
+				loadingDialog.dismiss();
 			}
 		});
 	}

@@ -62,4 +62,6 @@
 	<string name="bind_account_content">您当前尚未绑定任何提现账号，请前往绑定</string>
 	<string name="bind_account_sure_content">一个支付宝账号只能被一个账号绑定确认绑定吗?</string>
 	<string name="invite_code_check">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
+	<string name="phone">13604663424</string>
+	<string name="notice">    新用户特权：新用户需扫码或者填写推荐人号码，将奖励260体验金方可参加体验金活动。体验金24小时过期。体验金活动时间有上午9.00到11.00分下午14.30到16.30分，晚18.00到20.00结束。亲爱的会员由于抢购项目参与者过多。需要完成绑定支付宝账户与完善收货地址方可以参与活动。</string>
 </resources>

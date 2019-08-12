@@ -24,12 +24,16 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AddressBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.AddressEntity;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.DialogUtil;
 import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -217,24 +221,40 @@ public class AddressActivity extends BaseActivity implements XRecyclerView.Loadi
 
 					@Override
 					public void onClick() {
-						HashMap<String, String> hashMap = new HashMap<>();
-						hashMap.put("act", Constant.ACTION_ACT_DELETE);
-						hashMap.put("id", mArrayList.get(position - 1).getId());
-						HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {
-							@Override
-							public void accept(BaseResultEntity baseResultEntity) throws Exception {
-								if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
-									initData();
-								}
-							}
-						}, new Consumer<Throwable>() {
-							@Override
-							public void accept(Throwable throwable) throws Exception {
-
-							}
-						});
+						deleteAddress(position);
 					}
 				});
+
+			}
+		});
+	}
+
+	private void deleteAddress(final int position) {
+		HashMap<String, String> hashMap = new HashMap<>();
+		hashMap.put("act", Constant.ACTION_ACT_DELETE);
+		hashMap.put("id", mArrayList.get(position - 1).getId());
+		HttpUtils.addressInfo(hashMap, new Consumer<BaseResultEntity>() {
+			@Override
+			public void accept(BaseResultEntity baseResultEntity) throws Exception {
+				if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
+					initData();
+				}else if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
+					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+						@Override
+						public void callBack(BaseEntity<LoginEntity> loginEntity) {
+							deleteAddress(position);
+						}
+
+						@Override
+						public void failCallBack(Throwable throwable) {
+
+						}
+					});
+				}
+			}
+		}, new Consumer<Throwable>() {
+			@Override
+			public void accept(Throwable throwable) throws Exception {
 
 			}
 		});

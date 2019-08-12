@@ -428,7 +428,16 @@
 				android:drawableRight="@drawable/right_img"
 				android:drawableStart="@drawable/ic_version"
 				android:text="版本号"/>
+			<View style="@style/View.Line"/>
 
+			<TextView
+				android:id="@+id/link"
+				style="@style/TextView.TitleLeft"
+				android:drawableEnd="@drawable/right_img"
+				android:drawableLeft="@drawable/link"
+				android:drawableRight="@drawable/right_img"
+				android:drawableStart="@drawable/link"
+				android:text="联系我们"/>
 			<View
 				style="@style/View.Line"
 				android:layout_height="8dip"/>

@@ -38,12 +38,15 @@ import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.bean.PayResult;
 import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
+import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.MyToastView;
+import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
 
 import org.json.JSONException;
@@ -420,8 +423,17 @@ public class BuySetup2Activity extends BaseActivity {
 						balancePay.setText(Html.fromHtml(total));
 
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(userEntity.getCode())) {
-						startActivity(new Intent(BuySetup2Activity.this, LoginActivity.class));
-						BuySetup2Activity.this.finish();
+						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+							@Override
+							public void callBack(BaseEntity<LoginEntity> loginEntity) {
+								selectUser();
+							}
+
+							@Override
+							public void failCallBack(Throwable throwable) {
+
+							}
+						});
 					} else {
 
 					}
