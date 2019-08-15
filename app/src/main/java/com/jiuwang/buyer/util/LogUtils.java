@@ -11,6 +11,7 @@ public class LogUtils {
 	private static final String TAG = "LogUtils";
 	
 	private static final boolean LOGGER = true;
+	private static final boolean FILELOGGER = true;
 
 	public static void v(String tag, String msg) {
 		if (LOGGER) {

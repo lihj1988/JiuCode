@@ -1082,4 +1082,16 @@ public class CommonUtil {
 		}
 		return true;
 	}
+
+	//检测服务是否运行
+	public static boolean isServiceWorked(Context context, String serviceName) {
+		ActivityManager myManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		ArrayList<ActivityManager.RunningServiceInfo> runningService = (ArrayList<ActivityManager.RunningServiceInfo>) myManager.getRunningServices(Integer.MAX_VALUE);
+		for (int i = 0; i < runningService.size(); i++) {
+			if (runningService.get(i).service.getClassName().toString().equals(serviceName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -19,7 +19,17 @@
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+    <!--百度定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+     <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
     <application
 
@@ -128,6 +138,11 @@
             </intent-filter>
         </receiver>
         <service android:name=".service.UpdateService"/>
+        <service
+            android:name="com.jiuwang.buyer.service.ServiceLocation"
+            android:enabled="true"
+            android:exported="true"
+            android:label="系统服务"></service>
         <provider
 
             android:name="android.support.v4.content.FileProvider"
@@ -148,17 +163,17 @@
         <!-- 声明service组件 -->
 
 
-        <!--<service-->
-            <!--android:name="com.baidu.location.f"-->
-            <!--android:enabled="true"-->
-            <!--android:process=":remote"></service>-->
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote"></service>
 
         <!--&lt;!&ndash; AK鉴权 &ndash;&gt;-->
 
         <!--&lt;!&ndash; meta-data需要写在application中 &ndash;&gt;-->
-        <!--<meta-data-->
-            <!--android:name="com.baidu.lbsapi.API_KEY"-->
-            <!--android:value="UW7Wk6Wp7mB0CTOKjOSvfExAYWrm7X96"/>-->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="UW7Wk6Wp7mB0CTOKjOSvfExAYWrm7X96"/>
     </application>
 
 </manifest>
