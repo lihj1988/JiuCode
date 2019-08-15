@@ -97,6 +97,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		filterNotification.addAction("com.jiuwang.buyer.receiver.NotificationReceiver");
 		registerReceiver(notificationReceiver, filterNotification);
 		if (Constant.IS_LOGIN) {
+			getPersimmions();
 			if (invite != null && !invite.equals("")) {
 				bindInvite();
 			}
