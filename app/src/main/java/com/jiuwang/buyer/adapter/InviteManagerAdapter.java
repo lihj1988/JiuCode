@@ -38,7 +38,7 @@ public class InviteManagerAdapter extends RecyclerView.Adapter<InviteManagerAdap
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		holder.tvUserName.setText(inviteBeanList.get(position).getUser_cd());
+		holder.tvUserName.setText(inviteBeanList.get(position).getInvite_user());
 		holder.tvTime.setText(inviteBeanList.get(position).getCreate_time());
 	}
 
