@@ -943,7 +943,7 @@ public class CommonUtil {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("userID", userId);
 		map.put("password", password);
-		map.put("divice_id", SystemUtil.getDeviceId());
+		map.put("device_no", SystemUtil.getDeviceId());
 		HttpUtils.login(map, new Consumer<BaseEntity<LoginEntity>>() {
 			@Override
 			public void accept(BaseEntity<LoginEntity> loginEntityBaseEntity) throws Exception {
