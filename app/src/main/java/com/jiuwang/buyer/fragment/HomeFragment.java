@@ -2,6 +2,7 @@ package com.jiuwang.buyer.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -20,6 +21,7 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.activity.PoolActivity;
 import com.jiuwang.buyer.bean.AnnouncementBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.AnnouncementEntity;
@@ -244,7 +246,8 @@ public class HomeFragment extends Fragment {
 
 	@OnClick(R.id.ivRedPackage)
 	public void onViewClicked() {
-		showDialog();
+		startActivity(new Intent(getActivity(), PoolActivity.class));
+//		showDialog();
 	}
 
 

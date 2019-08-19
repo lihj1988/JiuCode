@@ -15,6 +15,7 @@ import com.jiuwang.buyer.entity.InviteUserEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
+import com.jiuwang.buyer.entity.PoolEntity;
 import com.jiuwang.buyer.entity.ProjectDetailsEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
@@ -221,6 +222,10 @@ public interface QNewsService {
 	Observable<AnnouncementEntity> selectAnnouncement(
 			@QueryMap HashMap<String, String> map
 	);
-
+	//获取首页滚动数据
+	@POST("admin/pool/lottery_action.jsp")
+	Observable<PoolEntity> poolInfo(
+			@QueryMap HashMap<String, String> map
+	);
 
 }

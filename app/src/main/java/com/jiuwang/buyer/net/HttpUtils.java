@@ -15,6 +15,7 @@ import com.jiuwang.buyer.entity.InviteUserEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
+import com.jiuwang.buyer.entity.PoolEntity;
 import com.jiuwang.buyer.entity.ProjectDetailsEntity;
 import com.jiuwang.buyer.entity.ProjectEntity;
 import com.jiuwang.buyer.entity.SelectGoodsEntity;
@@ -487,7 +488,8 @@ public class HttpUtils {
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
-	}/**
+	}
+	/**
 	 * 获取首页滚动数据
 	 *
 	 * @param map
@@ -497,6 +499,20 @@ public class HttpUtils {
 	public static void selectAnnouncement(HashMap<String, String> map, Consumer<AnnouncementEntity> consumer, Consumer<Throwable> throwableConsumer) {
 		QClitent.getInstance()
 				.selectAnnouncement(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}
+	/**
+	 * 获取首页滚动数据
+	 *
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void poolInfo(HashMap<String, String> map, Consumer<PoolEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.poolInfo(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);

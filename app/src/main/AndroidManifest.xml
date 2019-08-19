@@ -128,6 +128,9 @@
             android:name=".activity.MyProjectDetailsActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.PoolActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".camera.zxing.activity.CaptureActivity"
             android:screenOrientation="portrait"/>
 

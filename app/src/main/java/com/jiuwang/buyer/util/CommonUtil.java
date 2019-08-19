@@ -18,7 +18,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.Adapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -44,7 +43,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -723,9 +721,6 @@ public class CommonUtil {
 	/**
 	 * 验证身份证
 	 *
-	 * @param IDStr
-	 * @return
-	 * @throws ParseException
 	 */
     /*public static String IDCardValidate(String IDStr) throws ParseException {
         String errorInfo = "ok";// 记录错误信息
@@ -948,6 +943,7 @@ public class CommonUtil {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("userID", userId);
 		map.put("password", password);
+		map.put("divice_id", SystemUtil.getDeviceId());
 		HttpUtils.login(map, new Consumer<BaseEntity<LoginEntity>>() {
 			@Override
 			public void accept(BaseEntity<LoginEntity> loginEntityBaseEntity) throws Exception {
