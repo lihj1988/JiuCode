@@ -222,8 +222,8 @@ public interface QNewsService {
 	Observable<AnnouncementEntity> selectAnnouncement(
 			@QueryMap HashMap<String, String> map
 	);
-	//获取首页滚动数据
-	@POST("admin/pool/lottery_action.jsp")
+	//奖池
+	@POST("admin/pool/pool_action.jsp")
 	Observable<PoolEntity> poolInfo(
 			@QueryMap HashMap<String, String> map
 	);

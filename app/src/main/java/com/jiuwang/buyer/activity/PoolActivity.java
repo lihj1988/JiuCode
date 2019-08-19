@@ -55,7 +55,9 @@ public class PoolActivity extends BaseActivity {
 
 	private void initData() {
 		if (CommonUtil.getNetworkRequest(PoolActivity.this)) {
-			HttpUtils.poolInfo(new HashMap<String, String>(), new Consumer<PoolEntity>() {
+			HashMap<String, String> hashMap = new HashMap<>();
+			hashMap.put("act","getpercent");
+			HttpUtils.poolInfo(hashMap, new Consumer<PoolEntity>() {
 				@Override
 				public void accept(PoolEntity poolEntity) throws Exception {
 					if (Constant.HTTP_LOGINOUTTIME_CODE.equals(poolEntity.getCode())) {
