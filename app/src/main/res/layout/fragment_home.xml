@@ -28,23 +28,23 @@
 			app:canLoop="true"/>
 
 		<ImageView
-			android:visibility="gone"
 			android:id="@+id/ivNotice"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:src="@drawable/notice"
-			android:layout_below="@+id/icView"
 			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"/>
+			android:layout_alignParentStart="true"
+			android:layout_below="@+id/icView"
+			android:src="@drawable/notice"
+			android:visibility="gone"/>
 
 		<TextView
-			android:textColor="@color/black"
 			android:id="@+id/tvNotice"
-			android:background="@drawable/notice_content"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_below="@+id/ivNotice"
-			android:padding="5dp"/>
+			android:background="@drawable/notice_content"
+			android:padding="5dp"
+			android:textColor="@color/black"/>
 
 		<com.jiuwang.buyer.view.AutoScrollRecyclerView
 			android:id="@+id/am_rv"
@@ -60,11 +60,11 @@
 			android:id="@+id/ivRedPackage"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@drawable/red_pakage"
-			android:visibility="visible"
 			android:layout_above="@+id/am_rv"
-			android:layout_alignParentRight="true"
 			android:layout_alignParentEnd="true"
-			android:layout_marginBottom="155dp"/>
+			android:layout_alignParentRight="true"
+			android:layout_marginBottom="155dp"
+			android:src="@drawable/red_pakage"
+			android:visibility="visible"/>
 	</RelativeLayout>
 </LinearLayout>

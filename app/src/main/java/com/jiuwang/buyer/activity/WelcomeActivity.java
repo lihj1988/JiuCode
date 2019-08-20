@@ -65,7 +65,8 @@ public class WelcomeActivity extends BaseActivity implements Animation.Animation
 
 										@Override
 										public void failCallBack(Throwable throwable) {
-
+											CommonUtil.launchActivity(WelcomeActivity.this, LoginActivity.class);
+											finish();
 										}
 									});
 //								LoginManager.getLoginManager().loginSubmit(userId, password,WelcomeActivity.this, "0");

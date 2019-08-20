@@ -2,7 +2,6 @@ package com.jiuwang.buyer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.IInterface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -121,6 +120,8 @@ public class BindAccountActivity extends BaseActivity {
 					tvEditALi.setVisibility(View.INVISIBLE);
 					Intent intent = new Intent();
 					intent.setAction("minerefresh");
+					sendBroadcast(intent);
+					intent.setAction("balancerefresh");
 					sendBroadcast(intent);
 					break;
 				case Constant.CODE_ACCOUNT_WX:

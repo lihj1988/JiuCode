@@ -9,7 +9,8 @@ public class NetURL {
 
     //public static final String URL_BASE = "http://www.lange360.com/";
 
-    public static final String BASEURL = "http://47.93.163.66:80/";//标准版内网
+//    public static final String BASEURL = "http://192.168.0.129/";//内网
+    public static final String BASEURL = "http://47.93.163.66:80/";//正式
 //    public static final String BASEURL = "http://47.93.82.141:9999/";//外网
     public static final String PIC_BASEURL = BASEURL+"upload/pic/";//标准版外网
 

@@ -13,6 +13,7 @@ import com.jiuwang.buyer.entity.HomeResultEntity;
 import com.jiuwang.buyer.entity.InviteEntity;
 import com.jiuwang.buyer.entity.InviteUserEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
+import com.jiuwang.buyer.entity.LotteryEntity;
 import com.jiuwang.buyer.entity.MyCarEntity;
 import com.jiuwang.buyer.entity.OrderEntity;
 import com.jiuwang.buyer.entity.PoolEntity;
@@ -504,7 +505,7 @@ public class HttpUtils {
 				.subscribe(consumer, throwableConsumer);
 	}
 	/**
-	 * 获取首页滚动数据
+	 * 获取奖池数据
 	 *
 	 * @param map
 	 * @param consumer
@@ -513,6 +514,20 @@ public class HttpUtils {
 	public static void poolInfo(HashMap<String, String> map, Consumer<PoolEntity> consumer, Consumer<Throwable> throwableConsumer) {
 		QClitent.getInstance()
 				.poolInfo(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
+	}
+	/**
+	 * 抽奖记录
+	 *
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void lotteryInfo(HashMap<String, String> map, Consumer<LotteryEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.lotteryInfo(map)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);

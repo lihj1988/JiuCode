@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiuwang.buyer.R;
+import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
@@ -22,6 +23,7 @@ import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.PreforenceUtils;
 
@@ -100,11 +102,31 @@ public class BalanceActivity extends BaseActivity {
 				startActivityForResult(intent, 0);
 				break;
 			case R.id.llCashout:
-				Intent intentCashout = new Intent(BalanceActivity.this, CashOutActivity.class);
-				intentCashout.putExtra("account_name", account_name);
-				intentCashout.putExtra("account_no", account_no);
-				intentCashout.putExtra("avail_amount", avail_amount);
-				startActivity(intentCashout);
+				//提现
+				if ("".equals(userBean.getAccount_no())) {
+					AppUtils.showDialog(BalanceActivity.this, "提示", getResources().getString(R.string.bind_account_content), new DialogClickInterface() {
+						@Override
+						public void onClick() {
+
+							Intent intentAccount = new Intent(BalanceActivity.this, BindAccountActivity.class);
+							intentAccount.putExtra("data", userBean);
+							startActivity(intentAccount);
+
+						}
+
+						@Override
+						public void nagtiveOnClick() {
+
+						}
+					});
+				} else {
+					Intent intentCashout = new Intent(BalanceActivity.this, CashOutActivity.class);
+					intentCashout.putExtra("account_name", userBean.getAccount_name());
+					intentCashout.putExtra("account_no", userBean.getAccount_no());
+					intentCashout.putExtra("avail_amount", userBean.getAvail_amount());
+					startActivity(intentCashout);
+				}
+
 				break;
 		}
 	}

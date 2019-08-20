@@ -12,10 +12,12 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
+import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
+import com.jiuwang.buyer.net.CommonHttpUtils;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
@@ -69,29 +71,29 @@ public class CashOutActivity extends BaseActivity {
 	}
 
 	private void selectUser() {
-		Intent intent = getIntent();
-		 account_name = intent.getStringExtra("account_name");
-		 account_no = intent.getStringExtra("account_no");
-		 avail_amount = intent.getStringExtra("avail_amount");
+//		Intent intent = getIntent();
+//		 account_name = intent.getStringExtra("account_name");
+//		 account_no = intent.getStringExtra("account_no");
+//		 avail_amount = intent.getStringExtra("avail_amount");
 		initView();
-//		final LoadingDialog loadingDialog = AppUtils.setDialog_wait(this, "1");
-//		HashMap<String, String> map = new HashMap<>();
-//		CommonHttpUtils.selectUserInfo(map, new CommonHttpUtils.UserCallBack() {
-//			@Override
-//			public void successBack(UserBean userBean) {
-//				avail_amount = userBean.getAvail_amount();
-//				etMoney.setHint("可提现金额" + avail_amount + "元");
-//				account_name = userBean.getAccount_name();
-//				account_no = userBean.getAccount_no();
-//				initView();
-//				loadingDialog.dismiss();
-//			}
-//
-//			@Override
-//			public void failBack() {
-//				loadingDialog.dismiss();
-//			}
-//		});
+		final LoadingDialog loadingDialog = AppUtils.setDialog_wait(this, "1");
+		HashMap<String, String> map = new HashMap<>();
+		CommonHttpUtils.selectUserInfo(map, new CommonHttpUtils.UserCallBack() {
+			@Override
+			public void successBack(UserBean userBean) {
+				avail_amount = userBean.getAvail_amount();
+				etMoney.setHint("可提现金额" + avail_amount + "元");
+				account_name = userBean.getAccount_name();
+				account_no = userBean.getAccount_no();
+				initView();
+				loadingDialog.dismiss();
+			}
+
+			@Override
+			public void failBack() {
+				loadingDialog.dismiss();
+			}
+		});
 	}
 
 	private void initView() {

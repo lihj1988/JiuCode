@@ -2,7 +2,6 @@ package com.jiuwang.buyer.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -21,18 +20,14 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.jiuwang.buyer.R;
-import com.jiuwang.buyer.activity.PoolActivity;
 import com.jiuwang.buyer.bean.AnnouncementBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.AnnouncementEntity;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
-import com.jiuwang.buyer.redpakge.CustomDialog;
-import com.jiuwang.buyer.redpakge.OnRedPacketDialogClickListener;
-import com.jiuwang.buyer.redpakge.RedPacketEntity;
-import com.jiuwang.buyer.redpakge.RedPacketViewHolder;
 import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.view.ADInfo;
 import com.jiuwang.buyer.view.AutoScrollRecyclerView;
@@ -73,9 +68,6 @@ public class HomeFragment extends Fragment {
 	AutoScrollRecyclerView amRv;
 	private LinearSmoothScroller mScroller;
 	private Disposable mAutoTask;
-	private View mRedPacketDialogView;
-	private RedPacketViewHolder mRedPacketViewHolder;
-	private CustomDialog mRedPacketDialog;
 	private List<AnnouncementBean> announcementList;
 	private NoticeRecyclerViewAdapter adapter;
 	private List<String> data;
@@ -246,40 +238,12 @@ public class HomeFragment extends Fragment {
 
 	@OnClick(R.id.ivRedPackage)
 	public void onViewClicked() {
-		startActivity(new Intent(getActivity(), PoolActivity.class));
-//		showDialog();
+//		startActivity(new Intent(getActivity(), PoolActivity.class));
+		MyToastView.showToast("活动即将开始!",getActivity());
 	}
 
 
-	public void showDialog() {
-		RedPacketEntity entity = new RedPacketEntity("活动即将开始！", "http://upload.51qianmai.com/20171205180511192.png", "");
-		showRedPacketDialog(entity);
-	}
 
-	public void showRedPacketDialog(RedPacketEntity entity) {
-		if (mRedPacketDialogView == null) {
-			mRedPacketDialogView = View.inflate(getActivity(), R.layout.dialog_red_packet, null);
-			mRedPacketViewHolder = new RedPacketViewHolder(getActivity(), mRedPacketDialogView);
-			mRedPacketDialog = new CustomDialog(getActivity(), mRedPacketDialogView, R.style.custom_dialog);
-			mRedPacketDialog.setCancelable(false);
-		}
-
-		mRedPacketViewHolder.setData(entity);
-		mRedPacketViewHolder.setOnRedPacketDialogClickListener(new OnRedPacketDialogClickListener() {
-			@Override
-			public void onCloseClick() {
-				mRedPacketDialog.dismiss();
-			}
-
-			@Override
-			public void onOpenClick() {
-				//领取红包,调用接口
-
-			}
-		});
-
-		mRedPacketDialog.show();
-	}
 
 	//item滚动步骤2：设置定时器自动滚动
 	public void startAuto() {
