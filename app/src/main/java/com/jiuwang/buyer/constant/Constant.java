@@ -72,6 +72,7 @@ public class Constant {
 
 	public static String localVersion;// 本地安装版本
 	public static String serverVersion;// 服务器版本
+	public static String downLoadUrl;// 下载路径
 
 	public final static String CoorType_GCJ02 = "gcj02";
 	public final static String CoorType_BD09LL= "bd09ll";

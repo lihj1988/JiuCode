@@ -720,6 +720,7 @@ public class AppUtils {
 //								application.url_langde = homeEntity.getDownload_url();
 //								Constant.serverVersion = homeEntity.getVersion_android();
 						Constant.serverVersion = baseResultEntity.getVersion_no();
+						Constant.downLoadUrl = baseResultEntity.getDownload_url();
 						checkVersion(activity, permissionsResult, come_from);
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
 						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {

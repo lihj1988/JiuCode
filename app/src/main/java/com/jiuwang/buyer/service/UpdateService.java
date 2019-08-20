@@ -16,6 +16,7 @@ import android.os.Message;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.MainActivity;
 import com.jiuwang.buyer.base.MyApplication;
+import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.FileUtil;
@@ -55,7 +56,7 @@ public class UpdateService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		apps = (MyApplication) getApplication();
-		down_url = NetURL.BASEURL + apps.url_langde;
+		down_url = NetURL.BASEURL + Constant.downLoadUrl;
 		app_name = getResources().getString(R.string.app_name);
 		/*app_name = intent.getStringExtra("app_name");
         down_url=intent.getStringExtra("down_url");*/
