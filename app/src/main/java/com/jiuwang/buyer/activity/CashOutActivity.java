@@ -141,6 +141,9 @@ public class CashOutActivity extends BaseActivity {
 				if (Double.parseDouble(money) > Double.parseDouble(avail_amount)) {
 					MyToastView.showToast("提现金额不能大于可提现金额", CashOutActivity.this);
 					return;
+				}if (!(Double.parseDouble(money) > 0)) {
+					MyToastView.showToast("提现金额必须大于零", CashOutActivity.this);
+					return;
 				}
 				if (!CommonUtil.checkMoney(money, CashOutActivity.this)) return;
 				AppUtils.showDialog(CashOutActivity.this, "提示", getResources().getString(R.string.cash_out_content), new DialogClickInterface() {
