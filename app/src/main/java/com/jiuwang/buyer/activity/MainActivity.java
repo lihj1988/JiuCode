@@ -101,21 +101,22 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 			if (invite != null && !invite.equals("")) {
 				bindInvite();
 			}
-			if (!isServiceWorked(MainActivity.this,
-					"com.jiuwang.buyer.service.ServiceLocation")) {
-//				serviceLocation = new Intent();
-//				serviceLocation.setClass(MainActivity.this, ServiceLocation.class);
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//					startForegroundService(serviceLocation);
-//				} else {
-//					startService(serviceLocation);
-//				}
 
-
-//				startService(serviceLocation);
-//				bindService(serviceLocation, connLocation, BIND_AUTO_CREATE);
-			}
 			AppUtils.getSystemVersion(MainActivity.this, permissionsResult, "1");
+		}
+		if (!isServiceWorked(MainActivity.this,
+				"com.jiuwang.buyer.service.ServiceLocation")) {
+			serviceLocation = new Intent();
+			serviceLocation.setClass(MainActivity.this, ServiceLocation.class);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				startForegroundService(serviceLocation);
+			} else {
+				startService(serviceLocation);
+			}
+
+
+			startService(serviceLocation);
+			bindService(serviceLocation, connLocation, BIND_AUTO_CREATE);
 		}
 
 	}
@@ -316,8 +317,9 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		super.onDestroy();
 		unregisterReceiver(myReceiver);
 		unregisterReceiver(notificationReceiver);
-//		unbindService(connLocation);
-//		stopService(serviceLocation);
+
+		unbindService(connLocation);
+		stopService(serviceLocation);
 	}
 
 	class MyReceiver extends BroadcastReceiver {

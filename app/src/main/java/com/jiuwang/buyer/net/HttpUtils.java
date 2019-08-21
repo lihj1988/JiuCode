@@ -531,6 +531,19 @@ public class HttpUtils {
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(consumer, throwableConsumer);
+	}/**
+	 * 抽奖记录
+	 *
+	 * @param map
+	 * @param consumer
+	 * @param throwableConsumer
+	 */
+	public static void lottery(HashMap<String, String> map, Consumer<BaseResultEntity> consumer, Consumer<Throwable> throwableConsumer) {
+		QClitent.getInstance()
+				.lotteryInfo(map)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(consumer, throwableConsumer);
 	}
 
 }

@@ -233,5 +233,10 @@ public interface QNewsService {
 	Observable<LotteryEntity> lotteryInfo(
 			@QueryMap HashMap<String, String> map
 	);
+	//抽奖-开红包
+	@POST("admin/pool/lottery_action.jsp")
+	Observable<BaseResultEntity> lottery(
+			@QueryMap HashMap<String, String> map
+	);
 
 }

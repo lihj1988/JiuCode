@@ -202,9 +202,33 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 				}
 				if (Constant.HTTP_SUCCESS_CODE.equals(projectEntity.getCode())) {
 					projectList.addAll(projectEntity.getData());
+					new Handler() {
+						@Override
+						public void handleMessage(Message msg) {
 
+							if (projectList != null && projectList.size() > 0) {
+								stateTextView.setVisibility(View.GONE);
+								if (projectListAdapter != null) {
+									projectListAdapter.notifyDataSetChanged();
+								} else {
+									setAdapter();
+								}
+
+							} else {
+								stateTextView.setVisibility(View.VISIBLE);
+								stateTextView.setText(getActivity().getString(R.string.nothing));
+							}
+						}
+					}.sendEmptyMessageDelayed(0, 500);
 				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectEntity.getCode())) {
-
+//					Intent intent = new Intent(getActivity(), LoginActivity.class);
+//					startActivity(intent);
+//					getActivity().finish();
+					if (projectListAdapter != null) {
+						projectListAdapter.notifyDataSetChanged();
+					} else {
+						setAdapter();
+					}
 					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
 						@Override
 						public void callBack(BaseEntity<LoginEntity> loginEntity) {
@@ -217,28 +241,12 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 						}
 					});
 				}
-				new Handler() {
-					@Override
-					public void handleMessage(Message msg) {
+				if (page == 1) {
+					projectListView.refreshComplete();
+				} else {
+					projectListView.loadMoreComplete();
+				}
 
-						if (projectList != null && projectList.size() > 0) {
-							stateTextView.setVisibility(View.GONE);
-							if (projectListAdapter != null) {
-								projectListAdapter.notifyDataSetChanged();
-							} else {
-								setAdapter();
-							}
-							if (page == 1) {
-								projectListView.refreshComplete();
-							} else {
-								projectListView.loadMoreComplete();
-							}
-						} else {
-							stateTextView.setVisibility(View.VISIBLE);
-							stateTextView.setText(getActivity().getString(R.string.nothing));
-						}
-					}
-				}.sendEmptyMessageDelayed(0, 500);
 			}
 		}, new Consumer<Throwable>() {
 			@Override
@@ -302,7 +310,9 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 
 
 							} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(projectDetailsEntity.getCode())) {
-
+								Intent intent = new Intent(getActivity(), LoginActivity.class);
+								startActivity(intent);
+								getActivity().finish();
 							}
 						}
 					}.sendEmptyMessageDelayed(0, 1000);

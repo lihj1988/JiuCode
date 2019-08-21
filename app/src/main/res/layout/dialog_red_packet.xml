@@ -16,7 +16,15 @@
         android:paddingTop="15dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
-
+        <TextView
+            android:textStyle="bold"
+            android:text="0.01"
+            android:textSize="@dimen/text_bigger"
+            android:id="@+id/tvAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_close"
+            android:layout_centerHorizontal="true"/>
         <ImageView
             android:id="@+id/iv_close"
             android:layout_width="30dp"
@@ -73,6 +81,16 @@
             android:layout_marginBottom="60dp"
             android:background="@drawable/icon_open_red_packet1"
             />
+        <TextView
+            android:layout_marginBottom="@dimen/padding_size_20"
+            android:text="我的钱包"
+            android:id="@+id/myPackage"
+            android:textColor="#FFE294"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/iv_avatar"
+            android:layout_alignEnd="@+id/iv_avatar"/>
 
     </RelativeLayout>
 

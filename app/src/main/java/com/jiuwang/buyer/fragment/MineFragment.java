@@ -42,8 +42,6 @@ import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
-import com.jiuwang.buyer.entity.BaseEntity;
-import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.service.UpdateService;
@@ -241,17 +239,20 @@ public class MineFragment extends Fragment {
 							}
 						}.sendEmptyMessage(0);
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(userEntity.getCode())) {
-						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
-							@Override
-							public void callBack(BaseEntity<LoginEntity> loginEntity) {
-								initData();
-							}
-
-							@Override
-							public void failCallBack(Throwable throwable) {
-
-							}
-						});
+						Intent intent = new Intent(getActivity(), LoginActivity.class);
+						startActivity(intent);
+						getActivity().finish();
+//						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
+//							@Override
+//							public void callBack(BaseEntity<LoginEntity> loginEntity) {
+//								initData();
+//							}
+//
+//							@Override
+//							public void failCallBack(Throwable throwable) {
+//
+//							}
+//						});
 					} else {
 
 					}

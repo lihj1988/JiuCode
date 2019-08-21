@@ -17,6 +17,7 @@ import com.jiuwang.buyer.bean.LotteryRecordBean;
 import com.jiuwang.buyer.bean.PoolBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.entity.BaseEntity;
+import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.LotteryEntity;
 import com.jiuwang.buyer.entity.PoolEntity;
@@ -50,12 +51,16 @@ public class PoolActivity extends BaseActivity {
 	LinearLayout topView;
 	@Bind(R.id.actionbar_text)
 	TextView actionbarText;
+	@Bind(R.id.tvStatus)
+	TextView tvStatus;
 	@Bind(R.id.onclick_layout_left)
 	RelativeLayout onclickLayoutLeft;
 	@Bind(R.id.onclick_layout_right)
 	Button onclickLayoutRight;
 	@Bind(R.id.tvPb)
 	TextView tvPb;
+	@Bind(R.id.tvCount)
+	TextView tvCount;
 	@Bind(R.id.pb)
 	ZzHorizontalProgressBar pb;
 	@Bind(R.id.btnLottery)
@@ -67,6 +72,7 @@ public class PoolActivity extends BaseActivity {
 	private RedPacketViewHolder mRedPacketViewHolder;
 	private CustomDialog mRedPacketDialog;
 	private List<LotteryRecordBean> lotteryRecordBeanList;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,17 +80,19 @@ public class PoolActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		initView();
 		initData(false);
-		initLotteryRecord();
+		getCount(false);
 
 	}
 
 	private void initLotteryRecord() {
-		HttpUtils.lotteryInfo(new HashMap<String, String>(), new Consumer<LotteryEntity>() {
+		HashMap<String, String> map = new HashMap<>();
+//		map.put("id", data.get(0).getId());
+		HttpUtils.lotteryInfo(map, new Consumer<LotteryEntity>() {
 			@Override
 			public void accept(LotteryEntity lotteryEntity) throws Exception {
-				if(Constant.HTTP_SUCCESS_CODE.equals(lotteryEntity.getCode())){
+				if (Constant.HTTP_SUCCESS_CODE.equals(lotteryEntity.getCode())) {
 					lotteryRecordBeanList = lotteryEntity.getData();
-					if(lotteryRecordBeanList!=null){
+					if (lotteryRecordBeanList != null) {
 						LotteryRecordAdapter lotteryRecordAdapter = new LotteryRecordAdapter(lotteryRecordBeanList);
 						xRecyclerView.setAdapter(lotteryRecordAdapter);
 					}
@@ -103,7 +111,7 @@ public class PoolActivity extends BaseActivity {
 		setTopView(topView);
 		actionbarText.setText("奖池");
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
-		AppUtils.initListView(PoolActivity.this,xRecyclerView,false,false);
+		AppUtils.initListView(PoolActivity.this, xRecyclerView, false, false);
 
 	}
 
@@ -118,12 +126,12 @@ public class PoolActivity extends BaseActivity {
 						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
 							@Override
 							public void callBack(BaseEntity<LoginEntity> loginEntity) {
-								new Handler(){
+								new Handler() {
 									@Override
 									public void handleMessage(Message msg) {
 										initData(isCheck);
 									}
-								}.sendEmptyMessageDelayed(0,2000);
+								}.sendEmptyMessageDelayed(0, 2000);
 							}
 
 							@Override
@@ -133,17 +141,26 @@ public class PoolActivity extends BaseActivity {
 						});
 					} else if (Constant.HTTP_SUCCESS_CODE.equals(poolEntity.getCode())) {
 						data = poolEntity.getData();
+						initLotteryRecord();
 						double totalAmount = Double.parseDouble(data.get(0).getTotal_amount());
 						double amount = Double.parseDouble(data.get(0).getAmount());
 						double percent = totalAmount / amount;
-						if (percent > 1) {
+						if (percent > 1 || "1".equals(data.get(0).getStatus())) {
 							percent = 1;
 						}
 						pb.setProgress((int) (percent * 100));
 						tvPb.setText((int) (percent * 100) + "%");
-
-						if(!isCheck){
-							if("0".equals(data.get(0).getStatus())){
+						if ("1".equals(data.get(0).getStatus())) {
+							tvStatus.setText("已开始");
+						} else if ("0".equals(data.get(0).getStatus())) {
+							tvStatus.setText("未开始");
+						} else if ("2".equals(data.get(0).getStatus())) {
+							tvStatus.setText("已停止");
+						} else if ("3".equals(data.get(0).getStatus())) {
+							tvStatus.setText("停止蓄奖");
+						}
+						if (!isCheck) {
+							if ("0".equals(data.get(0).getStatus())) {
 								new Handler() {
 									@Override
 									public void handleMessage(Message msg) {
@@ -153,11 +170,16 @@ public class PoolActivity extends BaseActivity {
 								}.sendEmptyMessageDelayed(0, 5000);
 							}
 
-						}else {
-							if("0".equals(data.get(0).getStatus())){
-								MyToastView.showToast(poolEntity.getMsg(),PoolActivity.this);
-							}else if("1".equals(data.get(0).getStatus())){
-								showDialog();
+						} else {
+							if ("0".equals(data.get(0).getStatus())) {
+
+								MyToastView.showToast("抽奖未开始", PoolActivity.this);
+							} else if ("1".equals(data.get(0).getStatus())) {
+								getCount(true);
+							} else if ("2".equals(data.get(0).getStatus())) {
+								MyToastView.showToast("抽奖已结束", PoolActivity.this);
+							} else if ("3".equals(data.get(0).getStatus())) {
+								MyToastView.showToast("抽奖未开始", PoolActivity.this);
 							}
 
 						}
@@ -175,24 +197,24 @@ public class PoolActivity extends BaseActivity {
 		}
 	}
 
-	@OnClick({R.id.onclick_layout_left,R.id.btnLottery})
+	@OnClick({R.id.onclick_layout_left, R.id.btnLottery})
 	public void onViewClicked(View view) {
-		switch (view.getId()){
+		switch (view.getId()) {
 
 			case R.id.onclick_layout_left:
 				finish();
 				break;
 			case R.id.btnLottery:
+
 				initData(true);
 				break;
 		}
 	}
-	public void showDialog() {
-		RedPacketEntity entity = new RedPacketEntity();
-		entity.setName("活动即将开始！");
-		entity.setAvatar("http://upload.51qianmai.com/20171205180511192.png！");
-		entity.setRemark("");
+
+	public void showDialog(RedPacketEntity entity) {
+
 		showRedPacketDialog(entity);
+
 	}
 
 	public void showRedPacketDialog(RedPacketEntity entity) {
@@ -201,6 +223,7 @@ public class PoolActivity extends BaseActivity {
 			mRedPacketViewHolder = new RedPacketViewHolder(PoolActivity.this, mRedPacketDialogView);
 			mRedPacketDialog = new CustomDialog(PoolActivity.this, mRedPacketDialogView, R.style.custom_dialog);
 			mRedPacketDialog.setCancelable(false);
+			mRedPacketViewHolder.setAmount("");
 		}
 
 		mRedPacketViewHolder.setData(entity);
@@ -213,11 +236,82 @@ public class PoolActivity extends BaseActivity {
 			@Override
 			public void onOpenClick() {
 				//领取红包,调用接口
+				if (CommonUtil.getNetworkRequest(PoolActivity.this)) {
+					HashMap<String, String> map = new HashMap<>();
+					map.put("act", Constant.ACTION_ACT_ADD);
+//					map.put("act","getcount");
+					HttpUtils.lottery(map, new Consumer<BaseResultEntity>() {
+						@Override
+						public void accept(final BaseResultEntity baseResultEntity) throws Exception {
+							new Handler() {
+								@Override
+								public void handleMessage(Message msg) {
+									if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+										mRedPacketViewHolder.setAmount(baseResultEntity.getMsg());
+										mRedPacketViewHolder.stopAnim();
 
+									} else
+										MyToastView.showToast(baseResultEntity.getMsg(), PoolActivity.this);
+										mRedPacketViewHolder.setAmount("");
+										mRedPacketViewHolder.stopAnim();
+									}
+								}.sendEmptyMessageDelayed(0, 1500);
+
+
+//							mRedPacketViewHolder.setAmount(100.00 + "");
+							getCount(false);
+							initLotteryRecord();
+						}
+					}, new Consumer<Throwable>() {
+						@Override
+						public void accept(Throwable throwable) throws Exception {
+							new Handler() {
+								@Override
+								public void handleMessage(Message msg) {
+									mRedPacketViewHolder.stopAnim();
+								}
+							}.sendEmptyMessageDelayed(0, 1500);
+						}
+					});
+				}
 			}
 		});
 
 		mRedPacketDialog.show();
+	}
+
+	private void getCount(final boolean flag) {
+		if (CommonUtil.getNetworkRequest(PoolActivity.this)) {
+			HashMap<String, String> map = new HashMap<>();
+//					map.put("act",Constant.ACTION_ACT_ADD);
+			map.put("act", "getcount");
+			HttpUtils.lottery(map, new Consumer<BaseResultEntity>() {
+				@Override
+				public void accept(BaseResultEntity baseResultEntity) throws Exception {
+					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
+
+						RedPacketEntity redPacketEntity = new RedPacketEntity();
+						redPacketEntity.setName("剩余抽奖次数：" + baseResultEntity.getMsg());
+						redPacketEntity.setCount(baseResultEntity.getMsg());
+//						redPacketEntity.setAvatar("http://upload.51qianmai.com/20171205180511192.png！");
+						redPacketEntity.setRemark("");
+						tvCount.setText(redPacketEntity.getName());
+						if (flag) {
+
+							showDialog(redPacketEntity);
+						}
+					} else {
+						MyToastView.showToast(baseResultEntity.getMsg(), PoolActivity.this);
+					}
+
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+
+				}
+			});
+		}
 	}
 
 }
