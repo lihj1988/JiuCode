@@ -159,30 +159,17 @@ public class PoolActivity extends BaseActivity {
 						} else if ("3".equals(data.get(0).getStatus())) {
 							tvStatus.setText("停止蓄奖");
 						}
-						if (!isCheck) {
-							if ("0".equals(data.get(0).getStatus())) {
-								new Handler() {
-									@Override
-									public void handleMessage(Message msg) {
 
-										initData(isCheck);
-									}
-								}.sendEmptyMessageDelayed(0, 5000);
+//							if ("0".equals(data.get(0).getStatus())||"3".equals(data.get(0).getStatus())) {
+						new Handler() {
+							@Override
+							public void handleMessage(Message msg) {
+
+								initData(isCheck);
 							}
+						}.sendEmptyMessageDelayed(0, 5000);
+//							}
 
-						} else {
-							if ("0".equals(data.get(0).getStatus())) {
-
-								MyToastView.showToast("抽奖未开始", PoolActivity.this);
-							} else if ("1".equals(data.get(0).getStatus())) {
-								getCount(true);
-							} else if ("2".equals(data.get(0).getStatus())) {
-								MyToastView.showToast("抽奖已结束", PoolActivity.this);
-							} else if ("3".equals(data.get(0).getStatus())) {
-								MyToastView.showToast("抽奖未开始", PoolActivity.this);
-							}
-
-						}
 
 					} else {
 
@@ -205,8 +192,56 @@ public class PoolActivity extends BaseActivity {
 				finish();
 				break;
 			case R.id.btnLottery:
+				//每次点击时  检测奖池状态
+				if (CommonUtil.getNetworkRequest(PoolActivity.this)) {
+					HashMap<String, String> hashMap = new HashMap<>();
+					hashMap.put("act", "getpercent");
+					HttpUtils.poolInfo(hashMap, new Consumer<PoolEntity>() {
+						@Override
+						public void accept(final PoolEntity poolEntity) throws Exception {
+							if (Constant.HTTP_SUCCESS_CODE.equals(poolEntity.getCode())) {
+								data = poolEntity.getData();
+								initLotteryRecord();
+								double totalAmount = Double.parseDouble(data.get(0).getTotal_amount());
+								double amount = Double.parseDouble(data.get(0).getAmount());
+								double percent = totalAmount / amount;
+								if (percent > 1 || "1".equals(data.get(0).getStatus())) {
+									percent = 1;
+								}
+								pb.setProgress((int) (percent * 100));
+								tvPb.setText((int) (percent * 100) + "%");
+								if ("1".equals(data.get(0).getStatus())) {
+									tvStatus.setText("已开始");
+								} else if ("0".equals(data.get(0).getStatus())) {
+									tvStatus.setText("未开始");
+								} else if ("2".equals(data.get(0).getStatus())) {
+									tvStatus.setText("已停止");
+								} else if ("3".equals(data.get(0).getStatus())) {
+									tvStatus.setText("停止蓄奖");
+								}
 
-				initData(true);
+								if ("0".equals(data.get(0).getStatus())) {
+									MyToastView.showToast("抽奖未开始", PoolActivity.this);
+								} else if ("1".equals(data.get(0).getStatus())) {
+									getCount(true);
+								} else if ("2".equals(data.get(0).getStatus())) {
+									MyToastView.showToast("抽奖已结束", PoolActivity.this);
+								} else if ("3".equals(data.get(0).getStatus())) {
+									MyToastView.showToast("抽奖未开始", PoolActivity.this);
+								}
+
+
+							} else {
+
+							}
+						}
+					}, new Consumer<Throwable>() {
+						@Override
+						public void accept(Throwable throwable) throws Exception {
+
+						}
+					});
+				}
 				break;
 		}
 	}
@@ -223,9 +258,9 @@ public class PoolActivity extends BaseActivity {
 			mRedPacketViewHolder = new RedPacketViewHolder(PoolActivity.this, mRedPacketDialogView);
 			mRedPacketDialog = new CustomDialog(PoolActivity.this, mRedPacketDialogView, R.style.custom_dialog);
 			mRedPacketDialog.setCancelable(false);
-			mRedPacketViewHolder.setAmount("");
-		}
 
+		}
+		mRedPacketViewHolder.setAmount("0.00");
 		mRedPacketViewHolder.setData(entity);
 		mRedPacketViewHolder.setOnRedPacketDialogClickListener(new OnRedPacketDialogClickListener() {
 			@Override
@@ -248,14 +283,15 @@ public class PoolActivity extends BaseActivity {
 								public void handleMessage(Message msg) {
 									if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
 										mRedPacketViewHolder.setAmount(baseResultEntity.getMsg());
-										mRedPacketViewHolder.stopAnim();
 
-									} else
+									} else {
 										MyToastView.showToast(baseResultEntity.getMsg(), PoolActivity.this);
 										mRedPacketViewHolder.setAmount("");
-										mRedPacketViewHolder.stopAnim();
 									}
-								}.sendEmptyMessageDelayed(0, 1500);
+									mRedPacketViewHolder.stopAnim();
+								}
+
+							}.sendEmptyMessageDelayed(0, 1500);
 
 
 //							mRedPacketViewHolder.setAmount(100.00 + "");

@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.BalanceListActivity;
+import com.jiuwang.buyer.util.AppUtils;
+import com.jiuwang.buyer.util.MyToastView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -81,10 +83,10 @@ public class RedPacketViewHolder {
 
 			case R.id.iv_open:
 				if (redPacketEntity != null) {
-//					if ("0".equals(redPacketEntity.getCount())) {
-//						MyToastView.showToast("抽奖次数不足，不能继续抽奖", mContext);
-//						return;
-//					}
+					if ("0".equals(redPacketEntity.getCount())) {
+						MyToastView.showToast("抽奖次数不足，不能继续抽奖", mContext);
+						return;
+					}
 				}
 				if (mFrameAnimation != null) {
 					//如果正在转动，则直接返回
@@ -128,7 +130,7 @@ public class RedPacketViewHolder {
 //        options.centerCrop()
 //                .circleCrop();
 
-		tvAmount.setText(entity);
+		tvAmount.setText(mContext.getResources().getString(R.string.money_mark)+" "+ AppUtils.decimalFormat(Double.parseDouble(entity),"0"));
 	}
 
 	public void startAnim() {
