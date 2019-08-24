@@ -74,12 +74,11 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	TextView stateTextView;
 	@Bind(R.id.return_img)
 	ImageView returnImg;
+	@Bind(R.id.ivWarning)
+	ImageView ivWarning;
 	@Bind(R.id.onclick_layout_left)
 	RelativeLayout onclickLayoutLeft;
-	@Bind(R.id.onclick_layout_right)
-	Button onclickLayoutRight;
-	@Bind(R.id.iv_find)
-	ImageView ivFind;
+
 	@Bind(R.id.xRecyclerView)
 	XRecyclerView projectListView;
 	private int page = 1;
@@ -126,7 +125,6 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	private void initView() {
 		actionbarText.setText("限时抢购");
 		onclickLayoutLeft.setVisibility(View.INVISIBLE);
-		onclickLayoutRight.setVisibility(View.INVISIBLE);
 		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 		projectListView.setLayoutManager(layoutManager);
@@ -145,6 +143,12 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 			public void onClick(View view) {
 				stateTextView.setText(getActivity().getString(R.string.loading));
 				initData();
+			}
+		});
+		ivWarning.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				AppUtils.showDialog(getActivity(),"提示",getActivity().getResources().getString(R.string.warning_notice));
 			}
 		});
 		initData();

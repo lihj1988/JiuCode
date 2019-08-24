@@ -167,7 +167,6 @@ public class HomeFragment extends Fragment {
 		actionbarText.setText("首页");
 		onclickLayoutLeft.setVisibility(View.INVISIBLE);
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
-//		tvNotice.setText("    " + getActivity().getResources().getString(R.string.notice));
 	}
 
 	public void intDatas() {
