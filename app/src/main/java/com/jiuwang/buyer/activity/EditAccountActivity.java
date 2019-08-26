@@ -100,7 +100,13 @@ public class EditAccountActivity extends BaseActivity {
 					return;
 				}
 				if (CommonUtil.getNetworkRequest(EditAccountActivity.this)) {
-					AppUtils.showDialog(EditAccountActivity.this, "提示", getResources().getString(R.string.bind_account_sure_content), new DialogClickInterface() {
+					String context = "";
+					if (accountType.equals(Constant.PAY_MODE_WX)) {
+						context = getResources().getString(R.string.bind_account_sure_content_wx);
+					} else if (accountType.equals(Constant.PAY_MODE_ALI)) {
+						context = getResources().getString(R.string.bind_account_sure_content);
+					}
+					AppUtils.showDialog(EditAccountActivity.this, "提示", context, new DialogClickInterface() {
 						@Override
 						public void onClick() {
 							bind(account, accountName);
@@ -120,12 +126,19 @@ public class EditAccountActivity extends BaseActivity {
 	private void bind(final String account, final String accountName) {
 		HashMap<String, String> hashMap = new HashMap<>();
 		hashMap.put("act", Constant.ACTION_ACT_UPDATA);
-		hashMap.put("account_no", account);
-		hashMap.put("account_name", accountName);
+
+		if (accountType.equals(Constant.PAY_MODE_WX)) {
+			hashMap.put("account_no_wx", account);
+			hashMap.put("account_name_wx", account);
+		} else if (accountType.equals(Constant.PAY_MODE_ALI)) {
+			hashMap.put("account_no", account);
+			hashMap.put("account_name", accountName);
+		}
+
 		HttpUtils.userInfo(hashMap, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
-				if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
+				if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
 					Intent intent = new Intent();
 					intent.putExtra("account", account);
 					intent.putExtra("account_name", accountName);
@@ -135,7 +148,7 @@ public class EditAccountActivity extends BaseActivity {
 						setResult(RESULT_OK, intent);
 					}
 					finish();
-				}else if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
+				} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
 					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
 						@Override
 						public void callBack(BaseEntity<LoginEntity> loginEntity) {

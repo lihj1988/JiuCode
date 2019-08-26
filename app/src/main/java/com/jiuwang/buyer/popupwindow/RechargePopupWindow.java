@@ -33,6 +33,8 @@ import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
+import com.jiuwang.buyer.util.wxpay.WXPayUtils;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -172,7 +174,7 @@ public class RechargePopupWindow extends PopupWindow {
 				loadingDialog.show();
 				if(orderBean!=null){
 					if(CommonUtil.getNetworkRequest(context)){
-						recharge();
+						recharge(Constant.PAY_MODE_ALI);
 					}
 //						orderBean.setTimeout_express(baseResultEntity.getDate().get(0).getTimeout_express());
 
@@ -184,7 +186,7 @@ public class RechargePopupWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				//微信支付
-				MyToastView.showToast("微信支付" ,context);
+				recharge(Constant.PAY_MODE_WX);
 			}
 		});
 		cancle.setOnClickListener(new View.OnClickListener() {
@@ -195,55 +197,65 @@ public class RechargePopupWindow extends PopupWindow {
 		});
 	}
 
-	private void recharge() {
+	private void recharge(final String payMode) {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("act","1");
+		map.put("pay_mode",payMode);
 		map.put("amount",orderBean.getTotal_amount());
 		HttpUtils.recharge(map, new Consumer<BaseResultEntity>() {
 			@Override
 			public void accept(BaseResultEntity baseResultEntity) throws Exception {
 				loadingDialog.dismiss();
 				if(Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())){
-					JSONObject object = new JSONObject();
-					try {
-						object.put("product_code",orderBean.getProduct_code());
-						object.put("total_amount",orderBean.getTotal_amount());
-						object.put("subject",orderBean.getSubject());
-						object.put("out_trade_no",baseResultEntity.getMsg());
-						object.put("passback_params",Constant.BUSINESSTYPE_RECHARGE);
-					} catch (JSONException e) {
-						e.printStackTrace();
+					if(payMode.equals(Constant.PAY_MODE_ALI)){
+						JSONObject object = new JSONObject();
+						try {
+							object.put("product_code",orderBean.getProduct_code());
+							object.put("total_amount",orderBean.getTotal_amount());
+							object.put("subject",orderBean.getSubject());
+							object.put("out_trade_no",baseResultEntity.getMsg());
+							object.put("passback_params",Constant.BUSINESSTYPE_RECHARGE);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+
+						Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID,object.toString(), Constant.RSA2);
+						String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
+						String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
+						final String orderInfo = orderParam + "&" + sign;
+
+						final Runnable payRunnable = new Runnable() {
+
+							@Override
+							public void run() {
+								PayTask alipay = new PayTask(context);
+								Map<String, String> result = alipay.payV2(orderInfo, true);
+								Log.i("msp", result.toString());
+
+								Message msg = new Message();
+								msg.what = SDK_PAY_FLAG;
+								msg.obj = result;
+								mHandler.sendMessage(msg);
+							}
+						};
+
+						// 必须异步调用
+						Thread payThread = new Thread(payRunnable);
+						payThread.start();
+					}else if(payMode.equals(Constant.PAY_MODE_WX)){
+						//微信支付
+						PayReq payReq = new PayReq();
+						WXPayUtils wxPayUtils = new WXPayUtils(baseResultEntity.getMsg(),orderBean.getSubject(),orderBean.getTotal_amount(),payReq);
+						String productArgs = wxPayUtils.genProductArgs();
+
 					}
 
-					Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(Constant.ALIPAY_APPID,object.toString(), Constant.RSA2);
-					String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
-					String sign = OrderInfoUtil2_0.getSign(params, Constant.PRIVATE_KEY, Constant.RSA2);
-					final String orderInfo = orderParam + "&" + sign;
-
-					final Runnable payRunnable = new Runnable() {
-
-						@Override
-						public void run() {
-							PayTask alipay = new PayTask(context);
-							Map<String, String> result = alipay.payV2(orderInfo, true);
-							Log.i("msp", result.toString());
-
-							Message msg = new Message();
-							msg.what = SDK_PAY_FLAG;
-							msg.obj = result;
-							mHandler.sendMessage(msg);
-						}
-					};
-
-					// 必须异步调用
-					Thread payThread = new Thread(payRunnable);
-					payThread.start();
 
 				}else if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
 					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
 						@Override
 						public void callBack(BaseEntity<LoginEntity> loginEntity) {
-							recharge();
+							recharge(payMode);
 						}
 
 						@Override

@@ -87,7 +87,7 @@ public class BindAccountActivity extends BaseActivity {
 				finish();
 				break;
 			case R.id.tvEditALi:
-				intent.putExtra("accountType", "0");//账户类型 0 支付宝
+				intent.putExtra("accountType", Constant.PAY_MODE_ALI);//账户类型 0 支付宝
 				if ("去绑定".equals(tvEditALi.getText().toString().trim())) {
 					intent.putExtra("editType", "0");//编辑类型 0 绑定
 				} else {
@@ -97,7 +97,7 @@ public class BindAccountActivity extends BaseActivity {
 				startActivityForResult(intent, Constant.CODE_ACCOUNT_ALI);
 				break;
 			case R.id.tvEditWx:
-				intent.putExtra("accountType", "1");//账户类型 1 微信
+				intent.putExtra("accountType", Constant.PAY_MODE_WX);//账户类型 1 微信
 				if ("去绑定".equals(tvEditWx.getText().toString().trim())) {
 					intent.putExtra("editType", "0");
 				} else {

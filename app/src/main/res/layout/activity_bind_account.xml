@@ -67,7 +67,7 @@
     <View style="@style/View.Line"/>
 
     <LinearLayout
-        android:visibility="invisible"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
