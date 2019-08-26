@@ -8,7 +8,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0.8"
+        versionName "1.0.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         ndk{
@@ -86,4 +86,6 @@ dependencies {
     compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30"
     // 支付宝 SDK AAR 包所需的配置
     compile (name: 'alipaySdk-15.6.4-20190611174341', ext: 'aar')
+    //微信支付SDK
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
 }
