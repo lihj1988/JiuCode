@@ -126,13 +126,15 @@ public class EditAccountActivity extends BaseActivity {
 	private void bind(final String account, final String accountName) {
 		HashMap<String, String> hashMap = new HashMap<>();
 		hashMap.put("act", Constant.ACTION_ACT_UPDATA);
+		hashMap.put("account_no", account);
+		hashMap.put("account_name", accountName);
 
 		if (accountType.equals(Constant.PAY_MODE_WX)) {
+			hashMap.put("pay_mode", Constant.PAY_MODE_WX);
 			hashMap.put("account_no_wx", account);
-			hashMap.put("account_name_wx", account);
+			hashMap.put("account_name_wx", accountName);
 		} else if (accountType.equals(Constant.PAY_MODE_ALI)) {
-			hashMap.put("account_no", account);
-			hashMap.put("account_name", accountName);
+			hashMap.put("pay_mode", Constant.PAY_MODE_ALI);
 		}
 
 		HttpUtils.userInfo(hashMap, new Consumer<BaseResultEntity>() {

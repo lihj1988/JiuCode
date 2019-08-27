@@ -126,7 +126,7 @@ public class RechargeActivity extends BaseActivity {
 							orderBean.setBody("");
 							orderBean.setOut_trade_no(OrderInfoUtil2_0.getOutTradeNo());
 							orderBean.setSubject("充值");
-							rechargePopupWindow = new RechargePopupWindow(RechargeActivity.this,orderBean,type);
+							rechargePopupWindow = new RechargePopupWindow(RechargeActivity.this,orderBean,Constant.BUSINESS_TYPE_RECHARGE);
 							// 显示窗口
 							rechargePopupWindow.showAtLocation(rootView, Gravity.BOTTOM
 									| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置

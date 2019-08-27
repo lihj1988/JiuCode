@@ -37,8 +37,10 @@ public class BindAccountActivity extends BaseActivity {
 	TextView tvAliAccount;
 	@Bind(R.id.tvEditALi)
 	TextView tvEditALi;
-	@Bind(R.id.tvWX)
-	TextView tvWX;
+	@Bind(R.id.tvWXName)
+	TextView tvWXName;
+	@Bind(R.id.tvWXAccount)
+	TextView tvWXAccount;
 	@Bind(R.id.tvEditWx)
 	TextView tvEditWx;
 	private UserBean userBean;
@@ -65,16 +67,20 @@ public class BindAccountActivity extends BaseActivity {
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
 		tvAliAccount.setText(userBean.getAccount_no());
 		tvAliName.setText(userBean.getAccount_name());
-		tvWX.setText("");
+
+		tvWXAccount.setText(userBean.getAccount_no_wx());
+		tvWXName.setText(userBean.getAccount_name_wx());
+
+		tvEditWx.setText("");
 		if (tvAliAccount.getText().toString().equals("")) {
 			tvEditALi.setText("去绑定");
 		} else {
 			tvEditALi.setVisibility(View.INVISIBLE);
 		}
-		if (tvWX.getText().toString().equals("")) {
+		if (tvWXAccount.getText().toString().equals("")) {
 			tvEditWx.setText("去绑定");
 		} else {
-			tvEditWx.setText("去修改");
+			tvEditWx.setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -102,7 +108,7 @@ public class BindAccountActivity extends BaseActivity {
 					intent.putExtra("editType", "0");
 				} else {
 					intent.putExtra("editType", "1");
-					intent.putExtra("account", tvWX.getText().toString().trim());//账号
+					intent.putExtra("account", tvWXAccount.getText().toString().trim());//账号
 				}
 				startActivityForResult(intent, Constant.CODE_ACCOUNT_WX);
 				break;
@@ -112,22 +118,31 @@ public class BindAccountActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		Intent intent = new Intent();
+		intent.setAction("minerefresh");
+		sendBroadcast(intent);
+		intent.setAction("balancerefresh");
+		sendBroadcast(intent);
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 				case Constant.CODE_ACCOUNT_ALI:
-					tvAliAccount.setText( data.getStringExtra("account"));
-					tvAliName.setText( data.getStringExtra("account_name"));
+					tvAliAccount.setText(data.getStringExtra("account"));
+					tvAliName.setText(data.getStringExtra("account_name"));
 					tvEditALi.setVisibility(View.INVISIBLE);
-					Intent intent = new Intent();
-					intent.setAction("minerefresh");
-					sendBroadcast(intent);
-					intent.setAction("balancerefresh");
-					sendBroadcast(intent);
+
 					break;
 				case Constant.CODE_ACCOUNT_WX:
-					tvWX.setText("  " + data.getStringExtra("account"));
-					tvEditWx.setText("去修改");
+					tvWXAccount.setText(data.getStringExtra("account"));
+					tvWXName.setText(data.getStringExtra("account_name"));
+					tvEditWx.setVisibility(View.INVISIBLE);
+//					Intent intent1 = new Intent();
+//					intent1.setAction("minerefresh");
+//					sendBroadcast(intent1);
+//					intent1.setAction("balancerefresh");
+//					sendBroadcast(intent1);
 					break;
+				default:
+
 			}
 		}
 	}

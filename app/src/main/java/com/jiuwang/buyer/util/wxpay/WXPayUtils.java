@@ -1,7 +1,5 @@
 package com.jiuwang.buyer.util.wxpay;
 
-import android.content.Context;
-import android.provider.SyncStateContract;
 import android.util.Log;
 
 import com.jiuwang.buyer.constant.Constant;
@@ -27,11 +25,15 @@ public class WXPayUtils {
 	private PayReq req ;
 	private String body ;
 	private String total_fee ;
+	private String attach ;
 
 
-	public WXPayUtils(String out_trade_no,String body,String total_fee,PayReq req) {
+	public WXPayUtils(String out_trade_no,String body,String total_fee,String attach) {
 		this.out_trade_no = out_trade_no;
-		this.req = req;
+
+		this.body = body;
+		this.total_fee = total_fee;
+		this.attach = attach;
 
 	}
 
@@ -57,8 +59,9 @@ public class WXPayUtils {
 					out_trade_no));
 			packageParams.add(new BasicNameValuePair("spbill_create_ip",
 					SystemUtil.getIpAddressString()));
-			packageParams.add(new BasicNameValuePair("total_fee", total_fee));
+			packageParams.add(new BasicNameValuePair("total_fee", String.valueOf(Integer.parseInt(total_fee)*100)));
 			packageParams.add(new BasicNameValuePair("trade_type", "APP"));
+			packageParams.add(new BasicNameValuePair("attach", attach));
 
 			String sign = genAppSign(packageParams);
 			packageParams.add(new BasicNameValuePair("sign", sign));

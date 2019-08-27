@@ -80,6 +80,8 @@ public class UserBean implements Serializable {
 	private String account_name;
 	private String is_invited;//是否被邀请
 	private String is_trial;//是否是体验金账户
+	private String account_no_wx;//微信账号
+	private String account_name_wx;//微信账号名称
 	private int r;
 
 	public String getId() {
@@ -376,5 +378,21 @@ public class UserBean implements Serializable {
 
 	public void setR(int r) {
 		this.r = r;
+	}
+
+	public String getAccount_no_wx() {
+		return account_no_wx;
+	}
+
+	public void setAccount_no_wx(String account_no_wx) {
+		this.account_no_wx = account_no_wx;
+	}
+
+	public String getAccount_name_wx() {
+		return account_name_wx;
+	}
+
+	public void setAccount_name_wx(String account_name_wx) {
+		this.account_name_wx = account_name_wx;
 	}
 }

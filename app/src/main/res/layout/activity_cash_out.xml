@@ -7,7 +7,27 @@
 	<include layout="@layout/include_topview"></include>
 
 	<include layout="@layout/include_title"></include>
-
+<RadioGroup
+	android:padding="@dimen/padding_size_10"
+	android:orientation="horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+	<RadioButton
+		android:id="@+id/rbAli"
+		android:checked="true"
+		android:button="@drawable/check_box_bg"
+		android:layout_weight="1"
+		android:text="    支付宝"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"/>
+	<RadioButton
+		android:id="@+id/rbWX"
+		android:button="@drawable/check_box_bg"
+		android:layout_weight="1"
+		android:text="     微信"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"/>
+</RadioGroup>
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -20,22 +40,25 @@
 			android:padding="@dimen/padding_size_15">
 
 			<TextView
-				android:layout_width="wrap_content"
+				android:gravity="right"
+				android:layout_weight="1"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:text="            姓名："
+				android:text="姓名："
 				android:textColor="@color/black"
 				android:textSize="@dimen/textsize_14"/>
 
 			<EditText
+				android:layout_weight="3"
 				android:enabled="false"
 				android:id="@+id/etName"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_marginLeft="@dimen/padding_size_10"
 				android:background="@null"
 				android:hint="请输入真实姓名"
 				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_14"/>
+				android:textSize="@dimen/textsize_13"/>
 		</LinearLayout>
 
 		<View style="@style/View.Line"/>
@@ -46,16 +69,20 @@
 			android:padding="@dimen/padding_size_15">
 
 			<TextView
-				android:layout_width="wrap_content"
+				android:gravity="right"
+				android:layout_weight="1"
+				android:id="@+id/tvAccountTextName"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:text="支付宝账号："
 				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_14"/>
+				android:textSize="@dimen/textsize_13"/>
 
 			<EditText
+				android:layout_weight="3"
 				android:enabled="false"
 				android:id="@+id/etAccount"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_marginLeft="@dimen/padding_size_10"
 				android:background="@null"

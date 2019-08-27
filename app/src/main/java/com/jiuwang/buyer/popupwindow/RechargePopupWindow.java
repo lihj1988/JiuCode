@@ -34,7 +34,6 @@ import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
 import com.jiuwang.buyer.util.wxpay.WXPayUtils;
-import com.tencent.mm.opensdk.modelpay.PayReq;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -176,8 +175,6 @@ public class RechargePopupWindow extends PopupWindow {
 					if(CommonUtil.getNetworkRequest(context)){
 						recharge(Constant.PAY_MODE_ALI);
 					}
-//						orderBean.setTimeout_express(baseResultEntity.getDate().get(0).getTimeout_express());
-
 				}
 
 			}
@@ -186,6 +183,9 @@ public class RechargePopupWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				//微信支付
+				loadingDialog = new LoadingDialog(context);
+//				MyToastView.showToast("支付宝支付" ,context);
+				loadingDialog.show();
 				recharge(Constant.PAY_MODE_WX);
 			}
 		});
@@ -244,10 +244,14 @@ public class RechargePopupWindow extends PopupWindow {
 						payThread.start();
 					}else if(payMode.equals(Constant.PAY_MODE_WX)){
 						//微信支付
-						PayReq payReq = new PayReq();
-						WXPayUtils wxPayUtils = new WXPayUtils(baseResultEntity.getMsg(),orderBean.getSubject(),orderBean.getTotal_amount(),payReq);
-						String productArgs = wxPayUtils.genProductArgs();
-
+						OrderBean order = new OrderBean();
+						order.setBody(orderBean.getSubject());
+						order.setOut_trade_no(baseResultEntity.getMsg());
+						order.setTotal_amount(orderBean.getTotal_amount());
+						order.setAttach("1");//附加参数
+						WXPayUtils wxPayUtils = new WXPayUtils(order.getOut_trade_no(), order.getBody(), order.getTotal_amount(), order.getAttach());
+						String s = wxPayUtils.genProductArgs();
+//						HttpKit.get();
 					}
 
 
@@ -275,4 +279,5 @@ public class RechargePopupWindow extends PopupWindow {
 			}
 		});
 	}
+
 }

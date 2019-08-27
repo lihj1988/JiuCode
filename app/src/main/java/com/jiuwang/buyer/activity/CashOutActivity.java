@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,11 +58,20 @@ public class CashOutActivity extends BaseActivity {
 	EditText etMoney;
 	@Bind(R.id.btnNext)
 	TextView btnNext;
+	@Bind(R.id.tvAccountTextName)
+	TextView tvAccountTextName;
 	@Bind(R.id.tvAll)
 	TextView tvAll;
+	@Bind(R.id.rbAli)
+	RadioButton rbAli;
+	@Bind(R.id.rbWX)
+	RadioButton rbWX;
 	private String avail_amount;
 	private String account_name;
+	private String account_name_wx;
+	private String account_no_wx;
 	private String account_no;
+	private String payMode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +86,7 @@ public class CashOutActivity extends BaseActivity {
 //		 account_name = intent.getStringExtra("account_name");
 //		 account_no = intent.getStringExtra("account_no");
 //		 avail_amount = intent.getStringExtra("avail_amount");
-		initView();
+//		initView();
 		final LoadingDialog loadingDialog = AppUtils.setDialog_wait(this, "1");
 		HashMap<String, String> map = new HashMap<>();
 		CommonHttpUtils.selectUserInfo(map, new CommonHttpUtils.UserCallBack() {
@@ -85,6 +96,9 @@ public class CashOutActivity extends BaseActivity {
 				etMoney.setHint("可提现金额" + avail_amount + "元");
 				account_name = userBean.getAccount_name();
 				account_no = userBean.getAccount_no();
+
+				account_no_wx = userBean.getAccount_no_wx();
+				account_name_wx = userBean.getAccount_name_wx();
 				initView();
 				loadingDialog.dismiss();
 			}
@@ -98,21 +112,78 @@ public class CashOutActivity extends BaseActivity {
 
 	private void initView() {
 		setTopView(topView);
-		actionbarText.setText("支付宝提现");
+		actionbarText.setText("提现");
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
 		etMoney.setHint("可提现金额" + avail_amount + "元");
-		if (account_name==null||"".equals(account_name)) {
-			etName.setEnabled(true);
-		} else {
+
+
+		if ((account_name != null && !"".equals(account_name)) && (account_name_wx != null && !"".equals(account_name_wx))) {
+			rbAli.setChecked(true);
 			etName.setEnabled(false);
 			etName.setText(account_name);
-		}
-		if (account_no==null||"".equals(account_no)) {
-			etAccount.setEnabled(true);
-		} else {
 			etAccount.setEnabled(false);
 			etAccount.setText(account_no);
+		} else {
+			if (account_name == null || "".equals(account_name)) {
+				rbAli.setVisibility(View.GONE);
+				etName.setEnabled(false);
+			} else {
+				rbAli.setChecked(true);
+				etName.setEnabled(false);
+				etName.setText(account_name);
+			}
+
+			if (account_no == null || "".equals(account_no)) {
+				etAccount.setEnabled(false);
+			} else {
+				etAccount.setEnabled(false);
+				etAccount.setText(account_no);
+			}
+
+			if (account_name_wx == null || "".equals(account_name_wx)) {
+				rbWX.setVisibility(View.GONE);
+				etName.setEnabled(false);
+			} else {
+				rbWX.setChecked(true);
+				etName.setEnabled(false);
+				etName.setText(account_name_wx);
+			}
+
+			if (account_no_wx == null || "".equals(account_no_wx)) {
+				etAccount.setEnabled(false);
+			} else {
+				etAccount.setEnabled(false);
+				etAccount.setText(account_no_wx);
+			}
 		}
+
+		rbAli.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+				if(b){
+					rbWX.setChecked(false);
+					payMode = Constant.PAY_MODE_ALI;
+					tvAccountTextName.setText("支付宝账号：");
+					etAccount.setHint("请输入真实的支付宝账号");
+					etName.setText(account_name);
+					etAccount.setText(account_no);
+				}
+			}
+		});
+		rbWX.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+				if(b){
+					rbAli.setChecked(false);
+					payMode = Constant.PAY_MODE_WX;
+					tvAccountTextName.setText("微信账号：");
+					etAccount.setHint("请输入真实的微信账号");
+					etName.setText(account_name_wx);
+					etAccount.setText(account_no_wx);
+				}
+			}
+		});
+
 
 	}
 
@@ -141,7 +212,8 @@ public class CashOutActivity extends BaseActivity {
 				if (Double.parseDouble(money) > Double.parseDouble(avail_amount)) {
 					MyToastView.showToast("提现金额不能大于可提现金额", CashOutActivity.this);
 					return;
-				}if (!(Double.parseDouble(money) > 0)) {
+				}
+				if (!(Double.parseDouble(money) > 0)) {
 					MyToastView.showToast("提现金额必须大于零", CashOutActivity.this);
 					return;
 				}
@@ -164,6 +236,7 @@ public class CashOutActivity extends BaseActivity {
 				//执行提现
 				etMoney.setText(avail_amount + "");
 				break;
+
 		}
 	}
 
@@ -173,7 +246,7 @@ public class CashOutActivity extends BaseActivity {
 			HashMap<String, String> map = new HashMap<>();
 			map.put("act", Constant.ACTION_ACT_ADD);
 			map.put("amount", etMoney.getText().toString().trim());
-			map.put("pay_mode", Constant.PAY_MODE_ALI);
+			map.put("pay_mode", payMode);
 			HttpUtils.cash(map, new Consumer<BaseResultEntity>() {
 				@Override
 				public void accept(BaseResultEntity baseResultEntity) throws Exception {
@@ -211,4 +284,6 @@ public class CashOutActivity extends BaseActivity {
 			});
 		}
 	}
+
+
 }

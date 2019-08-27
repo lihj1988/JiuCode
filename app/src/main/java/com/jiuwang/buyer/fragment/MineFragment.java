@@ -161,6 +161,7 @@ public class MineFragment extends Fragment {
 	private MyReceiver myReceiver;
 	private String invite_code;
 	private String account_name;
+	private String account_name_wx;
 	private String account_no;
 	private String avail_amount;
 
@@ -197,13 +198,14 @@ public class MineFragment extends Fragment {
 								invite_code = userBean.getInvite_code();
 								account_name = userBean.getAccount_name();
 								account_no = userBean.getAccount_no();
+								account_name_wx = userBean.getAccount_name_wx();
 								avail_amount = userBean.getAvail_amount();
-								if ("".equals(account_no)) {
-									tvMyAccount.setClickable(true);
-								} else {
-									tvMyAccount.setClickable(false);
-									tvMyAccount.setText("我的账号：" + account_name + " " + account_no);
-								}
+//								if ("".equals(account_no)) {
+//									tvMyAccount.setClickable(true);
+//								} else {
+//									tvMyAccount.setClickable(false);
+//									tvMyAccount.setText("我的账号：" + account_name + " " + account_no);
+//								}
 								if ("0".equals(userBean.getIs_trial()) || "".equals(userBean.getTrial_amount()) || "0".equals(userBean.getTrial_amount())) {
 									tvTrialAmount.setText("0.00");
 									llTrialAmount.setVisibility(View.INVISIBLE);
@@ -417,7 +419,7 @@ public class MineFragment extends Fragment {
 				break;
 			case R.id.llAvailAmount:
 				//提现
-				if ("".equals(account_name)) {
+				if ("".equals(account_name)&&"".equals(account_name_wx)) {
 					AppUtils.showDialog(getActivity(), "提示", getResources().getString(R.string.bind_account_content), new DialogClickInterface() {
 						@Override
 						public void onClick() {
