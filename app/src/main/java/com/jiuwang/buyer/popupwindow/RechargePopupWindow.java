@@ -20,10 +20,12 @@ import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.OrderPayCompleteActivity;
+import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AuthResult;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.bean.PayResult;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
@@ -33,12 +35,18 @@ import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
+import com.jiuwang.buyer.util.wxpay.HttpKit;
 import com.jiuwang.buyer.util.wxpay.WXPayUtils;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.functions.Consumer;
@@ -249,11 +257,38 @@ public class RechargePopupWindow extends PopupWindow {
 						order.setOut_trade_no(baseResultEntity.getMsg());
 						order.setTotal_amount(orderBean.getTotal_amount());
 						order.setAttach("1");//附加参数
-						WXPayUtils wxPayUtils = new WXPayUtils(order.getOut_trade_no(), order.getBody(), order.getTotal_amount(), order.getAttach());
-						String s = wxPayUtils.genProductArgs();
-//						HttpKit.get();
-					}
+						final WXPayUtils wxPayUtils = new WXPayUtils(order.getOut_trade_no(), order.getBody(), order.getTotal_amount(), order.getAttach());
+						final String result = wxPayUtils.genProductArgs();
 
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								String post = HttpKit.post(NetURL.notify_url_wx, result);
+								new Handler(){
+									@Override
+									public void handleMessage(Message msg) {
+										PayReq req = new PayReq();
+										req.appId = Constant.WXPAY_APPID;
+										req.partnerId = Constant.MCH_ID;
+										req.prepayId = "prepay_id";
+										req.packageValue = "Sign=WXPay";
+										req.nonceStr = wxPayUtils.genNonceStr();
+										req.timeStamp = String.valueOf(wxPayUtils.genTimeStamp());
+										List<NameValuePair> signParams = new LinkedList<NameValuePair>();
+										signParams.add(new BasicNameValuePair("appid", req.appId));
+										signParams.add(new BasicNameValuePair("noncestr", req.nonceStr));
+										signParams.add(new BasicNameValuePair("package", req.packageValue));
+										signParams.add(new BasicNameValuePair("partnerid", req.partnerId));
+										signParams.add(new BasicNameValuePair("prepayid", req.prepayId));
+										signParams.add(new BasicNameValuePair("timestamp", req.timeStamp));
+										req.sign = wxPayUtils.genAppSign(signParams);
+										MyApplication.getInstance().api.sendReq(req);
+									}
+								};
+							}
+						}).start();
+
+					}
 
 				}else if(Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())){
 					CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {

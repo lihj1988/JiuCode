@@ -79,15 +79,8 @@ public class WXPayUtils {
 	}
 
 
-	private void genPayReq(String prepay_id) {
+	public void genPayReq(PayReq req) {
 
-		req.appId = Constant.WXPAY_APPID;
-		req.partnerId = Constant.MCH_ID;
-		req.prepayId = prepay_id;
-		req.packageValue = "Sign=WXPay";
-		req.nonceStr = genNonceStr();
-		req.timeStamp = String.valueOf(genTimeStamp());
-		req.timeStamp = String.valueOf(genTimeStamp());
 
 		List<NameValuePair> signParams = new LinkedList<NameValuePair>();
 		signParams.add(new BasicNameValuePair("appid", req.appId));
@@ -107,17 +100,17 @@ public class WXPayUtils {
 
 	}
 
-	private String genNonceStr() {
+	public String genNonceStr() {
 		Random random = new Random();
 		return MD5.getMessageDigest(String.valueOf(random.nextInt(10000))
 				.getBytes());
 	}
 
-	private long genTimeStamp() {
+	public long genTimeStamp() {
 		return System.currentTimeMillis() / 1000;
 	}
 
-	private String genAppSign(List<NameValuePair> params) {
+	public String genAppSign(List<NameValuePair> params) {
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < params.size(); i++) {

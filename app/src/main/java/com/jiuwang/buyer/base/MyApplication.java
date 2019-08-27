@@ -14,7 +14,10 @@ import android.webkit.WebView;
 
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.util.ToastUtil;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
 
@@ -56,7 +59,8 @@ public class MyApplication extends Application {
 	public static Activity currentActivity;//当前屏幕上正在显示的Activity
 	private boolean userLoginBoolean;
 	private boolean userLoginSuccessBoolean;
-
+	// IWXAPI 是第三方app和微信通信的openapi接口
+	public IWXAPI api;
 	//公用变量
 	public ArrayList<HashMap<String, String>>[] orderArrayList; //订单数组
 	public MyApplication() {
@@ -96,7 +100,7 @@ public class MyApplication extends Application {
 //		locationService = new LocationService(getApplicationContext());
 //		SDKInitializer.initialize(getApplicationContext());
 //		regToQq();
-//		regToWx();
+		regToWx();
 //		JPushInterface.setDebugMode(true);
 //		JPushInterface.init(this);
 	}
@@ -152,8 +156,8 @@ public class MyApplication extends Application {
 
 	//微信分享 暂时没有用到
 	private void regToWx() {
-//		api = WXAPIFactory.createWXAPI(this, NetURL.APP_ID_WEIXIN, true);
-//		api.registerApp(NetURL.APP_ID_WEIXIN);
+		api = WXAPIFactory.createWXAPI(this, Constant.WXPAY_APPID, true);
+		api.registerApp(Constant.WXPAY_APPID);
 	}
 
 	//QQ分享  暂时没有用到
