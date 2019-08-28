@@ -258,12 +258,12 @@ public class RechargePopupWindow extends PopupWindow {
 						order.setTotal_amount(orderBean.getTotal_amount());
 						order.setAttach("1");//附加参数
 						final WXPayUtils wxPayUtils = new WXPayUtils(order.getOut_trade_no(), order.getBody(), order.getTotal_amount(), order.getAttach());
-						final String result = wxPayUtils.genProductArgs();
+						final String request = wxPayUtils.getRequestXml(wxPayUtils.requestProductArgs());
 
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
-								String post = HttpKit.post(NetURL.notify_url_wx, result);
+								String post = HttpKit.post(NetURL.notify_url_wx, request);
 								new Handler(){
 									@Override
 									public void handleMessage(Message msg) {

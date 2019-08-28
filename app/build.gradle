@@ -100,4 +100,5 @@ dependencies {
     compile(name: 'alipaySdk-15.6.4-20190611174341', ext: 'aar')
     //微信支付SDK
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
+    compile files('libs/dom4j-2.1.1.jar')
 }

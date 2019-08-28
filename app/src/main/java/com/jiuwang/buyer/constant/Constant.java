@@ -39,6 +39,7 @@ public class Constant {
 
 	//微信支付AppId 及先关参数
 	public static final String WXPAY_APPID = "wx2bb21d5f82a0556a";//微信AppID
+	public static final String WXAPI_KEY = "";//微信ApiKey
 	//商户号
 	public static final String MCH_ID = "2019072165954132";//商户号
 	//提单状态
