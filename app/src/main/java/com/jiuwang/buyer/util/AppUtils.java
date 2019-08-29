@@ -715,10 +715,7 @@ public class AppUtils {
 			HttpUtils.version(map, new Consumer<BaseResultEntity>() {
 				@Override
 				public void accept(BaseResultEntity baseResultEntity) throws Exception {
-					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {
-//								HomeEntity homeEntity = baseEntity.getResult();
-//								application.url_langde = homeEntity.getDownload_url();
-//								Constant.serverVersion = homeEntity.getVersion_android();
+					if (Constant.HTTP_SUCCESS_CODE.equals(baseResultEntity.getCode())) {;
 						Constant.serverVersion = baseResultEntity.getVersion_no();
 						Constant.downLoadUrl = baseResultEntity.getDownload_url();
 						checkVersion(activity, permissionsResult, come_from);

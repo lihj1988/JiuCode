@@ -191,10 +191,10 @@ public class RechargePopupWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				//微信支付
-				loadingDialog = new LoadingDialog(context);
-//				MyToastView.showToast("支付宝支付" ,context);
-				loadingDialog.show();
-				recharge(Constant.PAY_MODE_WX);
+				MyToastView.showToast("暂未启用" ,context);
+//				loadingDialog = new LoadingDialog(context);
+//				loadingDialog.show();
+//				recharge(Constant.PAY_MODE_WX);
 			}
 		});
 		cancle.setOnClickListener(new View.OnClickListener() {
@@ -263,7 +263,7 @@ public class RechargePopupWindow extends PopupWindow {
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
-								String post = HttpKit.post(NetURL.notify_url_wx, request);
+								String post = HttpKit.post(NetURL.WX_UNIFIEDORDER, request);;
 								new Handler(){
 									@Override
 									public void handleMessage(Message msg) {

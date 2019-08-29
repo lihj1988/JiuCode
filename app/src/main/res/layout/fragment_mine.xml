@@ -377,7 +377,7 @@
 				android:drawableLeft="@drawable/ic_invite_code"
 				android:drawableRight="@drawable/right_img"
 				android:drawableStart="@drawable/ic_invite_code"
-				android:text="我的邀请码"/>
+				android:text="邀请码、下载码"/>
 
 			<View style="@style/View.Line"/>
 

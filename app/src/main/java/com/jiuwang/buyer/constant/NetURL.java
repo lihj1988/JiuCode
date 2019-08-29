@@ -20,8 +20,8 @@ public class NetURL {
     public static final String APP_ID_WEIXIN = "wx40c80eb06a1f029d";
     public static final String APP_ID_QQ = "1107763141";
     //微信统一下单接口
-    public static final String WX_UNIFIEDORDER =BASEURL+ "notify_wx.jsp";
-    public static final String notify_url_wx = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    public static final String  notify_url_wx =BASEURL+ "notify_wx.jsp";
+    public static final String WX_UNIFIEDORDER= "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
     public static final int HANDLER_GET_NEWS = 1;//获得新闻资讯
     // 分享底部文字5个
