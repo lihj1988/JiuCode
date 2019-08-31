@@ -7,7 +7,6 @@ public class NetURL {
     public static final String directory = Environment.getExternalStorageDirectory()
             + "/jbbuy/";
 
-    //public static final String URL_BASE = "http://www.lange360.com/";
 
 //    public static final String BASEURL = "http://192.168.0.213:8080/";//内网
     public static final String BASEURL = "http://47.93.163.66:80/";//正式

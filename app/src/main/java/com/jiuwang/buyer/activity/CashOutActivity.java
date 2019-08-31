@@ -118,6 +118,7 @@ public class CashOutActivity extends BaseActivity {
 
 
 		if ((account_name != null && !"".equals(account_name)) && (account_name_wx != null && !"".equals(account_name_wx))) {
+			payMode = Constant.PAY_MODE_ALI;
 			rbAli.setChecked(true);
 			etName.setEnabled(false);
 			etName.setText(account_name);
@@ -128,6 +129,7 @@ public class CashOutActivity extends BaseActivity {
 				rbAli.setVisibility(View.GONE);
 				etName.setEnabled(false);
 			} else {
+				payMode = Constant.PAY_MODE_ALI;
 				rbAli.setChecked(true);
 				etName.setEnabled(false);
 				etName.setText(account_name);
@@ -144,6 +146,7 @@ public class CashOutActivity extends BaseActivity {
 				rbWX.setVisibility(View.GONE);
 				etName.setEnabled(false);
 			} else {
+				payMode = Constant.PAY_MODE_WX;
 				rbWX.setChecked(true);
 				etName.setEnabled(false);
 				etName.setText(account_name_wx);

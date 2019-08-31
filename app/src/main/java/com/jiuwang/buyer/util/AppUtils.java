@@ -794,12 +794,14 @@ public class AppUtils {
 					@Override
 					public void onClick(View v) {
 						if (getWriteAndReadPermission(activity)) {
+							tv_context.setText("软件正在升级...");
 							Intent updateIntent = new Intent(
 									activity, UpdateService.class);
 							activity.startService(updateIntent);
 
+							button.setVisibility(View.INVISIBLE);
 						}
-						dialog.cancel();
+//						dialog.cancel();
 
 					}
 				});
