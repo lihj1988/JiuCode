@@ -35,6 +35,8 @@ import java.io.FileOutputStream;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.jiuwang.buyer.R.id.onclick_layout_left;
+
 /**
  * Created by lihj on 2019/7/22
  * desc:
@@ -45,7 +47,7 @@ public class InviteCodeActivity extends BaseActivity {
 	LinearLayout topView;
 	@Bind(R.id.actionbar_text)
 	TextView actionbarText;
-	@Bind(R.id.onclick_layout_left)
+	@Bind(onclick_layout_left)
 	RelativeLayout onclickLayoutLeft;
 	@Bind(R.id.onclick_layout_right)
 	Button onclickLayoutRight;
@@ -106,6 +108,12 @@ public class InviteCodeActivity extends BaseActivity {
 				return true;
 			}
 		});
+		onclickLayoutLeft.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				finish();
+			}
+		});
 	}
 
 	public static void saveImageToGallery(Context context, Bitmap bmp) {
@@ -155,7 +163,4 @@ public class InviteCodeActivity extends BaseActivity {
 		MyToastView.showToast("保存成功", context);
 	}
 
-	public void onViewClicked() {
-		finish();
-	}
 }

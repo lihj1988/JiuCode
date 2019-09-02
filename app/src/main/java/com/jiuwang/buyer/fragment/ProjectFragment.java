@@ -16,7 +16,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -87,6 +86,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 	private List<ProjectBean> projectList;
 	private ProjectListAdapter projectListAdapter;
 
+
 	private View rootView;
 	private ProjectReceiver projectReceiver;
 	private ChooseItemPopupWindow chooseItemPopupWindow;
@@ -152,6 +152,19 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 			}
 		});
 		initData();
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+
+		LogUtils.e(TAG,hidden+"");
+//		if(hidden){
+//			projectList.clear();
+//			projectListAdapter.notifyDataSetChanged();
+//			projectListAdapter.countDownTimerList.clear();
+//			projectListAdapter = null;
+//		}
+
 	}
 
 	private void setAdapter() {

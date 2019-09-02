@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 	private Context context;
 	private List<ProjectBean> projectList;
 	private ProjectItemOnClickListener projectItemOnClickListener;
-
+	public List<CountDownTimer> countDownTimerList= new ArrayList<>();
 	public ProjectListAdapter(Context context, List<ProjectBean> projectList, ProjectItemOnClickListener projectItemOnClickListener) {
 		this.context = context;
 		this.projectList = projectList;
@@ -166,9 +167,9 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 							if (holder.type.equals("1")) {
 
 							} else {
-//								if (holder.countDownTimer != null) {
-//									holder.countDownTimer.cancel();
-//								}
+								if (holder.countDownTimer != null) {
+									holder.countDownTimer.cancel();
+								}
 								projectList.get(position).setStatus_name("已结束");
 								projectList.get(position).setStatus("2");
 							}
@@ -188,10 +189,11 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 							}.sendEmptyMessageDelayed(0, 500);
 						}
 					}.start();
+					countDownTimerList.add(holder.countDownTimer);
 				} else {
-					if (holder.countDownTimer != null) {
-						holder.countDownTimer.cancel();
-					}
+//					if (holder.countDownTimer != null) {
+//						holder.countDownTimer.cancel();
+//					}
 				}
 				holder.tvProjectName.setText(projectList.get(position).getProject_name());
 				holder.tvSalePeice.setText("￥" + CommonUtil.decimalFormat(Double.parseDouble(projectList.get(position).getSale_price().equals("") ? "0" : projectList.get(position).getSale_price()), "0") + "");
@@ -203,7 +205,6 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
 		CommonUtil.loadImage(context,R.drawable.ic_project,holder.ivPic);
 
 	}
-
 	@Override
 	public int getItemCount() {
 		return projectList == null ? 0 : projectList.size();
