@@ -19,7 +19,7 @@ public class AnnouncementBean implements Serializable {
 	 */
 
 	private String user_cd;
-	private int amount;
+	private String amount;
 	private String project_name;
 	private String goods_name;
 	private String announce_type;
@@ -33,11 +33,11 @@ public class AnnouncementBean implements Serializable {
 		this.user_cd = user_cd;
 	}
 
-	public int getAmount() {
+	public String getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
 
@@ -71,5 +71,17 @@ public class AnnouncementBean implements Serializable {
 
 	public void setR(int r) {
 		this.r = r;
+	}
+
+	@Override
+	public String toString() {
+		return "AnnouncementBean{" +
+				"user_cd='" + user_cd + '\'' +
+				", amount=" + amount +
+				", project_name='" + project_name + '\'' +
+				", goods_name='" + goods_name + '\'' +
+				", announce_type='" + announce_type + '\'' +
+				", r=" + r +
+				'}';
 	}
 }

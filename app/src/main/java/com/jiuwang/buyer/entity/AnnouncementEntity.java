@@ -19,4 +19,11 @@ public class AnnouncementEntity extends BaseResultEntity {
 	public void setData(List<AnnouncementBean> data) {
 		this.data = data;
 	}
+
+	@Override
+	public String toString() {
+		return "AnnouncementEntity{" +
+				"data=" + data +
+				'}';
+	}
 }

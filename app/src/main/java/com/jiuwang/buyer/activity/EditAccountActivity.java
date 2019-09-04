@@ -46,7 +46,8 @@ public class EditAccountActivity extends BaseActivity {
 	@Bind(R.id.etAccountName)
 	EditText etAccountName;
 	@Bind(R.id.etAccount)
-	EditText etAccount;
+	EditText etAccount;@Bind(R.id.tvNotice)
+	EditText tvNotice;
 	@Bind(R.id.btnBind)
 	TextView btnBind;
 	private String accountType;
@@ -78,6 +79,11 @@ public class EditAccountActivity extends BaseActivity {
 			btnBind.setText("绑定");
 		} else {
 			btnBind.setText("保存");
+		}
+		if (Constant.PAY_MODE_ALI.equals(accountType)) {
+			tvNotice.setText("请填写真实有效支付宝账号");
+		} else {
+			tvNotice.setText("请填写真实有效微信账号");
 		}
 	}
 
