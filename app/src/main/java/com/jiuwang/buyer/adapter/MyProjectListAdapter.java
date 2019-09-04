@@ -1,10 +1,6 @@
 package com.jiuwang.buyer.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,16 +13,8 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.bean.ProjectBean;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.util.CommonUtil;
-import com.jiuwang.buyer.util.MyToastView;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by lihj on 2019/6/25
@@ -71,6 +59,7 @@ public class MyProjectListAdapter extends RecyclerView.Adapter<MyProjectListAdap
 				projectItemOnClickListener.itemOnClick(position);
 			}
 		});
+		CommonUtil.loadImage(context,R.drawable.ic_project,holder.ivPic);
 //		CommonUtil.loadImage(context, NetURL.PIC_BASEURL+projectList.get(position).getPic_url(),holder.ivPic);
 
 	}

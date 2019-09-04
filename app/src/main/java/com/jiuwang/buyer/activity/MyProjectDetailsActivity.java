@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -56,6 +57,8 @@ public class MyProjectDetailsActivity extends BaseActivity {
 	TextView tvReport;
 	@Bind(R.id.tvSalePeice)
 	TextView tvSalePeice;
+	@Bind(R.id.ivPic)
+	ImageView ivPic;
 
 
 	private List<ProjectDetailBean> projectList;
@@ -90,12 +93,13 @@ public class MyProjectDetailsActivity extends BaseActivity {
 		});
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
 		tvProjectName.setText(projectBean.getProject_name());
-		if(Constant.ISWIN.equals(projectBean.getIs_win())){
+		if (Constant.ISWIN.equals(projectBean.getIs_win())) {
 			tvReport.setText("已中奖");
 			tvReport.setTextColor(getResources().getColor(R.color.red));
-		}else {
+		} else {
 			tvReport.setText("未中奖");
 		}
+		CommonUtil.loadImage(MyProjectDetailsActivity.this,R.drawable.ic_project,ivPic);
 		tvSalePeice.setText(projectBean.getSale_price());
 	}
 

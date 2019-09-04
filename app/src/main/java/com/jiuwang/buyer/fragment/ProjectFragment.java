@@ -373,6 +373,7 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 						loadingDialog.show();
 						HashMap<String, String> hashMap = new HashMap<>();
 						hashMap.put("project_id", projectList.get(position).getProject_id());
+//						hashMap.put("act","getdetail");
 						HttpUtils.selectChooseGoods(hashMap, new Consumer<SelectGoodsEntity>() {
 
 							@Override
