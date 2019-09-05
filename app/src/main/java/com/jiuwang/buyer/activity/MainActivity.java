@@ -51,13 +51,13 @@ import static com.jiuwang.buyer.util.CommonUtil.isServiceWorked;
 
 public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelectedListener {
 	//定义一个变量，来标识是否退出
-	private static boolean isExit=false;
+	private static boolean isExit = false;
 
-	Handler handler=new Handler(){
+	Handler handler = new Handler() {
 		@Override
-		public void handleMessage(Message msg){
+		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			isExit=false;
+			isExit = false;
 		}
 	};
 
@@ -78,6 +78,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 	private String permissionInfo;
 	private Intent serviceLocation;
 	ServiceInterface sLocationSubmit;
+	private boolean mIsBound = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -108,15 +109,15 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 				"com.jiuwang.buyer.service.ServiceLocation")) {
 			serviceLocation = new Intent();
 			serviceLocation.setClass(MainActivity.this, ServiceLocation.class);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-				startForegroundService(serviceLocation);
-			} else {
-				startService(serviceLocation);
-			}
+//			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//				startForegroundService(serviceLocation);
+//			} else {
+//				startService(serviceLocation);
+//			}
 
 
 			startService(serviceLocation);
-			bindService(serviceLocation, connLocation, BIND_AUTO_CREATE);
+			mIsBound = bindService(serviceLocation, connLocation, BIND_AUTO_CREATE);
 		}
 
 	}
@@ -124,8 +125,6 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-
 
 	}
 
@@ -135,6 +134,19 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		super.onStop();
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(myReceiver);
+		unregisterReceiver(notificationReceiver);
+		if (mIsBound) {
+
+			unbindService(connLocation);
+			stopService(serviceLocation);
+			mIsBound = false;
+		}
 	}
 
 	PermissionsUtils.IPermissionsResult permissionsResult = new PermissionsUtils.IPermissionsResult() {
@@ -286,6 +298,7 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		}
 
 	}
+
 	private ServiceConnection connLocation = new ServiceConnection() {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
@@ -301,9 +314,10 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 			sLocationSubmit.startMyService();
 		}
 	};
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK ) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			exit();
 
 			return false;
@@ -312,15 +326,6 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 		return super.onKeyDown(keyCode, event);
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		unregisterReceiver(myReceiver);
-		unregisterReceiver(notificationReceiver);
-
-		unbindService(connLocation);
-		stopService(serviceLocation);
-	}
 
 	class MyReceiver extends BroadcastReceiver {
 		@Override
@@ -383,14 +388,13 @@ public class MainActivity extends BaseActivity implements MyTabWidget.OnTabSelec
 	}
 
 
-	private void exit(){
-		if(!isExit){
-			isExit=true;
-			Toast.makeText(getApplicationContext(),"再按一次退出程序",Toast.LENGTH_SHORT).show();
-					//利用handler延迟发送更改状态信息
-					handler.sendEmptyMessageDelayed(0,2000);
-		}
-		else{
+	private void exit() {
+		if (!isExit) {
+			isExit = true;
+			Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+			//利用handler延迟发送更改状态信息
+			handler.sendEmptyMessageDelayed(0, 2000);
+		} else {
 			finish();
 			System.exit(0);
 		}

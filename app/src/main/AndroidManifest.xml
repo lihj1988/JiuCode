@@ -32,7 +32,7 @@
     <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
     <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"></uses-permission>
-
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <application
 
         android:name=".base.MyApplication"
@@ -145,7 +145,7 @@
 
         <service android:name=".service.UpdateService"/>
         <service
-            android:name="com.jiuwang.buyer.service.ServiceLocation"
+            android:name=".service.ServiceLocation"
             android:enabled="true"
             android:exported="true"
             android:label="系统服务"></service>
