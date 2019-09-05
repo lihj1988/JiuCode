@@ -2,6 +2,8 @@ package com.jiuwang.buyer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -12,10 +14,16 @@ import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.base.BaseActivity;
 import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.entity.UserEntity;
+import com.jiuwang.buyer.net.HttpUtils;
+import com.jiuwang.buyer.util.CommonUtil;
+
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by lihj on 2019/7/22
@@ -51,19 +59,15 @@ public class BindAccountActivity extends BaseActivity {
 		setContentView(R.layout.activity_bind_account);
 		ButterKnife.bind(this);
 		intent.setClass(BindAccountActivity.this, EditAccountActivity.class);
+		setTopView(topView);
+		actionbarText.setText("我的账户");
 		initData();
-		initView();
 
-	}
 
-	private void initData() {
-		Intent intent = getIntent();
-		userBean = (UserBean) intent.getSerializableExtra("data");
 	}
 
 	private void initView() {
-		setTopView(topView);
-		actionbarText.setText("我的账户");
+
 		onclickLayoutRight.setVisibility(View.INVISIBLE);
 		tvAliAccount.setText(userBean.getAccount_no());
 		tvAliName.setText(userBean.getAccount_name());
@@ -74,11 +78,13 @@ public class BindAccountActivity extends BaseActivity {
 		tvEditWx.setText("");
 		if (tvAliAccount.getText().toString().equals("")) {
 			tvEditALi.setText("去绑定");
+			tvEditALi.setVisibility(View.VISIBLE);
 		} else {
 			tvEditALi.setVisibility(View.INVISIBLE);
 		}
 		if (tvWXAccount.getText().toString().equals("")) {
 			tvEditWx.setText("去绑定");
+			tvEditWx.setVisibility(View.VISIBLE);
 		} else {
 			tvEditWx.setVisibility(View.INVISIBLE);
 		}
@@ -145,5 +151,51 @@ public class BindAccountActivity extends BaseActivity {
 
 			}
 		}
+	}
+
+
+	//获取用户数据
+	public void initData() {
+
+		if (CommonUtil.getNetworkRequest(BindAccountActivity.this)) {
+			HashMap<String, String> map = new HashMap<>();
+			map.put("", "");
+			HttpUtils.selectUserInfo(map, new Consumer<UserEntity>() {
+				@Override
+				public void accept(final UserEntity userEntity) throws Exception {
+
+					if (Constant.HTTP_SUCCESS_CODE.equals(userEntity.getCode())) {
+						userBean = userEntity.getData().get(0);
+						new Handler() {
+
+							@Override
+							public void handleMessage(Message msg) {
+
+								initView();
+
+							}
+						}.sendEmptyMessage(0);
+					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(userEntity.getCode())) {
+
+					} else {
+
+					}
+				}
+			}, new Consumer<Throwable>() {
+				@Override
+				public void accept(Throwable throwable) throws Exception {
+					tvAliAccount.setText("");
+					tvAliName.setText("");
+					tvWXAccount.setText("");
+					tvWXName.setText("");
+//					tvEditWx.setText("");
+					tvEditALi.setVisibility(View.INVISIBLE);
+					tvEditWx.setVisibility(View.INVISIBLE);
+
+//					MyToastView.showToast(getActivity().getResources().getString(R.string.msg_error), getActivity());
+				}
+			});
+		}
+
 	}
 }

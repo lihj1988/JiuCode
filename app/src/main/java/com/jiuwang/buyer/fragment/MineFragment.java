@@ -159,11 +159,11 @@ public class MineFragment extends Fragment {
 
 	private UserBean userBean;
 	private MyReceiver myReceiver;
-	private String invite_code;
-	private String account_name;
-	private String account_name_wx;
-	private String account_no;
-	private String avail_amount;
+	private String invite_code= "";
+	private String account_name = "";
+	private String account_name_wx= "";
+	private String account_no= "";
+	private String avail_amount= "";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -402,10 +402,11 @@ public class MineFragment extends Fragment {
 				break;
 			case R.id.tvMyAccount://我的账户
 
-				Intent intentAccount = new Intent(getActivity(), BindAccountActivity.class);
-				intentAccount.putExtra("data", userBean);
-				getActivity().startActivity(intentAccount);
-
+				if(CommonUtil.getNetworkRequest(getActivity())){
+					Intent intentAccount = new Intent(getActivity(), BindAccountActivity.class);
+					intentAccount.putExtra("data", userBean);
+					getActivity().startActivity(intentAccount);
+				}
 
 				break;
 			case R.id.tvInviteManager://我的二维码

@@ -59,6 +59,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginRight="10dp"
 			android:text="去绑定"
+			android:visibility="invisible"
 			android:textColor="@color/blue"
 			android:textSize="@dimen/textsize_13"/>
 	</LinearLayout>
@@ -111,6 +112,8 @@
 		</LinearLayout>
 
 		<TextView
+			android:visibility="invisible"
+
 			android:id="@+id/tvEditWx"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

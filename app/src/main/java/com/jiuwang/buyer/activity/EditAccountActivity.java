@@ -46,8 +46,9 @@ public class EditAccountActivity extends BaseActivity {
 	@Bind(R.id.etAccountName)
 	EditText etAccountName;
 	@Bind(R.id.etAccount)
-	EditText etAccount;@Bind(R.id.tvNotice)
-	EditText tvNotice;
+	EditText etAccount;
+	@Bind(R.id.tvNotice)
+	TextView tvNotice;
 	@Bind(R.id.btnBind)
 	TextView btnBind;
 	private String accountType;
@@ -104,6 +105,26 @@ public class EditAccountActivity extends BaseActivity {
 				if ("".equals(account)) {
 					MyToastView.showToast("请填写账号", EditAccountActivity.this);
 					return;
+				}
+				if (accountType.equals(Constant.PAY_MODE_WX)) {
+
+				} else if (accountType.equals(Constant.PAY_MODE_ALI)) {
+					String stringData = PreforenceUtils.getStringData("loginInfo", "userID");
+					if(!stringData.equals(account)){
+						MyToastView.showToast("绑定的支付宝账号与您当前登录账号不相符，请重新填写!",EditAccountActivity.this);
+//						AppUtils.showDialog(EditAccountActivity.this, "提示", context, new DialogClickInterface() {
+//							@Override
+//							public void onClick() {
+//
+//							}
+//
+//							@Override
+//							public void nagtiveOnClick() {
+//
+//							}
+//						});
+						return;
+					}
 				}
 				if (CommonUtil.getNetworkRequest(EditAccountActivity.this)) {
 					String context = "";
