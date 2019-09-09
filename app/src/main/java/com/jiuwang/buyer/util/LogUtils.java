@@ -11,7 +11,8 @@ public class LogUtils {
 	private static final String TAG = "LogUtils";
 	
 	private static final boolean LOGGER = true;
-	private static final boolean FILELOGGER = true;
+	public static final boolean FILELOGGER = true;
+
 
 	public static void v(String tag, String msg) {
 		if (LOGGER) {
@@ -46,6 +47,12 @@ public class LogUtils {
 	public static void e(String tag, String msg, Throwable tr) {
 		if (LOGGER) {
 			Log.e(TAG, tag + "-->" + msg);
+		}
+	}
+
+	public static void writeLogToFile(String msg, String path) {
+		if (FILELOGGER) {
+			FileUtil.writeLogToFile(msg,path);
 		}
 	}
 }

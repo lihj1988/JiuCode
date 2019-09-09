@@ -106,7 +106,7 @@ public class WXPayUtils {
 			parameters.put("notify_url", NetURL.notify_url_wx);
 			parameters.put("out_trade_no", out_trade_no);
 			parameters.put("spbill_create_ip", SystemUtil.getIpAddressString());
-			parameters.put("total_fee", String.valueOf(Integer.parseInt(total_fee) * 100));
+			parameters.put("total_fee", String.valueOf(Double.parseDouble(total_fee) * 100));
 			parameters.put("trade_type", "APP");
 			parameters.put("attach", attach);
 			parameters.put("attach", attach);

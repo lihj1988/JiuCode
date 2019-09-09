@@ -15,6 +15,8 @@ import android.webkit.WebView;
 import com.jiuwang.buyer.activity.LoginActivity;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.util.LogUtils;
+import com.jiuwang.buyer.util.ReadConfigTXTUtil;
 import com.jiuwang.buyer.util.ToastUtil;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -22,7 +24,9 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,9 +71,23 @@ public class MyApplication extends Application {
 		activitys = new LinkedList();
 	}
 
+	public String filePath;
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+
+		String currentTime = "";
+		if (LogUtils.FILELOGGER) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
+			 currentTime = formatter.format(curDate);
+			 filePath = ReadConfigTXTUtil.getSDPath() + "/" + "shopTextLog"
+					+ ".txt";
+		}
+		LogUtils.writeLogToFile("currentTime=" + currentTime + "---App启动",
+				filePath);
+
 		myApplication = this;
 		handler = new Handler();
 		//公用变量

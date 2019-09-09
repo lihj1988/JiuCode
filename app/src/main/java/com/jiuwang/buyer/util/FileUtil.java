@@ -9,12 +9,14 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 
 /*
 *
@@ -339,6 +341,46 @@ public class FileUtil {
             filename = strs[strs.length - 1];
         }
         return filename;
+    }
+    // 生成文件
+    private static File makeFilePath(String fileName) {
+        File file = null;
+        try {
+            file = new File(fileName);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return file;
+    }
+
+    // 将字符串写入到文本文件中
+    public static void writeLogToFile(String strcontent, String fileName) {
+        //生成文件夹之后，再生成文件，不然会出错
+        makeFilePath(fileName);
+
+        String strFilePath = fileName;
+        // 每次写入时，都换行写
+        String strContent = strcontent + "\r\n";
+        try {
+            File file = new File(strFilePath);
+            if (!file.exists()) {
+                Log.d("TestFile", "Create the file:" + strFilePath);
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            }
+            RandomAccessFile raf = new RandomAccessFile(file, "rwd");
+            raf.seek(file.length());
+            raf.write(strContent.getBytes());
+            raf.close();
+        } catch (Exception e) {
+            Log.e("TestFile", "Error on write File:" + e);
+
+
+        }
     }
 
 }

@@ -32,6 +32,7 @@ import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
+import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
@@ -59,6 +60,7 @@ import io.reactivex.functions.Consumer;
 
 public class RechargePopupWindow extends PopupWindow {
 
+	private static final String TAG = RechargePopupWindow.class.getName();
 	private WindowManager.LayoutParams params;
 	private View mMenuView;
 	private String type;
@@ -191,10 +193,10 @@ public class RechargePopupWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				//微信支付
-				MyToastView.showToast("暂未启用" ,context);
-//				loadingDialog = new LoadingDialog(context);
-//				loadingDialog.show();
-//				recharge(Constant.PAY_MODE_WX);
+//				MyToastView.showToast("暂未启用" ,context);
+				loadingDialog = new LoadingDialog(context);
+				loadingDialog.show();
+				recharge(Constant.PAY_MODE_WX);
 			}
 		});
 		cancle.setOnClickListener(new View.OnClickListener() {
@@ -263,7 +265,19 @@ public class RechargePopupWindow extends PopupWindow {
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
-								String post = HttpKit.post(NetURL.WX_UNIFIEDORDER, request);;
+								String post = HttpKit.post(NetURL.WX_UNIFIEDORDER, request);
+								LogUtils.e(TAG,post);
+								LogUtils.writeLogToFile("post=" + post,
+										MyApplication.getInstance().filePath);
+								Map<String, String> stringXmlOut = wxPayUtils.readStringXmlOut(post);
+								if(stringXmlOut!=null){
+									if(stringXmlOut.get("return_code").equals("FAIL")){
+										MyToastView.showToast(stringXmlOut.get("return_msg").toString(),context);
+//										RechargePopupWindow.this.dismiss();
+										return;
+									}
+								}
+//								LogUtils.e(TAG,post);
 								new Handler(){
 									@Override
 									public void handleMessage(Message msg) {
@@ -284,7 +298,7 @@ public class RechargePopupWindow extends PopupWindow {
 										req.sign = wxPayUtils.genAppSign(signParams);
 										MyApplication.getInstance().api.sendReq(req);
 									}
-								};
+								}.sendEmptyMessage(0);
 							}
 						}).start();
 
