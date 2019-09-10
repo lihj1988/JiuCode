@@ -173,6 +173,13 @@ public class ProjectFragment extends Fragment implements XRecyclerView.LoadingLi
 			public void itemOnClick(final int position) {
 				LogUtils.e(TAG, "点击了第" + (position + 1) + "条");
 				if (CommonUtil.getNetworkRequest(getActivity())) {
+					if("2".equals(projectList.get(position).getProject_type())){
+						if(!"1".equals(MyApplication.getInstance().status)){
+							MyToastView.showToast("报名失败，请先用支付宝充值1元以上才可参加体验金项目",getActivity());
+							return;
+						}
+					}
+
 					selectAddress(position);
 
 				}

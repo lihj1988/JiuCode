@@ -106,9 +106,8 @@ public class WXPayUtils {
 			parameters.put("notify_url", NetURL.notify_url_wx);
 			parameters.put("out_trade_no", out_trade_no);
 			parameters.put("spbill_create_ip", SystemUtil.getIpAddressString());
-			parameters.put("total_fee", String.valueOf(Double.parseDouble(total_fee) * 100));
+			parameters.put("total_fee", String.valueOf((int)Double.parseDouble(total_fee) * 100));
 			parameters.put("trade_type", "APP");
-			parameters.put("attach", attach);
 			parameters.put("attach", attach);
 			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
 			packageParams.add(new BasicNameValuePair("appid", parameters.get("appid").toString()));
@@ -156,7 +155,7 @@ public class WXPayUtils {
 		sb.append("key=");
 		sb.append(Constant.WXAPI_KEY);
 
-//		sb.append("sign str\n" + sb.toString() + "\n\n");
+		sb.append("sign str\n" + sb.toString() + "\n\n");
 		String appSign = MD5.getMessageDigest(sb.toString().getBytes())
 				.toUpperCase();
 		Log.e("orion", appSign);

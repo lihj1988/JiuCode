@@ -720,9 +720,8 @@ public class CommonUtil {
 
 	/**
 	 * 验证身份证
-	 *
 	 */
-    /*public static String IDCardValidate(String IDStr) throws ParseException {
+	/*public static String IDCardValidate(String IDStr) throws ParseException {
         String errorInfo = "ok";// 记录错误信息
         String[] ValCodeArr = {"1", "0", "X", "9", "8", "7", "6", "5", "4",
                 "3", "2"};
@@ -925,6 +924,7 @@ public class CommonUtil {
 				.diskCacheStrategy(DiskCacheStrategy.SOURCE)
 				.into(ivPic);
 	}
+
 	public static void loadImage(Context context, int url, ImageView ivPic) {
 		Glide.with(context)
 				.load(url).error(R.drawable.test)
@@ -932,6 +932,14 @@ public class CommonUtil {
 				.error(R.drawable.test)
 				.skipMemoryCache(false)
 				.diskCacheStrategy(DiskCacheStrategy.SOURCE)
+				.into(ivPic);
+	}
+
+	public static void loadImageWithOutCache(Context context, String url, ImageView ivPic) {
+		Glide.with(context)
+				.load(url)
+				.skipMemoryCache(true)
+				.diskCacheStrategy(DiskCacheStrategy.NONE)
 				.into(ivPic);
 	}
 
@@ -1000,41 +1008,42 @@ public class CommonUtil {
 
 	/**
 	 * 校验时间
+	 *
 	 * @return
 	 */
-	public static String getNowTime(){
+	public static String getNowTime() {
 		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date = sDateFormat.format(new java.util.Date());
-		return  date;
+		return date;
 	}
 
 	/**
 	 * 校验时间
+	 *
 	 * @param startTime
 	 * @param endTime
 	 * @return
 	 */
-	public static int getTimeCompareSize(String startTime, String endTime){
-		int i=0;
+	public static int getTimeCompareSize(String startTime, String endTime) {
+		int i = 0;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//年-月-日 时-分
 		try {
 			Date date1 = dateFormat.parse(startTime);//开始时间
 			Date date2 = dateFormat.parse(endTime);//结束时间
 			// 1 结束时间小于开始时间 2 开始时间与结束时间相同 3 结束时间大于开始时间
-			if (date2.getTime()<date1.getTime()){
-				i= 1;
-			}else if (date2.getTime()==date1.getTime()){
-				i= 2;
-			}else if (date2.getTime()>date1.getTime()){
+			if (date2.getTime() < date1.getTime()) {
+				i = 1;
+			} else if (date2.getTime() == date1.getTime()) {
+				i = 2;
+			} else if (date2.getTime() > date1.getTime()) {
 				//正常情况下的逻辑操作.
-				i= 3;
+				i = 3;
 			}
 		} catch (java.text.ParseException e) {
 			e.printStackTrace();
 		}
-		return  i;
+		return i;
 	}
-
 
 
 	public static long[] longToString(long data) {
@@ -1044,12 +1053,12 @@ public class CommonUtil {
 		long M = (data % (24 * 60 * 60 * 1000) % (60 * 60 * 1000)) / (60 * 1000);
 		long S = (data % (24 * 60 * 60 * 1000) % (60 * 60 * 1000) % (60 * 1000)) / 1000;
 		String str = D + "天" + H + "时" + M + "分" + S + "秒";
-		long[] longs = new long[]{D,H,M,S};
+		long[] longs = new long[]{D, H, M, S};
 		return longs;
 
 	}
 
-	public static boolean checkMoney(String money,Context context) {
+	public static boolean checkMoney(String money, Context context) {
 		Pattern pattern = Pattern.compile("^\\d+(\\.\\d{1,2})?$");
 		Matcher isNum = pattern.matcher(money.charAt(0) + "");
 
@@ -1061,7 +1070,7 @@ public class CommonUtil {
 				if (split[0].length() > 1) {
 					char[] chars = split[0].toCharArray();
 					if (String.valueOf(chars[0]).equals("0")) {
-						MyToastView.showToast("请填写正确的金额",context);
+						MyToastView.showToast("请填写正确的金额", context);
 						return false;
 					}
 				}

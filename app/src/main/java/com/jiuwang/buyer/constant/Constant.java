@@ -39,22 +39,7 @@ public class Constant {
 
 	//微信支付AppId 及先关参数
 	public static final String WXPAY_APPID = "wxf7f5606ada32167e";//微信AppID
-	public static final String WXAPI_KEY = "MIIC2zCCAcMCAQAwgZUxCzAJBgNVBAYTAkNOMRIwEAYDVQQIDAlHdWFuZ0Rvbmcx\n" +
-			"ETAPBgNVBAcMCFNoZW5aaGVuMRswGQYDVQQKDBLlvq7kv6HllYbmiLfns7vnu58x\n" +
-			"LTArBgNVBAsMJOWkp+W6huW4gumUkOS5i+eEsOenkeaKgOaciemZkOWFrOWPuDET\n" +
-			"MBEGA1UEAwwKMTU1NTAyMTc2MTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC\n" +
-			"ggEBAKb3aofgVCj+bKuekRxPL3wer5lQHu48N8o8T3XNyn4eaeTorQpQ3g8i72iE\n" +
-			"gsaIk7T0wUqnQMf0rBiTpqPlYXs4haZeiUsG501II6eapUZe9fSDVho2sdRUY2BR\n" +
-			"uJlCPNwllTFKfrSCjr9CMWBTwXiMUUBelLZPTPudht/ZBe+JYyU52HqhyAGzDsSe\n" +
-			"08T/Na5x8GFMmhsoun/yruFaZgOuB24xMyjWvab423lJLG49ZVXlvtqqEycThpMW\n" +
-			"yVlTxLQGx/shBGW7cm07K3feyem2tbuOu/3ZUUTecOq5ncNCUYs4hDHMdWbLhCC5\n" +
-			"Nk3G3WaRXBn/Edpl1kNOPwdI+WsCAwEAAaAAMA0GCSqGSIb3DQEBCwUAA4IBAQCH\n" +
-			"T7F2OovaEjRrDXwlv3Tjol6KNidE+CUt4Dvzhj5JaPfdYcsDgK5LVMbASIbqJ8Rw\n" +
-			"IBx4EMk3PXqbPDqe0Wx3MLJxhsLxoufgZhKMmnQgKdfNveWxLRRdIl33qkgVNvNI\n" +
-			"WmQvgnRbypnWhiGgteSrgXr03cLwdg4eWLdFp6oG/K0qlky9eW81ux6NPXhlfvsf\n" +
-			"qXe+ylZbe1esJzq1peL7VA6+HAFM/01JOhHM1hpXqlobIAMV2wfh0R2ABZYqqmyW\n" +
-			"+abv7ZkX+ldguXsvvro53bnAU9zh70QCG9AAobsBdPchLiKQ5i+njQBlNG1lLNv5\n" +
-			"4WNiJWD/4dItXxk/1qin";//微信ApiKey
+	public static final String WXAPI_KEY = "2eb82938551c3849d6d13be59c508f6d";//微信ApiKey
 	//商户号
 	public static final String MCH_ID = "1555021761";//商户号
 	//提单状态

@@ -18,6 +18,8 @@ public class BaseResultEntity {
 	private String count;
 	private String version_no;
 	private String download_url;
+	private String webchat;
+	private String notes;
 
 	public String getMsg() {
 		return msg;
@@ -57,5 +59,21 @@ public class BaseResultEntity {
 
 	public void setDownload_url(String download_url) {
 		this.download_url = download_url;
+	}
+
+	public String getWebchat() {
+		return webchat;
+	}
+
+	public void setWebchat(String webchat) {
+		this.webchat = webchat;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 }

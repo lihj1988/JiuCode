@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -14,8 +15,10 @@ import android.widget.TextView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
+import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.UserBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
@@ -66,6 +69,10 @@ public class CashOutActivity extends BaseActivity {
 	RadioButton rbAli;
 	@Bind(R.id.rbWX)
 	RadioButton rbWX;
+	@Bind(R.id.tvNotice)
+	TextView tvNotice;
+	@Bind(R.id.ivWebChat)
+	ImageView ivWebChat;
 	private String avail_amount;
 	private String account_name;
 	private String account_name_wx;
@@ -96,7 +103,7 @@ public class CashOutActivity extends BaseActivity {
 				etMoney.setHint("可提现金额" + avail_amount + "元");
 				account_name = userBean.getAccount_name();
 				account_no = userBean.getAccount_no();
-
+				MyApplication.getInstance().status = userBean.getStatus();
 				account_no_wx = userBean.getAccount_no_wx();
 				account_name_wx = userBean.getAccount_name_wx();
 				initView();
@@ -117,53 +124,54 @@ public class CashOutActivity extends BaseActivity {
 		etMoney.setHint("可提现金额" + avail_amount + "元");
 
 
-		if ((account_name != null && !"".equals(account_name)) && (account_name_wx != null && !"".equals(account_name_wx))) {
+//		if ((account_name != null && !"".equals(account_name)) && (account_name_wx != null && !"".equals(account_name_wx))) {
+//			payMode = Constant.PAY_MODE_ALI;
+//			rbAli.setChecked(true);
+//			etName.setEnabled(false);
+//			etName.setText(account_name);
+//			etAccount.setEnabled(false);
+//			etAccount.setText(account_no);
+//		} else {
+		if (account_name == null || "".equals(account_name)) {
+			rbAli.setVisibility(View.GONE);
+			etName.setEnabled(false);
+		} else {
 			payMode = Constant.PAY_MODE_ALI;
 			rbAli.setChecked(true);
 			etName.setEnabled(false);
 			etName.setText(account_name);
+		}
+
+		if (account_no == null || "".equals(account_no)) {
+			etAccount.setEnabled(false);
+		} else {
 			etAccount.setEnabled(false);
 			etAccount.setText(account_no);
-		} else {
-			if (account_name == null || "".equals(account_name)) {
-				rbAli.setVisibility(View.GONE);
-				etName.setEnabled(false);
-			} else {
-				payMode = Constant.PAY_MODE_ALI;
-				rbAli.setChecked(true);
-				etName.setEnabled(false);
-				etName.setText(account_name);
-			}
-
-			if (account_no == null || "".equals(account_no)) {
-				etAccount.setEnabled(false);
-			} else {
-				etAccount.setEnabled(false);
-				etAccount.setText(account_no);
-			}
-
-			if (account_name_wx == null || "".equals(account_name_wx)) {
-				rbWX.setVisibility(View.GONE);
-				etName.setEnabled(false);
-			} else {
-				payMode = Constant.PAY_MODE_WX;
-				rbWX.setChecked(true);
-				etName.setEnabled(false);
-				etName.setText(account_name_wx);
-			}
-
-			if (account_no_wx == null || "".equals(account_no_wx)) {
-				etAccount.setEnabled(false);
-			} else {
-				etAccount.setEnabled(false);
-				etAccount.setText(account_no_wx);
-			}
 		}
+		CommonUtil.loadImageWithOutCache(CashOutActivity.this, NetURL.BASEURL+MyApplication.getInstance().webchat,ivWebChat);
+		tvNotice.setText(MyApplication.getInstance().notes);
+//			if (account_name_wx == null || "".equals(account_name_wx)) {
+//				rbWX.setVisibility(View.GONE);
+//				etName.setEnabled(false);
+//			} else {
+//				payMode = Constant.PAY_MODE_WX;
+//				rbWX.setChecked(true);
+//				etName.setEnabled(false);
+//				etName.setText(account_name_wx);
+//			}
+//
+//			if (account_no_wx == null || "".equals(account_no_wx)) {
+//				etAccount.setEnabled(false);
+//			} else {
+//				etAccount.setEnabled(false);
+//				etAccount.setText(account_no_wx);
+//			}
+//		}
 
 		rbAli.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				if(b){
+				if (b) {
 					rbWX.setChecked(false);
 					payMode = Constant.PAY_MODE_ALI;
 					tvAccountTextName.setText("支付宝账号：");
@@ -176,7 +184,7 @@ public class CashOutActivity extends BaseActivity {
 		rbWX.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				if(b){
+				if (b) {
 					rbAli.setChecked(false);
 					payMode = Constant.PAY_MODE_WX;
 					tvAccountTextName.setText("微信账号：");

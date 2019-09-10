@@ -1,170 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent"
-			  android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-	<include layout="@layout/include_topview"></include>
+    <include layout="@layout/include_topview"></include>
 
-	<include layout="@layout/include_title"></include>
-<RadioGroup
-	android:padding="@dimen/padding_size_10"
-	android:orientation="horizontal"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
-	<RadioButton
-		android:id="@+id/rbAli"
-		android:checked="true"
-		android:button="@drawable/check_box_bg"
-		android:layout_weight="1"
-		android:text="    支付宝"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"/>
-	<RadioButton
-		android:id="@+id/rbWX"
-		android:button="@drawable/check_box_bg"
-		android:layout_weight="1"
-		android:text="     微信"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"/>
-</RadioGroup>
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/white"
-		android:orientation="vertical">
+    <include layout="@layout/include_title"></include>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioGroup
+                android:padding="@dimen/padding_size_10"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/padding_size_15">
+                <RadioButton
+                    android:id="@+id/rbAli"
+                    android:checked="true"
+                    android:button="@drawable/check_box_bg"
+                    android:layout_weight="1"
+                    android:text="    支付宝"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
 
-			<TextView
-				android:gravity="right"
-				android:layout_weight="1"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:text="姓名："
-				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_14"/>
+                <RadioButton
+                    android:visibility="invisible"
+                    android:id="@+id/rbWX"
+                    android:button="@drawable/check_box_bg"
+                    android:layout_weight="1"
+                    android:text="     微信"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+            </RadioGroup>
 
-			<EditText
-				android:layout_weight="3"
-				android:enabled="false"
-				android:id="@+id/etName"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="@dimen/padding_size_10"
-				android:background="@null"
-				android:hint="请输入真实姓名"
-				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_13"/>
-		</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
 
-		<View style="@style/View.Line"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_size_15">
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/padding_size_15">
+                    <TextView
+                        android:gravity="right"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="姓名："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/textsize_14"/>
 
-			<TextView
-				android:gravity="right"
-				android:layout_weight="1"
-				android:id="@+id/tvAccountTextName"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:text="支付宝账号："
-				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_13"/>
+                    <EditText
+                        android:layout_weight="3"
+                        android:enabled="false"
+                        android:id="@+id/etName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_size_10"
+                        android:background="@null"
+                        android:hint="请输入真实姓名"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/textsize_13"/>
+                </LinearLayout>
 
-			<EditText
-				android:layout_weight="3"
-				android:enabled="false"
-				android:id="@+id/etAccount"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="@dimen/padding_size_10"
-				android:background="@null"
-				android:hint="请输入真实的支付宝账号"
-				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_14"/>
-		</LinearLayout>
+                <View style="@style/View.Line"/>
 
-		<View style="@style/View.Line"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_size_15">
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center_horizontal"
-			android:orientation="vertical"
-			android:padding="@dimen/textsize_14">
+                    <TextView
+                        android:gravity="right"
+                        android:layout_weight="1"
+                        android:id="@+id/tvAccountTextName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="支付宝账号："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/textsize_13"/>
 
-			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="提现金额"
-				android:textColor="@color/black"
-				android:textSize="@dimen/textsize_14"/>
+                    <EditText
+                        android:layout_weight="3"
+                        android:enabled="false"
+                        android:id="@+id/etAccount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_size_10"
+                        android:background="@null"
+                        android:hint="请输入真实的支付宝账号"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/textsize_14"/>
+                </LinearLayout>
 
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/padding_size_20"
-				android:gravity="center_vertical"
-				android:padding="@dimen/padding_size_5">
+                <View style="@style/View.Line"/>
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/money_mark"
-					android:textColor="@color/black"
-					android:textSize="25sp"
-					android:textStyle="bold"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="@dimen/textsize_14">
 
-				<EditText
-					android:id="@+id/etMoney"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="@dimen/padding_size_10"
-					android:layout_marginRight="10dp"
-					android:layout_weight="1"
-					android:background="@null"
-					android:hint="可提现0.00元"
-					android:inputType="numberDecimal"
-					android:textColor="@color/black"
-					android:textSize="@dimen/textsize_16"
-					android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="提现金额"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/textsize_14"/>
 
-				<TextView
-					android:id="@+id/tvAll"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="全部"
-					android:textColor="@color/blue"
-					android:textSize="@dimen/textsize_16"/>
-			</LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_size_20"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/padding_size_5">
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:background="@color/line_gray"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/money_mark"
+                            android:textColor="@color/black"
+                            android:textSize="25sp"
+                            android:textStyle="bold"/>
 
-			<TextView
-				android:id="@+id/btnNext"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="@dimen/padding_size_28"
-				android:layout_marginRight="@dimen/padding_size_28"
-				android:layout_marginTop="@dimen/padding_size_20"
-				android:background="@drawable/btn_selecter"
-				android:gravity="center"
-				android:padding="@dimen/padding_size_10"
-				android:text="提交"
-				android:textColor="@color/white"
-				android:textSize="@dimen/textsize_16"/>
-		</LinearLayout>
+                        <EditText
+                            android:id="@+id/etMoney"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/padding_size_10"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="可提现0.00元"
+                            android:inputType="numberDecimal"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/textsize_16"
+                            android:textStyle="bold"/>
 
-		<View style="@style/View.Line"/>
-	</LinearLayout>
+                        <TextView
+                            android:id="@+id/tvAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="全部"
+                            android:textColor="@color/blue"
+                            android:textSize="@dimen/textsize_16"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/line_gray"/>
+
+                    <TextView
+                        android:id="@+id/btnNext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_size_28"
+                        android:layout_marginRight="@dimen/padding_size_28"
+                        android:layout_marginTop="@dimen/padding_size_20"
+                        android:background="@drawable/btn_selecter"
+                        android:gravity="center"
+                        android:padding="@dimen/padding_size_10"
+                        android:text="提交"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/textsize_16"/>
+                </LinearLayout>
+
+                <View style="@style/View.Line"/>
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/padding_size_5"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/mustfill"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"/>
+                    <TextView
+                        android:textColor="@color/red"
+                        android:layout_marginLeft="@dimen/padding_size_5"
+                        android:id="@+id/tvNotice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:weightSum="2"
+                    android:padding="@dimen/padding_size_10"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_weight="1"
+                        android:id="@+id/ivWebChat"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

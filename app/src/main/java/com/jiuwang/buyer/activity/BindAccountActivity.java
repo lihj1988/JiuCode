@@ -82,12 +82,12 @@ public class BindAccountActivity extends BaseActivity {
 		} else {
 			tvEditALi.setVisibility(View.INVISIBLE);
 		}
-		if (tvWXAccount.getText().toString().equals("")) {
-			tvEditWx.setText("去绑定");
-			tvEditWx.setVisibility(View.VISIBLE);
-		} else {
-			tvEditWx.setVisibility(View.INVISIBLE);
-		}
+//		if (tvWXAccount.getText().toString().equals("")) {
+//			tvEditWx.setText("去绑定");
+//			tvEditWx.setVisibility(View.VISIBLE);
+//		} else {
+//			tvEditWx.setVisibility(View.INVISIBLE);
+//		}
 	}
 
 	private Intent intent = new Intent();

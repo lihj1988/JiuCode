@@ -51,6 +51,7 @@ public class ProjectBean implements Serializable {
 	private String status_name;//状态名称
 	private String servr_time;//系统时间
 	private String is_part;//是否报名 0 未报名  其他已报名
+	private String project_type;//是--项目类型 1 正常项目 2体验金项目
 
 	public String getId() {
 		return id;
@@ -220,5 +221,13 @@ public class ProjectBean implements Serializable {
 
 	public void setIs_win(String is_win) {
 		this.is_win = is_win;
+	}
+
+	public String getProject_type() {
+		return project_type;
+	}
+
+	public void setProject_type(String project_type) {
+		this.project_type = project_type;
 	}
 }

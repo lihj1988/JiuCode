@@ -103,7 +103,8 @@ public class BalanceActivity extends BaseActivity {
 				break;
 			case R.id.llCashout:
 				//提现
-				if ("".equals(userBean.getAccount_no())&&"".equals(userBean.getAccount_no_wx())) {
+//				if ("".equals(userBean.getAccount_no())&&"".equals(userBean.getAccount_no_wx())) {
+				if ("".equals(userBean.getAccount_no())) {
 					AppUtils.showDialog(BalanceActivity.this, "提示", getResources().getString(R.string.bind_account_content), new DialogClickInterface() {
 						@Override
 						public void onClick() {

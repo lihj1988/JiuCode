@@ -191,7 +191,6 @@ public class MineFragment extends Fragment {
 					if (Constant.HTTP_SUCCESS_CODE.equals(userEntity.getCode())) {
 						userBean = userEntity.getData().get(0);
 						new Handler() {
-
 							@Override
 							public void handleMessage(Message msg) {
 								tvUserName.setText(userBean.getMobile_number());
@@ -200,6 +199,7 @@ public class MineFragment extends Fragment {
 								account_no = userBean.getAccount_no();
 								account_name_wx = userBean.getAccount_name_wx();
 								avail_amount = userBean.getAvail_amount();
+								MyApplication.getInstance().status = userBean.getStatus();
 //								if ("".equals(account_no)) {
 //									tvMyAccount.setClickable(true);
 //								} else {
@@ -213,6 +213,7 @@ public class MineFragment extends Fragment {
 									llTrialAmount.setVisibility(View.VISIBLE);
 									tvTrialAmount.setText("" + CommonUtil.decimalFormat(Double.parseDouble(userBean.getTrial_amount()), "0") + "");
 								}
+
 								String avail_amount = "";
 								if ("".equals(userBean.getAvail_amount())) {
 									avail_amount = "";

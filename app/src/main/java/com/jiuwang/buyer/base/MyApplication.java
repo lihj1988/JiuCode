@@ -72,6 +72,9 @@ public class MyApplication extends Application {
 	}
 
 	public String filePath;
+	public String status;//体验金是否可用
+	public String webchat;//微信群二维码地址
+	public String notes;//提现规则
 	@Override
 	public void onCreate() {
 		super.onCreate();
