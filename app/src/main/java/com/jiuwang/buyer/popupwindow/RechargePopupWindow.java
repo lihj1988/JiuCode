@@ -36,18 +36,14 @@ import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
-import com.jiuwang.buyer.util.wxpay.HttpKit;
-import com.jiuwang.buyer.util.wxpay.WXPayUtils;
+import com.jiuwang.buyer.wxpay.HttpKit;
+import com.jiuwang.buyer.wxpay.WXPayUtils;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import io.reactivex.functions.Consumer;
@@ -261,7 +257,9 @@ public class RechargePopupWindow extends PopupWindow {
 						order.setAttach("1");//附加参数
 						final WXPayUtils wxPayUtils = new WXPayUtils(order.getOut_trade_no(), order.getBody(), order.getTotal_amount(), order.getAttach());
 						final String request = wxPayUtils.getRequestXml(wxPayUtils.requestProductArgs());
-
+//						final String request = wxPayUtils.genProductArgs();
+						LogUtils.writeLogToFile("request=" + request,
+								MyApplication.getInstance().filePath);
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
@@ -278,27 +276,20 @@ public class RechargePopupWindow extends PopupWindow {
 									}
 								}
 //								LogUtils.e(TAG,post);
-								new Handler(){
+								context.runOnUiThread(new Runnable() {
 									@Override
-									public void handleMessage(Message msg) {
+									public void run() {
 										PayReq req = new PayReq();
 										req.appId = Constant.WXPAY_APPID;
 										req.partnerId = Constant.MCH_ID;
-										req.prepayId = "prepay_id";
+										req.prepayId = stringXmlOut.get("prepay_id");
 										req.packageValue = "Sign=WXPay";
 										req.nonceStr = wxPayUtils.genNonceStr();
 										req.timeStamp = String.valueOf(wxPayUtils.genTimeStamp());
-										List<NameValuePair> signParams = new LinkedList<NameValuePair>();
-										signParams.add(new BasicNameValuePair("appid", req.appId));
-										signParams.add(new BasicNameValuePair("noncestr", req.nonceStr));
-										signParams.add(new BasicNameValuePair("package", req.packageValue));
-										signParams.add(new BasicNameValuePair("partnerid", req.partnerId));
-										signParams.add(new BasicNameValuePair("prepayid", req.prepayId));
-										signParams.add(new BasicNameValuePair("timestamp", req.timeStamp));
-										req.sign = wxPayUtils.genAppSign(signParams);
+										req.sign = wxPayUtils.genPayReq(req);
 										MyApplication.getInstance().api.sendReq(req);
 									}
-								}.sendEmptyMessage(0);
+								});
 							}
 						}).start();
 

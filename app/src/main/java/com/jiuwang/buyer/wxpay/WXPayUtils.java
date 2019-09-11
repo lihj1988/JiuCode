@@ -1,9 +1,11 @@
-package com.jiuwang.buyer.util.wxpay;
+package com.jiuwang.buyer.wxpay;
 
 import android.util.Log;
 
+import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.constant.Constant;
 import com.jiuwang.buyer.constant.NetURL;
+import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.SystemUtil;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 
@@ -15,9 +17,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -53,45 +52,6 @@ public class WXPayUtils {
 
 	private final String TAG = WXPayUtils.class.getName();
 
-	//统一下单请求
-	public String genProductArgs() {
-		StringBuffer xml = new StringBuffer();
-
-		try {
-			String nonceStr = genNonceStr();
-
-			xml.append("</xml>");
-			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
-			packageParams
-					.add(new BasicNameValuePair("appid", Constant.WXPAY_APPID));
-			packageParams.add(new BasicNameValuePair("body", "weixin"));
-			packageParams
-					.add(new BasicNameValuePair("mch_id", Constant.MCH_ID));
-			packageParams.add(new BasicNameValuePair("nonce_str", nonceStr));
-			packageParams.add(new BasicNameValuePair("notify_url",
-					NetURL.notify_url_wx));
-			packageParams.add(new BasicNameValuePair("out_trade_no",
-					out_trade_no));
-			packageParams.add(new BasicNameValuePair("spbill_create_ip",
-					SystemUtil.getIpAddressString()));
-			packageParams.add(new BasicNameValuePair("total_fee", String.valueOf(Integer.parseInt(total_fee) * 100)));
-			packageParams.add(new BasicNameValuePair("trade_type", "APP"));
-			packageParams.add(new BasicNameValuePair("attach", attach));
-
-			String sign = genAppSign(packageParams);
-			packageParams.add(new BasicNameValuePair("sign", sign));
-
-//			String xmlstring = toXml(packageParams);
-			String xmlstring = "";
-
-			return xmlstring;
-
-		} catch (Exception e) {
-			Log.e(TAG, "genProductArgs fail, ex = " + e.getMessage());
-			return null;
-		}
-
-	}
 
 	//统一下单请求
 	public SortedMap<Object, Object> requestProductArgs() {
@@ -106,7 +66,7 @@ public class WXPayUtils {
 			parameters.put("notify_url", NetURL.notify_url_wx);
 			parameters.put("out_trade_no", out_trade_no);
 			parameters.put("spbill_create_ip", SystemUtil.getIpAddressString());
-			parameters.put("total_fee", String.valueOf((int)Double.parseDouble(total_fee) * 100));
+			parameters.put("total_fee", String.valueOf((int) (Double.parseDouble(total_fee) * 100)));
 			parameters.put("trade_type", "APP");
 			parameters.put("attach", attach);
 			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
@@ -120,7 +80,7 @@ public class WXPayUtils {
 			packageParams.add(new BasicNameValuePair("total_fee", parameters.get("total_fee").toString()));
 			packageParams.add(new BasicNameValuePair("trade_type", parameters.get("trade_type").toString()));
 			packageParams.add(new BasicNameValuePair("attach", parameters.get("attach").toString()));
-			String sign = genAppSign(packageParams);
+			String sign = getSign("UTF-8", parameters);
 			parameters.put("sign", sign);
 			return parameters;
 
@@ -131,18 +91,68 @@ public class WXPayUtils {
 
 	}
 
+	/**
+	 * 获取支付请求数据，发起支付请求
+	 */
+	public String genPayReq(PayReq req) {
+		List<NameValuePair> signParams = new LinkedList<NameValuePair>();
+		signParams.add(new BasicNameValuePair("appid", req.appId));
+		signParams.add(new BasicNameValuePair("noncestr", req.nonceStr));
+		signParams.add(new BasicNameValuePair("package", req.packageValue));
+		signParams.add(new BasicNameValuePair("partnerid", req.partnerId));
+		signParams.add(new BasicNameValuePair("prepayid", req.prepayId));
+		signParams.add(new BasicNameValuePair("timestamp", req.timeStamp));
 
+		Log.e("PayReq", signParams.toString());
+		return genAppSign(signParams);
+
+	}
+
+	public static String getSign(String characterEncoding, SortedMap<Object, Object> parameters) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		Set es = parameters.entrySet();//所有参与传参的参数按照accsii排序（升序）
+		Iterator it = es.iterator();
+		while (it.hasNext()) {
+			Map.Entry entry = (Map.Entry) it.next();
+			String k = (String) entry.getKey();
+			Object v = entry.getValue();
+			if (null != v && !"".equals(v)
+					&& !"sign".equals(k) && !"key".equals(k)) {
+				sb.append(k + "=" + v + "&");
+			}
+		}
+		sb.append("key=" + Constant.WXAPI_KEY);
+		String sign = MD5.MD5Encode(sb.toString(), characterEncoding).toUpperCase();
+		return sign;
+
+	}
+
+	/**
+	 * 随机字符串
+	 *
+	 * @return
+	 */
 	public String genNonceStr() {
 		Random random = new Random();
 		return MD5.getMessageDigest(String.valueOf(random.nextInt(10000))
 				.getBytes());
 	}
 
+	/**
+	 * 获取时间
+	 *
+	 * @return
+	 */
 	public long genTimeStamp() {
 		return System.currentTimeMillis() / 1000;
 	}
 
-
+	/**
+	 * 支付请求签名
+	 *
+	 * @param params
+	 * @return
+	 */
 	public String genAppSign(List<NameValuePair> params) {
 		StringBuilder sb = new StringBuilder();
 
@@ -155,13 +165,18 @@ public class WXPayUtils {
 		sb.append("key=");
 		sb.append(Constant.WXAPI_KEY);
 
+		LogUtils.writeLogToFile("加密前=" + sb.toString(), MyApplication.getInstance().filePath);
+
 		sb.append("sign str\n" + sb.toString() + "\n\n");
-		String appSign = MD5.getMessageDigest(sb.toString().getBytes())
-				.toUpperCase();
+
+		Log.e("sb", sb.toString());
+
+		String appSign = MD5.MD5Encode(sb.toString(), "UTF-8").toUpperCase();
+
+		LogUtils.writeLogToFile("加密后=" + appSign, MyApplication.getInstance().filePath);
 		Log.e("orion", appSign);
 		return appSign;
 	}
-
 
 	//	将map数组拼装成xml
 	public String getRequestXml(SortedMap<Object, Object> parameters) {
@@ -183,7 +198,9 @@ public class WXPayUtils {
 		return sb.toString();
 	}
 
-	/** * @description 将xml字符串转换成map * @param xml * @return Map */
+	/**
+	 * @description 将xml字符串转换成map * @param xml * @return Map
+	 */
 	public static Map<String, String> readStringXmlOut(String xml) {
 		Map<String, String> map = new HashMap<String, String>();
 		Document doc = null;

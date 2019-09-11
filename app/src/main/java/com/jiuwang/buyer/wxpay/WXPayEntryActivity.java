@@ -1,4 +1,4 @@
-package com.jiuwang.buyer.util.wxpay;
+package com.jiuwang.buyer.wxpay;
 
 
 
@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.util.Log;
 
 import com.jiuwang.buyer.R;

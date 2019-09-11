@@ -1,4 +1,4 @@
-package com.jiuwang.buyer.util.wxpay;
+package com.jiuwang.buyer.wxpay;
 
 import java.io.BufferedReader;
 import java.io.IOException;
