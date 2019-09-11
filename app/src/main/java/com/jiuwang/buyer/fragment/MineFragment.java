@@ -206,12 +206,12 @@ public class MineFragment extends Fragment {
 //									tvMyAccount.setClickable(false);
 //									tvMyAccount.setText("我的账号：" + account_name + " " + account_no);
 //								}
-								if ("0".equals(userBean.getIs_trial()) || "".equals(userBean.getTrial_amount()) || "0".equals(userBean.getTrial_amount())) {
+								if ("0".equals(userBean.getIs_trial()) || "".equals(userBean.getAvail_trial_amount()) || "0".equals(userBean.getAvail_trial_amount())) {
 									tvTrialAmount.setText("0.00");
 									llTrialAmount.setVisibility(View.INVISIBLE);
 								} else {
 									llTrialAmount.setVisibility(View.VISIBLE);
-									tvTrialAmount.setText("" + CommonUtil.decimalFormat(Double.parseDouble(userBean.getTrial_amount()), "0") + "");
+									tvTrialAmount.setText("" + CommonUtil.decimalFormat(Double.parseDouble(userBean.getAvail_trial_amount()), "0") + "");
 								}
 
 								String avail_amount = "";

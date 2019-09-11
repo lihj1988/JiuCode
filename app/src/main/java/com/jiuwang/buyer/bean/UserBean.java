@@ -41,6 +41,7 @@ public class UserBean implements Serializable {
 	 * invite_code :
 	 * trial_amount :
 	 * account_balance :
+	 * avail_trial_amount : 体验金余额
 	 * r : 1
 	 */
 
@@ -83,6 +84,7 @@ public class UserBean implements Serializable {
 	private String account_no_wx;//微信账号
 	private String account_name_wx;//微信账号名称
 	private String status;//1 代表体验金可用
+	private String avail_trial_amount;//体验金余额
 	private int r;
 
 	public String getId() {
@@ -403,5 +405,13 @@ public class UserBean implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getAvail_trial_amount() {
+		return avail_trial_amount;
+	}
+
+	public void setAvail_trial_amount(String avail_trial_amount) {
+		this.avail_trial_amount = avail_trial_amount;
 	}
 }
