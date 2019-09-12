@@ -1,6 +1,9 @@
 package com.jiuwang.buyer.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +15,9 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.appinterface.DialogClickInterface;
 import com.jiuwang.buyer.base.BaseActivity;
@@ -26,6 +32,7 @@ import com.jiuwang.buyer.net.CommonHttpUtils;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
+import com.jiuwang.buyer.util.ImageUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
@@ -79,6 +86,10 @@ public class CashOutActivity extends BaseActivity {
 	private String account_no_wx;
 	private String account_no;
 	private String payMode;
+	//长按后显示的 Item
+	final String[] items = new String[]{"保存图片"};
+	//图片转成Bitmap数组
+	final Bitmap[] bitmap = new Bitmap[1];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +159,7 @@ public class CashOutActivity extends BaseActivity {
 			etAccount.setEnabled(false);
 			etAccount.setText(account_no);
 		}
-		CommonUtil.loadImageWithOutCache(CashOutActivity.this, NetURL.BASEURL+MyApplication.getInstance().webchat,ivWebChat);
+		CommonUtil.loadImageWithOutCache(CashOutActivity.this, NetURL.BASEURL + MyApplication.getInstance().webchat, ivWebChat);
 		tvNotice.setText(MyApplication.getInstance().notes);
 //			if (account_name_wx == null || "".equals(account_name_wx)) {
 //				rbWX.setVisibility(View.GONE);
@@ -192,6 +203,38 @@ public class CashOutActivity extends BaseActivity {
 					etName.setText(account_name_wx);
 					etAccount.setText(account_no_wx);
 				}
+			}
+		});
+
+		ivWebChat.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View view) {
+				//弹出的“保存图片”的Dialog
+				AlertDialog.Builder builder = new AlertDialog.Builder(CashOutActivity.this);
+				builder.setItems(items, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+							case 0:
+
+								Glide.with(CashOutActivity.this).load(NetURL.BASEURL + MyApplication.getInstance().webchat).asBitmap().into(new SimpleTarget<Bitmap>() {
+									@Override
+									public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+										bitmap[0] = resource;
+										if (bitmap[0] != null) {
+											ImageUtil.saveImageToGallery(CashOutActivity.this, bitmap[0],"wechat.png");
+										} else {
+
+										}
+									}
+								});
+
+
+						}
+					}
+				});
+				builder.show();
+				return true;
 			}
 		});
 

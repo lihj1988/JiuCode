@@ -1,14 +1,21 @@
 package com.jiuwang.buyer.util;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class ImageUtil {
@@ -116,5 +123,55 @@ public class ImageUtil {
         }
 
     }
+
+    public static void saveImageToGallery(Context context, Bitmap bmp,String imageName) {
+        // 首先保存图片 创建文件夹
+        // 获取内置SD卡路径
+        String sdCardPath = Environment.getExternalStorageDirectory().getPath();
+        // 图片文件路径
+        File file = new File(sdCardPath);
+        File[] files = file.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            File file1 = files[i];
+            String name = file1.getName();
+            if (name.endsWith(imageName)) {
+                boolean flag = file1.delete();
+                LogUtils.e("1111", "删除 + " + flag);
+            }
+        }
+
+        //图片文件名称
+        String fileName = sdCardPath + "/"+imageName;
+        file = new File(fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            LogUtils.e("111", e.getMessage());
+            e.printStackTrace();
+        }
+
+        // 其次把文件插入到系统图库
+        String path = file.getAbsolutePath();
+        try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(), path, fileName, null);
+        } catch (FileNotFoundException e) {
+            LogUtils.e("333", e.getMessage());
+            e.printStackTrace();
+        }
+
+        // 最后通知图库更新
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri uri = Uri.fromFile(file);
+        intent.setData(uri);
+        context.sendBroadcast(intent);
+        file.delete();
+        MyToastView.showToast("保存成功", context);
+    }
+
+
+
 
 }

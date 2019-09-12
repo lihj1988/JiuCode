@@ -720,7 +720,6 @@ public class AppUtils {
 						Constant.downLoadUrl = baseResultEntity.getDownload_url();
 						MyApplication.getInstance().notes = baseResultEntity.getNotes();
 						MyApplication.getInstance().webchat = baseResultEntity.getWebchat();
-						Constant.downLoadUrl = baseResultEntity.getDownload_url();
 						checkVersion(activity, permissionsResult, come_from);
 					} else if (Constant.HTTP_LOGINOUTTIME_CODE.equals(baseResultEntity.getCode())) {
 						CommonUtil.reLogin(PreforenceUtils.getStringData("loginInfo", "userID"), PreforenceUtils.getStringData("loginInfo", "password"), new CommonUtil.LoginCallBack() {
