@@ -189,10 +189,10 @@ public class RechargePopupWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				//微信支付
-//				MyToastView.showToast("暂未启用" ,context);
-				loadingDialog = new LoadingDialog(context);
-				loadingDialog.show();
-				recharge(Constant.PAY_MODE_WX);
+				MyToastView.showToast("暂未启用" ,context);
+//				loadingDialog = new LoadingDialog(context);
+//				loadingDialog.show();
+//				recharge(Constant.PAY_MODE_WX);
 			}
 		});
 		cancle.setOnClickListener(new View.OnClickListener() {
