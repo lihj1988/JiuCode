@@ -36,8 +36,8 @@ import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
-import com.jiuwang.buyer.wxpay.HttpKit;
-import com.jiuwang.buyer.wxpay.WXPayUtils;
+import com.jiuwang.buyer.wxapi.HttpKit;
+import com.jiuwang.buyer.wxapi.WXPayUtils;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 
 import org.json.JSONException;
@@ -189,10 +189,10 @@ public class RechargePopupWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				//微信支付
-				MyToastView.showToast("暂未启用" ,context);
-//				loadingDialog = new LoadingDialog(context);
-//				loadingDialog.show();
-//				recharge(Constant.PAY_MODE_WX);
+//				MyToastView.showToast("暂未启用" ,context);
+				loadingDialog = new LoadingDialog(context);
+				loadingDialog.show();
+				recharge(Constant.PAY_MODE_WX);
 			}
 		});
 		cancle.setOnClickListener(new View.OnClickListener() {
@@ -254,7 +254,7 @@ public class RechargePopupWindow extends PopupWindow {
 						order.setBody(orderBean.getSubject());
 						order.setOut_trade_no(baseResultEntity.getMsg());
 						order.setTotal_amount(orderBean.getTotal_amount());
-						order.setAttach("1");//附加参数
+						order.setAttach(Constant.BUSINESSTYPE_RECHARGE);//附加参数
 						final WXPayUtils wxPayUtils = new WXPayUtils(order.getOut_trade_no(), order.getBody(), order.getTotal_amount(), order.getAttach());
 						final String request = wxPayUtils.getRequestXml(wxPayUtils.requestProductArgs());
 //						final String request = wxPayUtils.genProductArgs();
@@ -279,12 +279,14 @@ public class RechargePopupWindow extends PopupWindow {
 								context.runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
+										RechargePopupWindow.this.dismiss();
+										Constant.wx_pay_amount_temp = orderBean.getTotal_amount();
 										PayReq req = new PayReq();
 										req.appId = Constant.WXPAY_APPID;
 										req.partnerId = Constant.MCH_ID;
 										req.prepayId = stringXmlOut.get("prepay_id");
+										req.nonceStr = stringXmlOut.get("nonce_str");
 										req.packageValue = "Sign=WXPay";
-										req.nonceStr = wxPayUtils.genNonceStr();
 										req.timeStamp = String.valueOf(wxPayUtils.genTimeStamp());
 										req.sign = wxPayUtils.genPayReq(req);
 										MyApplication.getInstance().api.sendReq(req);

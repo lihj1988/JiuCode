@@ -1,4 +1,4 @@
-package com.jiuwang.buyer.wxpay;
+package com.jiuwang.buyer.wxapi;
 
 import android.util.Log;
 
@@ -60,10 +60,10 @@ public class WXPayUtils {
 		try {
 
 			parameters.put("appid", Constant.WXPAY_APPID);
-			parameters.put("body", "weixin");
+			parameters.put("body", body);
 			parameters.put("mch_id", Constant.MCH_ID);
 			parameters.put("nonce_str", genNonceStr());
-			parameters.put("notify_url", NetURL.notify_url_wx);
+			parameters.put("notify_url", Constant.NOTIFY_URL_WX);
 			parameters.put("out_trade_no", out_trade_no);
 			parameters.put("spbill_create_ip", SystemUtil.getIpAddressString());
 			parameters.put("total_fee", String.valueOf((int) (Double.parseDouble(total_fee) * 100)));
@@ -167,7 +167,7 @@ public class WXPayUtils {
 
 		LogUtils.writeLogToFile("加密前=" + sb.toString(), MyApplication.getInstance().filePath);
 
-		sb.append("sign str\n" + sb.toString() + "\n\n");
+//		sb.append("sign str\n" + sb.toString() + "\n\n");
 
 		Log.e("sb", sb.toString());
 

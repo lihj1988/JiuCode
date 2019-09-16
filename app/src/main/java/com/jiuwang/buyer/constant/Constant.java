@@ -39,7 +39,7 @@ public class Constant {
 
 	//微信支付AppId 及先关参数
 	public static final String WXPAY_APPID = "wxf7f5606ada32167e";//微信AppID
-	public static final String WXAPI_KEY = "2eb82938551c3849d6d13be59c508f6d";//微信ApiKey
+	public static final String WXAPI_KEY = "ruizhiyan2019155502176124857717o";//微信ApiKey
 	//商户号
 	public static final String MCH_ID = "1555021761";//商户号
 	//提单状态
@@ -59,6 +59,10 @@ public class Constant {
 	public static final String PAY_MODE_ALI = "1";//支付宝
 	public static final String PAY_MODE_WX = "2";//微信
 	public static final String PAY_MODE_BALANCE = "3";//余额
+	//微信支付回调返回码
+	public static final int WX_PAY_ERRCODE_FAIL = -1;
+	public static final int WX_PAY_ERRCODE_FAIL_OTHTER = -2;
+	public static final int WX_PAY_ERRCODE_SUCCESS = 0;
 	//排序方式
 	public static final String SORT_TYPE_PRICE_UP = "0";//价格升序
 	public static final String SORT_TYPE_PRICE_DWON = "1";//价格降序
@@ -86,6 +90,9 @@ public class Constant {
 	public final static String CoorType_GCJ02 = "gcj02";
 	public final static String CoorType_BD09LL = "bd09ll";
 	public final static String CoorType_BD09MC = "bd09";
+
+	public  static String wx_pay_amount_temp = "bd09";
+
 	/***
 	 *61 ： GPS定位结果，GPS定位成功。
 	 *62 ： 无法获取有效定位依据，定位失败，请检查运营商网络或者wifi网络是否正常开启，尝试重新请求定位。

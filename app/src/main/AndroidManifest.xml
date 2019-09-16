@@ -135,7 +135,9 @@
             android:name=".camera.zxing.activity.CaptureActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".wxpay.WXPayEntryActivity"
+            android:name=".wxapi.WXPayEntryActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
             android:exported="true"/>
 
         <receiver
