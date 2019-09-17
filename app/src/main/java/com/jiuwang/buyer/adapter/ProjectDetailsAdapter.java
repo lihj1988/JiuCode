@@ -13,6 +13,7 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.bean.ProjectDetailBean;
 import com.jiuwang.buyer.constant.Constant;
+import com.jiuwang.buyer.util.PreforenceUtils;
 
 import java.util.List;
 
@@ -40,9 +41,13 @@ public class ProjectDetailsAdapter extends RecyclerView.Adapter<ProjectDetailsAd
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
 		if (Constant.ISWIN.equals(list.get(position).getIs_win())) {
-			holder.tvIsWin.setText("已中奖");
-			holder.tvIsWin.setTextColor(context.getResources().getColor(R.color.red));
-			holder.tvUserName.setTextColor(context.getResources().getColor(R.color.red));
+			String loginName = PreforenceUtils.getStringData("loginInfo", "userID");
+			if(list.get(position).getCreate_user().equals(loginName)){
+				holder.tvIsWin.setText("已中奖");
+				holder.tvIsWin.setTextColor(context.getResources().getColor(R.color.red));
+				holder.tvUserName.setTextColor(context.getResources().getColor(R.color.red));
+			}
+
 		} else {
 			holder.tvIsWin.setText("未中奖");
 		}
