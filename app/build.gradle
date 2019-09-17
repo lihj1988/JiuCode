@@ -39,6 +39,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    //增加这里，写你的keystore的位置和key、password
+//    signingConfigs {
+//        config {
+//            keyAlias 'xxa'
+//            keyPassword 'aaa123'
+//            storeFile file('d:/Android/keystore/xxx.keystore')
+//            storePassword 'aaa123'
+//        }
+//    }
+
     useLibrary 'org.apache.http.legacy'
     sourceSets {
         main {

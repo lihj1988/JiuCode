@@ -4,9 +4,11 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,7 +46,6 @@ import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.entity.UserEntity;
 import com.jiuwang.buyer.net.HttpUtils;
-import com.jiuwang.buyer.popupwindow.RechargePopupWindow;
 import com.jiuwang.buyer.util.AppUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LogUtils;
@@ -154,6 +155,7 @@ public class BuySetup2Activity extends BaseActivity {
 
 		;
 	};
+	private FinishReceiver finishReceiver;
 
 	private void payComplete() {
 		Intent intent1 = new Intent();
@@ -190,6 +192,16 @@ public class BuySetup2Activity extends BaseActivity {
 		requestPermission();
 		initView();
 		initData();
+		finishReceiver = new FinishReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("buy2finish");
+		registerReceiver(finishReceiver,filter);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(finishReceiver);
 	}
 
 	//初始化控件
@@ -317,7 +329,7 @@ public class BuySetup2Activity extends BaseActivity {
 
 				}
 				if (wxPayRadioButton.isChecked()) {
-					MyToastView.showToast("不支付的支付方式", mActivity);
+//					MyToastView.showToast("不支付的支付方式", mActivity);
 					payWX();
 
 				}
@@ -380,8 +392,8 @@ public class BuySetup2Activity extends BaseActivity {
 	private void payWX(){
 		//微信支付
 		OrderBean order = new OrderBean();
-		order.setBody(orderBean.getSubject());
-		order.setOut_trade_no(orderBean.getOut_trade_no());
+		order.setBody(orderBean.getGoods_name());
+		order.setOut_trade_no(orderBean.getId());
 		order.setTotal_amount(orderBean.getTotal_amount());
 		order.setAttach(Constant.BUSINESSTYPE_PAYMWENT);//附加参数
 		final WXPayUtils wxPayUtils = new WXPayUtils(order.getOut_trade_no(), order.getBody(), order.getTotal_amount(), order.getAttach());
@@ -418,7 +430,6 @@ public class BuySetup2Activity extends BaseActivity {
 						req.packageValue = "Sign=WXPay";
 						req.timeStamp = String.valueOf(wxPayUtils.genTimeStamp());
 						req.sign = wxPayUtils.genPayReq(req);
-						payComplete();
 						MyApplication.getInstance().api.sendReq(req);
 					}
 				});
@@ -519,5 +530,14 @@ public class BuySetup2Activity extends BaseActivity {
 
 	private static void showToast(Context ctx, String msg) {
 		Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show();
+	}
+
+	class FinishReceiver extends BroadcastReceiver{
+
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			payComplete();
+		}
 	}
 }
