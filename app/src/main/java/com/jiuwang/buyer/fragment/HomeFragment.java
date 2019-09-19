@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment {
 	private NoticeRecyclerViewAdapter adapter;
 	private List<String> data;
 	int[] imageUrls_local = {R.drawable.play1,
-			R.drawable.play2};
+			R.drawable.play2,R.drawable.play3,R.drawable.play4,};
 	private ArrayList<ADInfo> infos = new ArrayList<>();
 	private ArrayList<Integer> localImages = new ArrayList<Integer>();
 
@@ -98,7 +98,7 @@ public class HomeFragment extends Fragment {
 
 
 		//获取本地的图片
-		for (int position = 0; position < 3; position++) {
+		for (int position = 0; position < imageUrls_local.length; position++) {
 			localImages.add(getResId("play" + (position + 1), R.drawable.class));
 		}
 

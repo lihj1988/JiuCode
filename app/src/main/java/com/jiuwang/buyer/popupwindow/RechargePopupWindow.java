@@ -20,25 +20,19 @@ import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.jiuwang.buyer.R;
 import com.jiuwang.buyer.activity.OrderPayCompleteActivity;
-import com.jiuwang.buyer.base.MyApplication;
 import com.jiuwang.buyer.bean.AuthResult;
 import com.jiuwang.buyer.bean.OrderBean;
 import com.jiuwang.buyer.bean.PayResult;
 import com.jiuwang.buyer.constant.Constant;
-import com.jiuwang.buyer.constant.NetURL;
 import com.jiuwang.buyer.entity.BaseEntity;
 import com.jiuwang.buyer.entity.BaseResultEntity;
 import com.jiuwang.buyer.entity.LoginEntity;
 import com.jiuwang.buyer.net.HttpUtils;
 import com.jiuwang.buyer.util.CommonUtil;
 import com.jiuwang.buyer.util.LoadingDialog;
-import com.jiuwang.buyer.util.LogUtils;
 import com.jiuwang.buyer.util.MyToastView;
 import com.jiuwang.buyer.util.PreforenceUtils;
 import com.jiuwang.buyer.util.alipay.OrderInfoUtil2_0;
-import com.jiuwang.buyer.wxapi.HttpKit;
-import com.jiuwang.buyer.wxapi.WXPayUtils;
-import com.tencent.mm.opensdk.modelpay.PayReq;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -249,51 +243,52 @@ public class RechargePopupWindow extends PopupWindow {
 						Thread payThread = new Thread(payRunnable);
 						payThread.start();
 					}else if(payMode.equals(Constant.PAY_MODE_WX)){
+						MyToastView.showToast("暂不支持",context);
 						//微信支付
-						OrderBean order = new OrderBean();
-						order.setBody(orderBean.getSubject());
-						order.setOut_trade_no(baseResultEntity.getMsg());
-						order.setTotal_amount(orderBean.getTotal_amount());
-						order.setAttach(Constant.BUSINESSTYPE_RECHARGE);//附加参数
-						final WXPayUtils wxPayUtils = new WXPayUtils(order.getOut_trade_no(), order.getBody(), order.getTotal_amount(), order.getAttach());
-						final String request = wxPayUtils.getRequestXml(wxPayUtils.requestProductArgs());
-//						final String request = wxPayUtils.genProductArgs();
-						LogUtils.writeLogToFile("request=" + request,
-								MyApplication.getInstance().filePath);
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								String post = HttpKit.post(NetURL.WX_UNIFIEDORDER, request);
-								LogUtils.e(TAG,post);
-								LogUtils.writeLogToFile("post=" + post,
-										MyApplication.getInstance().filePath);
-								Map<String, String> stringXmlOut = wxPayUtils.readStringXmlOut(post);
-								if(stringXmlOut!=null){
-									if(stringXmlOut.get("return_code").equals("FAIL")){
-										MyToastView.showToast(stringXmlOut.get("return_msg").toString(),context);
-//										RechargePopupWindow.this.dismiss();
-										return;
-									}
-								}
+//						OrderBean order = new OrderBean();
+//						order.setBody(orderBean.getSubject());
+//						order.setOut_trade_no(baseResultEntity.getMsg());
+//						order.setTotal_amount(orderBean.getTotal_amount());
+//						order.setAttach(Constant.BUSINESSTYPE_RECHARGE);//附加参数
+//						final WXPayUtils wxPayUtils = new WXPayUtils(order.getOut_trade_no(), order.getBody(), order.getTotal_amount(), order.getAttach());
+//						final String request = wxPayUtils.getRequestXml(wxPayUtils.requestProductArgs());
+////						final String request = wxPayUtils.genProductArgs();
+//						LogUtils.writeLogToFile("request=" + request,
+//								MyApplication.getInstance().filePath);
+//						new Thread(new Runnable() {
+//							@Override
+//							public void run() {
+//								String post = HttpKit.post(NetURL.WX_UNIFIEDORDER, request);
 //								LogUtils.e(TAG,post);
-								context.runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										RechargePopupWindow.this.dismiss();
-										Constant.wx_pay_amount_temp = orderBean.getTotal_amount();
-										PayReq req = new PayReq();
-										req.appId = Constant.WXPAY_APPID;
-										req.partnerId = Constant.MCH_ID;
-										req.prepayId = stringXmlOut.get("prepay_id");
-										req.nonceStr = stringXmlOut.get("nonce_str");
-										req.packageValue = "Sign=WXPay";
-										req.timeStamp = String.valueOf(wxPayUtils.genTimeStamp());
-										req.sign = wxPayUtils.genPayReq(req);
-										MyApplication.getInstance().api.sendReq(req);
-									}
-								});
-							}
-						}).start();
+//								LogUtils.writeLogToFile("post=" + post,
+//										MyApplication.getInstance().filePath);
+//								Map<String, String> stringXmlOut = wxPayUtils.readStringXmlOut(post);
+//								if(stringXmlOut!=null){
+//									if(stringXmlOut.get("return_code").equals("FAIL")){
+//										MyToastView.showToast(stringXmlOut.get("return_msg").toString(),context);
+////										RechargePopupWindow.this.dismiss();
+//										return;
+//									}
+//								}
+////								LogUtils.e(TAG,post);
+//								context.runOnUiThread(new Runnable() {
+//									@Override
+//									public void run() {
+//										RechargePopupWindow.this.dismiss();
+//										Constant.wx_pay_amount_temp = orderBean.getTotal_amount();
+//										PayReq req = new PayReq();
+//										req.appId = Constant.WXPAY_APPID;
+//										req.partnerId = Constant.MCH_ID;
+//										req.prepayId = stringXmlOut.get("prepay_id");
+//										req.nonceStr = stringXmlOut.get("nonce_str");
+//										req.packageValue = "Sign=WXPay";
+//										req.timeStamp = String.valueOf(wxPayUtils.genTimeStamp());
+//										req.sign = wxPayUtils.genPayReq(req);
+//										MyApplication.getInstance().api.sendReq(req);
+//									}
+//								});
+//							}
+//						}).start();
 
 					}
 

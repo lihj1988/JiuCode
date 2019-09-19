@@ -329,8 +329,8 @@ public class BuySetup2Activity extends BaseActivity {
 
 				}
 				if (wxPayRadioButton.isChecked()) {
-//					MyToastView.showToast("不支付的支付方式", mActivity);
-					payWX();
+					MyToastView.showToast("不支持的支付方式", mActivity);
+//					payWX();
 
 				}
 				if (balancePay.isChecked()) {
